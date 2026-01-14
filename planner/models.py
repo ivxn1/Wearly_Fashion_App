@@ -16,7 +16,8 @@ class PlanEntry(models.Model):
         to=outfits.models.Outfit,
         blank=False,
         null=False,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        related_name = 'planentry'
     )
     note = models.TextField(
         max_length=200,
@@ -35,4 +36,8 @@ class PlanEntry(models.Model):
         indexes = [
             models.Index(fields=('date',))
         ]
+        verbose_name_plural = 'Plan Entries'
+        verbose_name = 'Plan Entry'
 
+    def __str__(self):
+        return str(self.date) + self.outfit.title + str(self.created_at)
