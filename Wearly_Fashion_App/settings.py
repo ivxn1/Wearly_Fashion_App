@@ -33,7 +33,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 PROJECT_APSS = [
-    'wardrobe'
+    'wardrobe',
+    'outfits',
+
 ]
 
 INSTALLED_APPS = [
