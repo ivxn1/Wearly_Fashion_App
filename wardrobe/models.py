@@ -32,11 +32,6 @@ class Category(models.Model):
         blank=False,
         null=False
     )
-    slug = models.TextField(
-        unique=True,
-        blank=True,
-        null=True
-    )
 
     def __str__(self):
         return self.name
