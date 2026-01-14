@@ -32,11 +32,9 @@ class Category(models.Model):
         blank=False,
         null=False
     )
-    slug = models.TextField(
-        unique=True,
-        blank=True,
-        null=True
-    )
+
+    class Meta:
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
