@@ -14,6 +14,9 @@ class Occasion(models.Model):
         null=False
     )
 
+    def __str__(self):
+        return self.name
+
 class Outfit(models.Model):
 
     class SeasonChoices(models.TextChoices):
@@ -53,6 +56,9 @@ class Outfit(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    def __str__(self):
+        return self.title + self.occasion.name + self.season
 
 class OutfitGarment(models.Model):
 
@@ -95,3 +101,6 @@ class OutfitGarment(models.Model):
                 name='uniq_outfit_garment'
             )
         ]
+
+    def __str__(self):
+        return self.outfit.title + self.garment.title + self.role
