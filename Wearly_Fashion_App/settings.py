@@ -35,7 +35,7 @@ ALLOWED_HOSTS = []
 PROJECT_APSS = [
     'wardrobe',
     'outfits',
-
+    'planner',
 ]
 
 INSTALLED_APPS = [
