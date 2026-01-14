@@ -116,4 +116,4 @@ class Garment(models.Model):
         ]
 
     def __str__(self):
-        return self.title + self.brand.name + self.category.name
+        return self.title + ' - ' + self.brand.name + ' - ' + self.category.name

@@ -58,7 +58,7 @@ class Outfit(models.Model):
     )
 
     def __str__(self):
-        return self.title + self.occasion.name + self.season
+        return self.title + ' - ' + self.occasion.name + ' - ' +  self.season
 
 class OutfitGarment(models.Model):
 
@@ -103,4 +103,4 @@ class OutfitGarment(models.Model):
         ]
 
     def __str__(self):
-        return self.outfit.title + self.garment.title + self.role
+        return self.outfit.title + ' - ' + self.garment.title + ' - ' + self.role

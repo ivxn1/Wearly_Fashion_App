@@ -40,4 +40,4 @@ class PlanEntry(models.Model):
         verbose_name = 'Plan Entry'
 
     def __str__(self):
-        return str(self.date) + self.outfit.title + str(self.created_at)
+        return str(self.date) + ' - '+  self.outfit.title + ' - '+ str(self.created_at)
