@@ -99,7 +99,7 @@ class Garment(models.Model):
         blank=True,
         null=True,
         validators = [
-            MinValueValidator(0, "Price must be at least 0")
+            MinValueValidator(0, 'Price must be at least 0')
         ]
     )
     image = models.ImageField(
@@ -112,10 +112,10 @@ class Garment(models.Model):
     )
 
     class Meta:
-        ordering = ("-created_at",)
+        ordering = ('-created_at',)
         indexes = [
-            models.Index(fields=("category", "brand")),
-            models.Index(fields=("season",))
+            models.Index(fields=('category', 'brand')),
+            models.Index(fields=('season',))
         ]
 
     def __str__(self):
