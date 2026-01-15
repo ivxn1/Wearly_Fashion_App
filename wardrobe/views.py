@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from outfits.models import Outfit
 from wardrobe.models import Garment, Brand, Category
@@ -68,3 +68,12 @@ def garment_details(request: HttpRequest, pk:int) -> HttpResponse:
     }
 
     return render(request, "wardrobe/garment_details.html", context)
+
+def garment_confirm_delete(request:HttpRequest, pk:int) -> HttpResponse:
+    garm = get_object_or_404(Garment, pk=pk)
+
+    if request.method == 'POST':
+        garm.delete()
+        return redirect('garment_list')
+
+    return render(request, 'wardrobe/garment_confirm_delete.html', {'garment': garm})
