@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from outfits.models import Outfit
 from wardrobe.models import Garment, Brand, Category
@@ -59,7 +59,7 @@ def garment_list_view(request: HttpRequest) -> HttpResponse:
 
 
 def garment_details(request: HttpRequest, pk:int) -> HttpResponse:
-    garm = Garment.objects.get(pk=pk)
+    garm = get_object_or_404(Garment, pk=pk)
     in_outfits = Outfit.objects.filter(outfitgarment__garment=garm).distinct()
 
     context = {
