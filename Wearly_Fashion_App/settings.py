@@ -36,6 +36,7 @@ PROJECT_APSS = [
     'wardrobe',
     'outfits',
     'planner',
+    'core'
 ]
 
 INSTALLED_APPS = [
