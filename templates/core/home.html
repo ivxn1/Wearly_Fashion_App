@@ -1,0 +1,136 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load category_filter %}
+
+{% block title %}Wearly - Your Fashion Planning Assistant{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block container %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Wearly</h1>
+        <div class="hero-divider"></div>
+        <p class="hero-subtitle">Your personal fashion planning assistant</p>
+        <div class="cta-buttons">
+            <a href="#" class="btn-cta btn-primary-cta">Explore Wardrobe</a>
+            <a href="#" class="btn-cta btn-secondary-cta">Create Outfit</a>
+        </div>
+    </div>
+</section>
+
+<div class="content-wrapper">
+    <!-- Recent Garments Section -->
+    {% if garments %}
+    <section class="collection-section">
+        <div class="section-header">
+            <h2 class="section-title">Latest Additions</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="garments-grid">
+            {% for garment in garments %}
+                <article class="garment-card">
+                    <div class="garment-container">
+                        <div class="garment-image">
+                            {% if garment.image %}
+                                <img class="garment-img" src="{{ garment.image.url }}" alt="{{ garment.name }}">
+                            {% else %}
+                                <span class="garment-emoji">{{ garment.category.name|category_filter }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="garment-content">
+                        <h3 class="garment-name">{{ garment.name }}</h3>
+                        <div class="garment-details">
+                            {% if garment.category %}<span class="detail-item">{{ garment.category.name }}</span>{% endif %}
+                            {% if garment.brand %}<span class="detail-item">{{ garment.brand.name }}</span>{% endif %}
+                        </div>
+                        <time class="garment-date">{{ garment.created_at|date:"M d, Y" }}</time>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% else %}
+    <section class="empty-section">
+        <div class="empty-state">
+            <div class="empty-icon">👗</div>
+            <p class="empty-text">No garments yet. Start building your wardrobe!</p>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Recent Outfits Section -->
+    {% if outfits %}
+    <section class="collection-section">
+        <div class="section-header">
+            <h2 class="section-title">Your Outfits</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="outfits-grid">
+            {% for outfit in outfits %}
+                <article class="outfit-card">
+                    <div class="outfit-container">
+                        <div class="outfit-preview">✨</div>
+                    </div>
+                    <div class="outfit-content">
+                        <h3 class="outfit-name">{{ outfit.name }}</h3>
+                        {% if outfit.occasion %}
+                            <span class="occasion-badge">{{ outfit.occasion.name }}</span>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% else %}
+    <section class="empty-section">
+        <div class="empty-state">
+            <div class="empty-icon">✨</div>
+            <p class="empty-text">No outfits created yet. Mix and match your garments!</p>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Upcoming Plans Section -->
+    {% if plans %}
+    <section class="collection-section">
+        <div class="section-header">
+            <h2 class="section-title">What's Planned</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="plans-grid">
+            {% for plan in plans %}
+                <article class="plan-card">
+                    <div class="plan-header">
+                        <span class="plan-date">{{ plan.date|date:"l, F j, Y" }}</span>
+                    </div>
+                    <div class="plan-content">
+                        {% if plan.outfit %}
+                            <h4 class="plan-outfit-name">{{ plan.outfit.name }}</h4>
+                            {% if plan.outfit.occasion %}
+                                <p class="plan-occasion">{{ plan.outfit.occasion.name }}</p>
+                            {% endif %}
+                        {% else %}
+                            <p class="plan-outfit-name empty-plan">Outfit to be assigned</p>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% else %}
+    <section class="empty-section">
+        <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <p class="empty-text">No upcoming plans yet. Schedule your outfits!</p>
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+{% endblock %}
+
