@@ -89,7 +89,7 @@
 }
 
 .section-line {
-    width: 50px;
+    width: 120px;
     height: 1px;
     background: linear-gradient(90deg, #1a1a1a 0%, transparent 100%);
     margin-bottom: 48px;
@@ -256,10 +256,17 @@
 .cta-section {
     padding: 60px 24px;
     text-align: center;
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.02) 0%, rgba(26, 26, 26, 0.04) 100%);
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    /*background: linear-gradient(135deg, rgba(26, 26, 26, 0.02) 0%, rgba(26, 26, 26, 0.04) 100%);*/
+    /*border-top: 1px solid rgba(0, 0, 0, 0.06);*/
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     margin: 0 -24px;
+}
+
+.cta-section .section-line {
+    width: 60px;
+    background: linear-gradient(90deg, transparent 0%, #1a1a1a 50%, transparent 100%);
+
+    margin: 0 auto 24px;
 }
 
 .cta-subtitle {
