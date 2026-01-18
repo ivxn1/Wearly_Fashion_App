@@ -141,8 +141,8 @@
 }
 
 .empty-section {
-    padding: 80px 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 40px 24px;
+    /*border-bottom: 1px solid rgba(0, 0, 0, 0.04);*/
 }
 
 /* ===== Section Header ===== */
@@ -161,7 +161,7 @@
 }
 
 .section-line {
-    width: 50px;
+    width: 120px;
     height: 1px;
     background: linear-gradient(90deg, #1a1a1a 0%, transparent 100%);
 }
