@@ -1,0 +1,194 @@
+/* ===== Garments List Page (matches home liquid-glass aesthetic) ===== */
+
+.btn-cta-sm {
+  padding: 12px 26px;
+  font-size: 0.82rem;
+  letter-spacing: 0.6px;
+}
+
+/* Filters glass panel */
+.filters-glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  padding: 28px;
+  margin-bottom: 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+.filters-glass::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr auto;
+  gap: 18px;
+  align-items: end;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #6a6a6a;
+  font-weight: 600;
+}
+
+.filter-input,
+.filter-select {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  color: #1a1a1a;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: rgba(26, 26, 26, 0.28);
+  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.06);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: end;
+}
+
+/* Garments grid: same system, just tuned for list page */
+.garments-grid--list {
+  gap: 28px; /* slightly tighter than home, still airy */
+}
+
+/* Card footer row inside content */
+.garment-meta {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.garment-price {
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.2px;
+}
+
+.garment-link {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.35);
+  padding-bottom: 2px;
+  transition: all 0.25s ease;
+}
+
+.garment-link:hover {
+  border-bottom-color: rgba(26, 26, 26, 0.75);
+  opacity: 0.9;
+}
+
+/* Pagination: glass, minimal */
+.pagination-glass {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.page-btn {
+  font-size: 0.78rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+  padding: 10px 14px;
+  border: 1px solid rgba(26, 26, 26, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.65);
+  transition: all 0.25s ease;
+}
+
+.page-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(26, 26, 26, 0.22);
+}
+
+.page-btn--disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.page-indicator {
+  font-size: 0.8rem;
+  color: #6a6a6a;
+  letter-spacing: 0.3px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .filters-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .filter-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters-glass {
+    padding: 22px;
+    margin-bottom: 36px;
+  }
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+  .btn-cta-sm {
+    width: 100%;
+  }
+  .filter-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

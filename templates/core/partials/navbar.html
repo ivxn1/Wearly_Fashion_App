@@ -5,7 +5,7 @@
     <div class="navbar-top-row">
         <!-- Logo Section -->
         <div class="navbar-left">
-            <a class="navbar-brand" href="{% url 'home' %}">
+            <a class="navbar-brand" href="{% url 'core:home' %}">
                 <img class="navbar-logo" src="{% static 'images/Logo.webp' %}" alt="Wearly Logo">
             </a>
         </div>
@@ -21,19 +21,19 @@
         <div class="navbar-container">
             <ul class="navbar-nav navbar-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link" href="{% url 'core:home' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'garment_list' %}">Garments</a>
+                    <a class="nav-link" href="{% url 'wardrobe:garment_list' %}">Garments</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Outfits</a>
+                    <a class="nav-link" href="{% url 'outfits:outfits_list' %}">Outfits</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Planner</a>
+                    <a class="nav-link" href="{% url 'planner:planner' %}">Planner</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                    <a class="nav-link" href="{% url 'core:about' %}">About</a>
                 </li>
             </ul>
         </div>

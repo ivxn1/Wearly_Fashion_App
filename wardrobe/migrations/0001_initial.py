@@ -40,10 +40,10 @@ class Migration(migrations.Migration):
                 ('material', models.CharField(blank=True, max_length=40, null=True)),
                 ('season', models.CharField(choices=[('all', 'All-Season'), ('spring', 'Spring'), ('summer', 'Summer'), ('autumn', 'Autumn'), ('winter', 'Winter')], default='all')),
                 ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=8, null=True, validators=[django.core.validators.MinValueValidator(0, 'Price must be at least 0')])),
-                ('image', models.ImageField(blank=True, null=True, upload_to='garments/')),
+                ('image', models.ImageField(blank=True, null=True, upload_to='wardrobe/')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('brand', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='garments', to='wardrobe.brand')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='garments', to='wardrobe.category')),
+                ('brand', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='wardrobe', to='wardrobe.brand')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='wardrobe', to='wardrobe.category')),
             ],
             options={
                 'ordering': ('-created_at',),

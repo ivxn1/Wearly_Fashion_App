@@ -1,0 +1,40 @@
+{% load category_filter %}
+
+<article class="garment-card">
+    <div class="garment-container">
+        <div class="garment-image">
+            {% if item.image %}
+                <img class="garment-img" src="{{ item.image.url }}" alt="{{ item.title }}">
+            {% endif %}
+            <span class="garment-emoji">{{ item.category.name|category_filter }}</span>
+
+        </div>
+
+        <div class="garment-content">
+            <h2 class="garment-name">{{ item.title }}</h2>
+
+            <div class="garment-details">
+                <span class="detail-item">{{ item.brand.name }}</span>
+                <span class="detail-item">•</span>
+                <span class="detail-item">{{ item.category.name }}</span>
+            </div>
+
+            <div class="garment-details">
+                {% if item.season %}
+                    <span class="detail-item">{{ item.season|title }}</span>
+                {% endif %}
+                {% if item.color %}
+                    <span class="detail-item">•</span>
+                    <span class="detail-item">{{ item.color }}</span>
+                {% endif %}
+            </div>
+
+            <div class="garment-meta">
+                {% if item.price %}
+                    <span class="garment-price">{{ item.price }} €</span>
+                {% endif %}
+                <a class="garment-link" href="">View details</a>
+            </div>
+        </div>
+    </div>
+</article>

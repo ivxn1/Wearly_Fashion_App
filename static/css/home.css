@@ -209,6 +209,9 @@
 }
 
 .garment-container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
     position: relative;
 }
 
@@ -249,6 +252,10 @@
 }
 
 .garment-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
     padding: 28px;
 }
 
