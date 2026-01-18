@@ -16,7 +16,7 @@ def home_view(request: HttpRequest) -> HttpResponse:
 
     context = {
         'page_title': 'Wearly Home',
-        'garments': newest_garments,
+        'wardrobe': newest_garments,
         'outfits': newest_outfits,
         'plans': future_planned,
     }
@@ -26,7 +26,7 @@ def home_view(request: HttpRequest) -> HttpResponse:
 
 def about_view(request: HttpRequest) -> HttpResponse:
     main_text = 'Wearly is a lightweight outfit planning web application that helps you stay organized when it comes to clothing and daily outfit choices.'
-    secondary_text = 'Instead of keeping outfits in your head or scattered notes, Wearly lets you store garments, create outfits from them, and plan what to wear for upcoming days — all in one place.'
+    secondary_text = 'Instead of keeping outfits in your head or scattered notes, Wearly lets you store wardrobe, create outfits from them, and plan what to wear for upcoming days — all in one place.'
     contacts = 'If you have questions or suggestions, feel free to reach out at:'
     email = 'contact@wearly.app'
 

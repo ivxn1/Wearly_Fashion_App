@@ -8,7 +8,8 @@
 {% block title %}Wearly - Your Fashion Planning Assistant{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/garments_list.css' %}">
 {% endblock %}
 
 {% block container %}
@@ -27,7 +28,7 @@
 
 <div class="content-wrapper">
     <!-- Recent Garments Section -->
-    {% collection_section 'Latest additions' garments 'garments' '👗'%}
+    {% collection_section 'Latest additions' wardrobe 'wardrobe' '👗'%}
 
     <!-- Recent Outfits Section -->
     {% collection_section 'Your Outfits' outfits 'outfits' '✨' %}
