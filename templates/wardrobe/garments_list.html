@@ -1,0 +1,166 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Wearly — Garments{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/garments_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="collection-section">
+  <div class="section-header">
+    <h1 class="section-title">Garments</h1>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- Filters: glass panel -->
+  <form method="get" class="filters-glass" autocomplete="off">
+    <div class="filters-grid">
+
+      <div class="filter-field">
+        <label class="filter-label" for="id_title">Search</label>
+        <input
+          id="id_title"
+          type="text"
+          name="title"
+          class="filter-input"
+          placeholder="Search by title…"
+          value="{{ current_title }}"
+        >
+      </div>
+
+      <div class="filter-field">
+        <label class="filter-label" for="id_brand">Brand</label>
+        <select id="id_brand" name="brand" class="filter-select">
+          <option value="">All</option>
+          {% for brand in brands %}
+            <option value="{{ brand.id }}" {% if current_brand == brand.id|stringformat:"s" %}selected{% endif %}>
+              {{ brand.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label class="filter-label" for="id_category">Category</label>
+        <select id="id_category" name="category" class="filter-select">
+          <option value="">All</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if current_category == category.id|stringformat:"s" %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label class="filter-label" for="id_season">Season</label>
+        <select id="id_season" name="season" class="filter-select">
+          <option value="">All</option>
+          <option value="summer" {% if current_season == "summer" %}selected{% endif %}>Summer</option>
+          <option value="winter" {% if current_season == "winter" %}selected{% endif %}>Winter</option>
+          <option value="all" {% if current_season == "all" %}selected{% endif %}>All year</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label class="filter-label" for="id_sort">Sort</label>
+        <select id="id_sort" name="sort" class="filter-select">
+          <option value="" {% if current_sort == "" %}selected{% endif %}>Newest</option>
+          <option value="price_asc" {% if current_sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
+          <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="submit" class="btn-cta btn-primary-cta btn-cta-sm">Apply</button>
+        <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-secondary-cta btn-cta-sm">Reset</a>
+      </div>
+
+    </div>
+  </form>
+
+  <!-- Results -->
+  {% if wardrobe %}
+    <div class="garments-grid garments-grid--list">
+      {% for g in wardrobe %}
+        <article class="garment-card">
+          <div class="garment-container">
+            <div class="garment-image">
+              {% if g.image %}
+                <img class="garment-img" src="{{ g.image.url }}" alt="{{ g.title }}">
+              {% else %}
+                <div class="garment-emoji">👕</div>
+              {% endif %}
+            </div>
+
+            <div class="garment-content">
+              <h2 class="garment-name">{{ g.title }}</h2>
+
+              <div class="garment-details">
+                <span class="detail-item">{{ g.brand }}</span>
+                <span class="detail-item">•</span>
+                <span class="detail-item">{{ g.category }}</span>
+              </div>
+
+              <div class="garment-details">
+                {% if g.season %}
+                  <span class="detail-item">{{ g.season|title }}</span>
+                {% endif %}
+                {% if g.color %}
+                  <span class="detail-item">•</span>
+                  <span class="detail-item">{{ g.color }}</span>
+                {% endif %}
+              </div>
+
+              <div class="garment-meta">
+                {% if g.price %}
+                  <span class="garment-price">{{ g.price }} €</span>
+                {% endif %}
+                <a class="garment-link" href="">View details</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination: preserve filters -->
+    {% if is_paginated %}
+      <nav class="pagination-glass">
+        {% if page_obj.has_previous %}
+          <a class="page-btn"
+             href="?page={{ page_obj.previous_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+            Previous
+          </a>
+        {% else %}
+          <span class="page-btn page-btn--disabled">Previous</span>
+        {% endif %}
+
+        <span class="page-indicator">
+          {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+          <a class="page-btn"
+             href="?page={{ page_obj.next_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+            Next
+          </a>
+        {% else %}
+          <span class="page-btn page-btn--disabled">Next</span>
+        {% endif %}
+      </nav>
+    {% endif %}
+
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">👗</span>
+      <p class="empty-text">No garments found for the selected filters.</p>
+    </div>
+  {% endif %}
+</section>
+
+{% endblock %}

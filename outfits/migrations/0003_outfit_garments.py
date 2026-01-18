@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='outfit',
-            name='garments',
+            name='wardrobe',
             field=models.ManyToManyField(related_name='outfits', through='outfits.OutfitGarment', to='wardrobe.garment'),
         ),
     ]
