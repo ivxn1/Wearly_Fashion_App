@@ -57,6 +57,12 @@ class Outfit(models.Model):
         auto_now_add=True
     )
 
+    garments = models.ManyToManyField(
+        'wardrobe.Garment',
+        through='OutfitGarment',
+        related_name='outfits'
+    )
+
     def __str__(self):
         return self.title + ' - ' + self.occasion.name + ' - ' +  self.season
 
