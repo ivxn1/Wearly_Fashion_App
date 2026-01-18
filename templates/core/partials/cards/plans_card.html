@@ -1,0 +1,15 @@
+<article class="plan-card">
+    <div class="plan-header">
+        <span class="plan-date">{{ item.date|date:"l, F j, Y" }}</span>
+    </div>
+    <div class="plan-content">
+        {% if item.outfit %}
+            <h4 class="plan-outfit-name">{{ item.outfit.name }}</h4>
+            {% if item.outfit.occasion %}
+                <p class="plan-occasion">{{ item.outfit.occasion.name }}</p>
+            {% endif %}
+        {% else %}
+            <p class="plan-outfit-name empty-plan">Outfit to be assigned</p>
+        {% endif %}
+    </div>
+</article>

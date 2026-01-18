@@ -1,0 +1,11 @@
+<article class="outfit-card">
+    <div class="outfit-container">
+        <div class="outfit-preview">✨</div>
+    </div>
+    <div class="outfit-content">
+        <h3 class="outfit-name">{{ item.name }}</h3>
+        {% if item.occasion %}
+            <span class="occasion-badge">{{ item.occasion.name }}</span>
+        {% endif %}
+    </div>
+</article>
