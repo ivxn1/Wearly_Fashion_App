@@ -5,7 +5,7 @@
 {% load section_header %}
 {% load collection_section %}
 
-{% block title %}Wearly - Your Fashion Planning Assistant{% endblock %}
+{% block title %}{{ block.super }}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
