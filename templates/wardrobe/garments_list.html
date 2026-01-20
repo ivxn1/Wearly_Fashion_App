@@ -1,7 +1,8 @@
 {% extends "core/base.html" %}
 {% load static %}
+{% load cards %}
 
-{% block title %}Wearly — Garments{% endblock %}
+{% block title %}{{ block.super }}{% endblock %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
@@ -48,10 +49,14 @@
         <label class="filter-label" for="id_category">Category</label>
         <select id="id_category" name="category" class="filter-select">
           <option value="">All</option>
-          {% for category in categories %}
-            <option value="{{ category.id }}" {% if current_category == category.id|stringformat:"s" %}selected{% endif %}>
-              {{ category.name }}
-            </option>
+          {% for group_name, group_choices in category_choices %}
+            <optgroup label="{{ group_name }}">
+              {% for category_value, category_label in group_choices %}
+                <option value="{{ category_value }}" {% if current_category == category_value %}selected{% endif %}>
+                  {{ category_label }}
+                </option>
+              {% endfor %}
+            </optgroup>
           {% endfor %}
         </select>
       </div>
@@ -87,44 +92,7 @@
   {% if wardrobe %}
     <div class="garments-grid garments-grid--list">
       {% for g in wardrobe %}
-        <article class="garment-card">
-          <div class="garment-container">
-            <div class="garment-image">
-              {% if g.image %}
-                <img class="garment-img" src="{{ g.image.url }}" alt="{{ g.title }}">
-              {% else %}
-                <div class="garment-emoji">👕</div>
-              {% endif %}
-            </div>
-
-            <div class="garment-content">
-              <h2 class="garment-name">{{ g.title }}</h2>
-
-              <div class="garment-details">
-                <span class="detail-item">{{ g.brand }}</span>
-                <span class="detail-item">•</span>
-                <span class="detail-item">{{ g.category }}</span>
-              </div>
-
-              <div class="garment-details">
-                {% if g.season %}
-                  <span class="detail-item">{{ g.season|title }}</span>
-                {% endif %}
-                {% if g.color %}
-                  <span class="detail-item">•</span>
-                  <span class="detail-item">{{ g.color }}</span>
-                {% endif %}
-              </div>
-
-              <div class="garment-meta">
-                {% if g.price %}
-                  <span class="garment-price">{{ g.price }} €</span>
-                {% endif %}
-                <a class="garment-link" href="">View details</a>
-              </div>
-            </div>
-          </div>
-        </article>
+        {% garment_card g %}
       {% endfor %}
     </div>
 
