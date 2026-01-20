@@ -182,16 +182,14 @@ main {
 
 /* Collapse Panel */
 .collapse.navbar-collapse {
-    display: none;
     width: 100%;
-    background: rgba(255, 255, 255, 0.5);
+    /*background: rgba(255, 255, 255, 0.5);*/
     border-top: 1px solid rgba(0, 0, 0, 0.04);
     z-index: 100;
 }
 
 .collapse.navbar-collapse.show {
     display: block !important;
-    animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
@@ -329,7 +327,6 @@ main {
     }
 
     .collapse.navbar-collapse {
-        background: rgba(255, 255, 255, 0.6);
         display: none;
         width: 100%;
     }
@@ -383,14 +380,12 @@ main {
         letter-spacing: 0.3px;
     }
 
+    /* Adjust overlay for smaller screens */
     .collapse.navbar-collapse {
-        background: rgba(255, 255, 255, 0.65);
-        display: none;
-        width: 100%;
-    }
-
-    .collapse.navbar-collapse.show {
-        display: block !important;
+        top: 60px;
+        /*background: rgba(255, 255, 255, 0.8);*/
+        /*backdrop-filter: blur(20px);*/
+        -webkit-backdrop-filter: blur(20px);
     }
 
     .navbar-container {
