@@ -5,6 +5,9 @@ register = template.Library()
 
 @register.inclusion_tag('core/partials/collection_section.html')
 def collection_section(title, items, section_type, icon):
+    """
+    Renders a collection section with a title, items, type, and icon.
+    """
     empty_messages = {
         'wardrobe': 'No wardrobe yet. Start building your wardrobe!',
         'outfits': 'No outfits created yet. Mix and match your wardrobe!',
