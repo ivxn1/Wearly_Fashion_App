@@ -1,0 +1,161 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/garment_details.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="details-section">
+  <!-- Back Button -->
+  <div class="back-nav">
+    <a href="{% url 'wardrobe:garment_list' %}" class="back-link">← Back to Wardrobe</a>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="details-grid">
+
+    <!-- Image Section -->
+    <div class="details-image-container">
+      {% if garment.image %}
+        <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="details-image">
+      {% else %}
+        <div class="details-image-placeholder">
+          <span class="placeholder-emoji">👕</span>
+          <p class="placeholder-text">No image available</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Info Section -->
+    <div class="details-info">
+
+      <!-- Title & Category Badge -->
+      <div class="details-header">
+        <h1 class="details-title">{{ garment.title }}</h1>
+        <span class="category-badge-large">{{ garment.category }}</span>
+      </div>
+
+      <!-- Meta Info Grid -->
+      <div class="meta-grid">
+
+        <div class="meta-item">
+          <span class="meta-label">Brand</span>
+          <span class="meta-value">{{ garment.brand.name }}</span>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Color</span>
+          <span class="meta-value">{{ garment.color }}</span>
+        </div>
+
+        {% if garment.size %}
+        <div class="meta-item">
+          <span class="meta-label">Size</span>
+          <span class="meta-value">{{ garment.size }}</span>
+        </div>
+        {% endif %}
+
+        {% if garment.material %}
+        <div class="meta-item">
+          <span class="meta-label">Material</span>
+          <span class="meta-value">{{ garment.material }}</span>
+        </div>
+        {% endif %}
+
+        <div class="meta-item">
+          <span class="meta-label">Season</span>
+          <span class="meta-value">{{ garment.season|capfirst }}</span>
+        </div>
+
+        {% if garment.price %}
+        <div class="meta-item">
+          <span class="meta-label">Price</span>
+          <span class="meta-value meta-price">{{ garment.price }} €</span>
+        </div>
+        {% endif %}
+
+        <div class="meta-item">
+          <span class="meta-label">Added</span>
+          <span class="meta-value">{{ garment.created_at }}</span>
+        </div>
+
+      </div>
+
+      <!-- Brand Additional Info -->
+      {% if garment.brand.website or garment.brand.country %}
+      <div class="brand-info-section">
+        <h3 class="brand-info-title">Brand Information</h3>
+        <div class="brand-info-grid">
+          {% if garment.brand.country %}
+          <div class="brand-info-item">
+            <span class="brand-info-label">Country</span>
+            <span class="brand-info-value">{{ garment.brand.country }}</span>
+          </div>
+          {% endif %}
+          {% if garment.brand.website %}
+          <div class="brand-info-item">
+            <span class="brand-info-label">Website</span>
+            <a href="{{ garment.brand.website }}" target="_blank" class="brand-website-link">
+              Visit Website ↗
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="#" class="btn-cta btn-primary-cta btn-action">Edit Garment</a>
+{#        <a href="{% url 'wardrobe:garment_confirm_delete' garment.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Garment</a>#}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Outfits Section -->
+  {% if in_outfits %}
+  <div class="related-section">
+    <div class="section-header">
+      <h2 class="section-title">Featured in Outfits</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="related-outfits-grid">
+      {% for outfit in in_outfits %}
+        <article class="related-outfit-card">
+          <div class="related-outfit-image">
+            {% if outfit.image %}
+              <img src="{{ outfit.image.url }}" alt="{{ outfit.title }}" class="related-outfit-img">
+            {% else %}
+              <div class="related-outfit-emoji">✨</div>
+            {% endif %}
+          </div>
+          <div class="related-outfit-content">
+            <h3 class="related-outfit-title">{{ outfit.title }}</h3>
+            <span class="related-outfit-occasion">{{ outfit.occasion.name }}</span>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="related-section">
+    <div class="empty-outfits">
+      <span class="empty-outfits-icon">✨</span>
+      <p class="empty-outfits-text">This garment is not part of any outfit yet.</p>
+      <a href="#" class="btn-cta btn-secondary-cta btn-cta-sm">Create Outfit</a>
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}
+

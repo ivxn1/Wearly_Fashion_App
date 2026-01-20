@@ -5,9 +5,9 @@
         <div class="garment-image">
             {% if item.image %}
                 <img class="garment-img" src="{{ item.image.url }}" alt="{{ item.title }}">
+            {% else %}
+                <span class="garment-emoji">{{ item.category|category_filter }}</span>
             {% endif %}
-            <span class="garment-emoji">{{ item.category.name|category_filter }}</span>
-
         </div>
 
         <div class="garment-content">
@@ -16,7 +16,7 @@
             <div class="garment-details">
                 <span class="detail-item">{{ item.brand.name }}</span>
                 <span class="detail-item">•</span>
-                <span class="detail-item">{{ item.category.name }}</span>
+                <span class="detail-item">{{ item.category|category_display }}</span>
             </div>
 
             <div class="garment-details">
@@ -33,7 +33,7 @@
                 {% if item.price %}
                     <span class="garment-price">{{ item.price }} €</span>
                 {% endif %}
-                <a class="garment-link" href="">View details</a>
+                <a class="garment-link" href="{% url 'wardrobe:garment_details' item.slug %}">View details</a>
             </div>
         </div>
     </div>

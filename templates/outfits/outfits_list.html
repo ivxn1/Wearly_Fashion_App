@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load cards %}
+{% load section_header %}
+{% load empty_collection %}
+
+{% block title %}{{ block.super }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/outfits_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="collection-section">
+  {% section_header "Outfits" %}
+
+  <!-- Results -->
+  {% if outfits %}
+    <div class="outfits-grid outfits-grid--list">
+      {% for outfit in outfits %}
+        {% outfit_card outfit %}
+      {% endfor %}
+    </div>
+
+  {% else %}
+    {% empty_collection "✨" "No outfits created yet. Start building your first outfit!" %}
+  {% endif %}
+
+</section>
+
+{% endblock %}

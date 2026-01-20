@@ -1,5 +1,7 @@
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
+from django.utils.text import slugify
+
 
 # Create your models here.
 
@@ -25,21 +27,6 @@ class Brand(models.Model):
         return self.name
 
 
-class Category(models.Model):
-    name = models.CharField(
-        max_length=50,
-        unique=True,
-        blank=False,
-        null=False
-    )
-
-    class Meta:
-        verbose_name_plural = 'Categories'
-
-    def __str__(self):
-        return self.name
-
-
 class Garment(models.Model):
 
     class SeasonChoices(models.TextChoices):
@@ -48,6 +35,64 @@ class Garment(models.Model):
         SUMMER = 'summer', 'Summer'
         AUTUMN = 'autumn', 'Autumn'
         WINTER = 'winter', 'Winter'
+
+    class Category(models.TextChoices):
+        TSHIRT = "tshirt", "T-Shirt"
+        SHIRT = "shirt", "Shirt"
+        SWEATER = "sweater", "Sweater"
+        HOODIE = "hoodie", "Hoodie"
+
+        JEANS = "jeans", "Jeans"
+        TROUSERS = "trousers", "Trousers"
+        SHORTS = "shorts", "Shorts"
+        SKIRT = "skirt", "Skirt"
+
+        JACKET = "jacket", "Jacket"
+        COAT = "coat", "Coat"
+
+        SNEAKERS = "sneakers", "Sneakers"
+        BOOTS = "boots", "Boots"
+        SANDALS = "sandals", "Sandals"
+
+        BAG = "bag", "Bag"
+        BELT = "belt", "Belt"
+        SCARF = "scarf", "Scarf"
+        SUNGLASSES = "sunglasses", "Sunglasses"
+
+    CATEGORY_CHOICES = [
+        ("Tops", [
+            (Category.TSHIRT, "T-Shirt"),
+            (Category.SHIRT, "Shirt"),
+            (Category.SWEATER, "Sweater"),
+            (Category.HOODIE, "Hoodie"),
+        ]),
+        ("Bottoms", [
+            (Category.JEANS, "Jeans"),
+            (Category.TROUSERS, "Trousers"),
+            (Category.SHORTS, "Shorts"),
+            (Category.SKIRT, "Skirt"),
+        ]),
+        ("Outerwear", [
+            (Category.JACKET, "Jacket"),
+            (Category.COAT, "Coat"),
+        ]),
+        ("Footwear", [
+            (Category.SNEAKERS, "Sneakers"),
+            (Category.BOOTS, "Boots"),
+            (Category.SANDALS, "Sandals"),
+        ]),
+        ("Accessories", [
+            (Category.BAG, "Bag"),
+            (Category.BELT, "Belt"),
+            (Category.SCARF, "Scarf"),
+            (Category.SUNGLASSES, "Sunglasses"),
+        ]),
+    ]
+
+    category = models.CharField(
+        max_length=30,
+        choices=CATEGORY_CHOICES,
+    )
 
     title = models.CharField(
         max_length=120,
@@ -65,15 +110,16 @@ class Garment(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        related_name='garments'
+        related_name='wardrobe'
     )
-    category = models.ForeignKey(
-        to=Category,
-        blank=False,
-        null=False,
-        on_delete=models.PROTECT,
-        related_name='garments'
+
+    slug = models.SlugField(
+        max_length=150,
+        unique=True,
+        blank=True,
+        null=True
     )
+
     color = models.CharField(
         max_length=30,
         blank=False,
@@ -103,7 +149,7 @@ class Garment(models.Model):
         ]
     )
     image = models.ImageField(
-        upload_to='garments/',
+        upload_to='wardrobe/',
         blank=True,
         null=True
     )
@@ -118,5 +164,12 @@ class Garment(models.Model):
             models.Index(fields=('season',))
         ]
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            slug = slugify(self.title + '-' + self.brand.name)
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+
     def __str__(self):
-        return self.title + ' - ' + self.brand.name + ' - ' + self.category.name
+        return self.title + ' - ' + self.brand.name + ' - ' + self.category

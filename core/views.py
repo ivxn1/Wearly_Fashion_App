@@ -10,7 +10,7 @@ from wardrobe.models import Garment
 # Create your views here.
 
 def home_view(request: HttpRequest) -> HttpResponse:
-    newest_garments = Garment.objects.select_related('category', 'brand').order_by('-created_at')[:6]
+    newest_garments = Garment.objects.select_related('brand').order_by('-created_at')[:6]
     newest_outfits = Outfit.objects.select_related('occasion').order_by('-created_at')[:4]
     future_planned = PlanEntry.objects.select_related('outfit').filter(date__gte=localdate()).order_by('date')[:6]
 
@@ -31,6 +31,7 @@ def about_view(request: HttpRequest) -> HttpResponse:
     email = 'contact@wearly.app'
 
     context = {
+        'page_title': 'About Wearly',
         'main': main_text,
         'secondary': secondary_text,
         'contacts': contacts,

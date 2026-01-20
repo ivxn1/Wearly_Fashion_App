@@ -1,11 +1,50 @@
 <article class="outfit-card">
-    <div class="outfit-container">
-        <div class="outfit-preview">✨</div>
+  <div class="outfit-container">
+    <!-- Outfit Image -->
+    <div class="outfit-image">
+      {% if item.image %}
+        <img class="outfit-img" src="{{ item.image.url }}" alt="{{ item.title }}">
+      {% else %}
+        <div class="outfit-emoji">👗</div>
+      {% endif %}
     </div>
+
+    <!-- Outfit Content -->
     <div class="outfit-content">
-        <h3 class="outfit-name">{{ item.name }}</h3>
-        {% if item.occasion %}
-            <span class="occasion-badge">{{ item.occasion.name }}</span>
-        {% endif %}
+      <h2 class="outfit-name">{{ item.title }}</h2>
+
+      <!-- Occasion & Season -->
+      <div class="outfit-details">
+        <span class="detail-item">{{ item.occasion.name }}</span>
+        <span class="detail-item">•</span>
+        <span class="detail-item">{{ item.season|title }}</span>
+      </div>
+
+      <!-- Notes (if any) -->
+      {% if item.notes %}
+        <p class="outfit-notes">{{ item.notes }}</p>
+      {% endif %}
+
+      <!-- Garments Preview -->
+      {% if item.garments.all %}
+        <div class="garments-preview">
+          <span class="garments-label">Includes:</span>
+          <div class="garments-list">
+            {% for garment in item.garments.all|slice:":3" %}
+              <span class="garment-badge">{{ garment.title }}</span>
+            {% endfor %}
+            {% if item.garments.count > 3 %}
+              <span class="garment-badge garment-badge--more">+{{ item.garments.count|add:"-3" }} more</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Meta: Created Date & View Link -->
+      <div class="outfit-meta">
+        <span class="outfit-date">{{ item.created_at|date:"M d, Y" }}</span>
+        <a class="outfit-link" href="">View outfit</a>
+      </div>
     </div>
+  </div>
 </article>

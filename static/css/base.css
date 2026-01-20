@@ -14,6 +14,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
     background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 50%, #ffffff 100%);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: #1a1a1a;
@@ -452,17 +454,42 @@ a:hover {
 }
 
 /* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    main {
+        width: 100%;
+        overflow-x: hidden;
+    }
+}
+
 @media (max-width: 768px) {
     body {
         font-size: 14px;
     }
 
     .container {
-        padding: 0 16px;
+        padding: 0 18px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    main {
+        width: 100%;
+        overflow-x: hidden;
     }
 
     .navbar {
         padding: 12px 0;
+    }
+
+    .navbar-top-row,
+    .navbar-container {
+        padding: 0 18px;
     }
 
     .navbar-logo {
@@ -470,8 +497,42 @@ a:hover {
     }
 
     footer {
-        padding: 40px 16px;
+        padding: 40px 18px;
         margin-top: 60px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 14px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .navbar-top-row,
+    .navbar-container {
+        padding: 0 14px;
+    }
+
+    footer {
+        padding: 40px 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 12px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .navbar-top-row,
+    .navbar-container {
+        padding: 0 12px;
+    }
+
+    footer {
+        padding: 40px 12px;
     }
 }
 
