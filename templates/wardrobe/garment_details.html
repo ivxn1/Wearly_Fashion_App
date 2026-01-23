@@ -140,6 +140,7 @@
           <div class="related-outfit-content">
             <h3 class="related-outfit-title">{{ outfit.title }}</h3>
             <span class="related-outfit-occasion">{{ outfit.occasion.name }}</span>
+            <a href="{% url 'outfits:outfit_details' id=outfit.pk %}" class="outfit-details">View details</a>
           </div>
         </article>
       {% endfor %}

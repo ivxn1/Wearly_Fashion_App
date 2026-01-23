@@ -1,4 +1,4 @@
-/* ===== Garment Details Page - Premium Liquid Glass Aesthetic ===== */
+/* ===== Outfit Details Page - Premium Liquid Glass Aesthetic ===== */
 
 .details-section {
   padding: 40px 0;
@@ -53,7 +53,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 0 rgba(0, 0, 0, 0.03);
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,7 +119,7 @@
   line-height: 1.2;
 }
 
-.category-badge-large {
+.occasion-badge-large {
   display: inline-block;
   background: rgba(26, 26, 26, 0.08);
   color: #1a1a1a;
@@ -170,67 +170,28 @@
   letter-spacing: 0.2px;
 }
 
-.meta-price {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-/* Brand Info Section */
-.brand-info-section {
+/* Notes Section */
+.notes-section {
   padding: 24px;
   background: rgba(250, 250, 250, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 8px;
 }
 
-.brand-info-title {
+.notes-title {
   font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   letter-spacing: 0.3px;
 }
 
-.brand-info-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.brand-info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.brand-info-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: #8a8a8a;
-  font-weight: 600;
-}
-
-.brand-info-value {
-  font-size: 0.9rem;
-  color: #1a1a1a;
-  font-weight: 500;
-}
-
-.brand-website-link {
-  font-size: 0.9rem;
-  color: #1a1a1a;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.3);
-  padding-bottom: 1px;
-  transition: all 0.25s ease;
-  width: fit-content;
-}
-
-.brand-website-link:hover {
-  border-bottom-color: rgba(26, 26, 26, 0.7);
-  opacity: 0.85;
+.notes-text {
+  font-size: 0.95rem;
+  color: #4a4a4a;
+  line-height: 1.6;
+  margin: 0;
+  letter-spacing: 0.2px;
 }
 
 /* Action Buttons */
@@ -246,7 +207,7 @@
   padding: 14px 32px;
 }
 
-/* Related Outfits Section */
+/* Garments Section */
 .related-section {
   padding: 48px 0;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
@@ -271,13 +232,13 @@
   background: linear-gradient(90deg, #1a1a1a 0%, transparent 100%);
 }
 
-.related-outfits-grid {
+.garments-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 24px;
 }
 
-.related-outfit-card {
+.garment-card {
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -289,10 +250,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
     inset 0 -1px 0 rgba(0, 0, 0, 0.04);
   transition: all 0.35s ease;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
-.related-outfit-card:hover {
+.garment-card:hover {
   transform: translateY(-4px);
   box-shadow:
     0 12px 48px rgba(0, 0, 0, 0.12),
@@ -300,42 +262,50 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.04);
 }
 
-.related-outfit-image {
+.garment-image {
   width: 100%;
-  height: 160px;
+  height: 200px;
   background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.8) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
 }
 
-.related-outfit-img {
+.garment-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.35s ease;
 }
 
-.related-outfit-card:hover .related-outfit-img {
+.garment-card:hover .garment-img {
   transform: scale(1.05);
 }
 
-.related-outfit-emoji {
-  font-size: 2.5rem;
+.garment-emoji {
+  font-size: 3rem;
   opacity: 0.4;
 }
 
-.related-outfit-content {
-  padding: 16px;
+.garment-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.garment-header {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.related-outfit-title {
-  font-size: 0.95rem;
+.garment-title {
+  font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
   margin: 0;
@@ -343,14 +313,37 @@
   line-height: 1.3;
 }
 
-.related-outfit-occasion {
-  font-size: 0.75rem;
-  color: #6a6a6a;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+.garment-category {
+  font-size: 0.7rem;
+  color: #8a8a8a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.outfit-details {
+.garment-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.garment-brand {
+  font-size: 0.85rem;
+  color: #4a4a4a;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.garment-color {
+  font-size: 0.8rem;
+  color: #6a6a6a;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+.garment-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -358,27 +351,19 @@
   font-weight: 500;
   color: #1a1a1a;
   text-decoration: none;
+  margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.25s ease;
 }
 
-.outfit-details:hover {
+.garment-link:hover {
   opacity: 0.7;
   gap: 10px;
 }
 
-.outfit-details::after {
-  content: '→';
-  transition: transform 0.25s ease;
-}
-
-.outfit-details:hover::after {
-  transform: translateX(4px);
-}
-
-/* Empty Outfits State */
-.empty-outfits {
+/* Empty Garments State */
+.empty-garments {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -387,14 +372,14 @@
   text-align: center;
 }
 
-.empty-outfits-icon {
+.empty-garments-icon {
   font-size: 3.5rem;
   opacity: 0.4;
   margin-bottom: 16px;
   display: block;
 }
 
-.empty-outfits-text {
+.empty-garments-text {
   font-size: 1.05rem;
   color: #6a6a6a;
   margin: 0 0 24px 0;
@@ -415,6 +400,11 @@
 
   .meta-grid {
     padding: 24px;
+    gap: 20px;
+  }
+
+  .garments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 20px;
   }
 }
@@ -442,8 +432,8 @@
     width: 100%;
   }
 
-  .related-outfits-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  .garments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
   }
 
@@ -474,37 +464,27 @@
     font-size: 0.95rem;
   }
 
-  .meta-price {
-    font-size: 1.1rem;
+  .notes-section {
+    padding: 20px;
   }
 
-  .related-outfits-grid {
+  .notes-text {
+    font-size: 0.9rem;
+  }
+
+  .garments-grid {
     grid-template-columns: 1fr;
   }
 
-  .empty-outfits {
+  .empty-garments {
     padding: 48px 24px;
   }
 
-  .empty-outfits-icon {
+  .empty-garments-icon {
     font-size: 3rem;
   }
 
-  .empty-outfits-text {
+  .empty-garments-text {
     font-size: 1rem;
   }
-}
-
-.outfit-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #1a1a1a;
-  text-decoration: none;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.25s ease;
 }
