@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load category_filter %}
 {% load static %}
 
 {% block title %}{{ page_title }}{% endblock %}
@@ -36,8 +37,11 @@
 
       <!-- Title & Occasion Badge -->
       <div class="details-header">
-        <h1 class="details-title">{{ outfit.title }}</h1>
-        <span class="occasion-badge-large">{{ outfit.occasion.name }}</span>
+
+{#          TODO: CREATE FILTER TO CAPITALIZE EACH WORD OF TITLE        #}
+
+        <h1 class="details-title">{{ outfit.title|capfirst }}</h1>
+        <span class="occasion-badge-large">{{ outfit.occasion.name|capfirst }}</span>
       </div>
 
       <!-- Meta Info Grid -->
@@ -45,17 +49,17 @@
 
         <div class="meta-item">
           <span class="meta-label">Occasion</span>
-          <span class="meta-value">{{ outfit.occasion.name }}</span>
+          <span class="meta-value">{{ outfit.occasion.name|capfirst }}</span>
         </div>
 
         <div class="meta-item">
           <span class="meta-label">Season</span>
-          <span class="meta-value">{{ outfit.get_season_display }}</span>
+          <span class="meta-value">{{ outfit.season.title }}</span>
         </div>
 
         <div class="meta-item">
           <span class="meta-label">Created</span>
-          <span class="meta-value">{{ outfit.created_at|date:"M d, Y" }}</span>
+          <span class="meta-value">{{ outfit.created_at|date:"d M, Y G:i" }}</span>
         </div>
 
         <div class="meta-item">
@@ -76,6 +80,7 @@
       <!-- Action Buttons -->
       <div class="action-buttons">
         <a href="#" class="btn-cta btn-primary-cta btn-action">Edit Outfit</a>
+        <a href="#" class="btn-cta btn-secondary-cta btn-action">Delete Outfit</a>
       </div>
 
     </div>
@@ -91,25 +96,28 @@
     </div>
 
     <div class="garments-grid">
+
+{#  TODO: COME UP WITH SOME INCLUSION TAG TO REPLACE REDUNDANCY OF THE CARDS BELOW AND ON OTHER PAGES TOO #}
+
       {% for garment in outfit_garments %}
         <article class="garment-card">
           <div class="garment-image">
             {% if garment.image %}
               <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="garment-img">
             {% else %}
-              <div class="garment-emoji">👕</div>
+              <div class="garment-emoji">{{ garment.category.title|lower|category_filter }}</div>
             {% endif %}
           </div>
           <div class="garment-content">
             <div class="garment-header">
-              <h3 class="garment-title">{{ garment.title }}</h3>
-              <span class="garment-category">{{ garment.get_category_display }}</span>
+              <h3 class="garment-title">{{ garment.title|capfirst }}</h3>
+              <span class="garment-category">{{ garment.category.title|capfirst }} ~ {{ garment.category.title|lower|category_filter }}</span>
             </div>
             <div class="garment-meta">
-              <span class="garment-brand">{{ garment.brand.name }}</span>
-              <span class="garment-color">{{ garment.color }}</span>
+              <span class="garment-brand">{{ garment.brand.name|capfirst }}</span>
+              <span class="garment-color">{{ garment.color|capfirst }}</span>
             </div>
-            <a href="{% url 'wardrobe:garment_details' garment.pk %}" class="garment-link">View Details →</a>
+            <a href="{% url 'wardrobe:garment_details' slug=garment.slug %}" class="garment-link">View Details →</a>
           </div>
         </article>
       {% endfor %}

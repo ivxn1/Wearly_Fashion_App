@@ -43,7 +43,7 @@
       <!-- Meta: Created Date & View Link -->
       <div class="outfit-meta">
         <span class="outfit-date">{{ item.created_at|date:"M d, Y" }}</span>
-        <a class="outfit-link" href="">View outfit</a>
+        <a class="outfit-link" href="{% url 'outfits:outfit_details' id=item.pk %}">View outfit</a>
       </div>
     </div>
   </div>
