@@ -1,0 +1,130 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/outfit_details.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="details-section">
+  <!-- Back Button -->
+  <div class="back-nav">
+    <a href="{% url 'outfits:outfits_list' %}" class="back-link">← Back to Outfits</a>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="details-grid">
+
+    <!-- Image Section -->
+    <div class="details-image-container">
+      {% if outfit.image %}
+        <img src="{{ outfit.image.url }}" alt="{{ outfit.title }}" class="details-image">
+      {% else %}
+        <div class="details-image-placeholder">
+          <span class="placeholder-emoji">✨</span>
+          <p class="placeholder-text">No image available</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Info Section -->
+    <div class="details-info">
+
+      <!-- Title & Occasion Badge -->
+      <div class="details-header">
+        <h1 class="details-title">{{ outfit.title }}</h1>
+        <span class="occasion-badge-large">{{ outfit.occasion.name }}</span>
+      </div>
+
+      <!-- Meta Info Grid -->
+      <div class="meta-grid">
+
+        <div class="meta-item">
+          <span class="meta-label">Occasion</span>
+          <span class="meta-value">{{ outfit.occasion.name }}</span>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Season</span>
+          <span class="meta-value">{{ outfit.get_season_display }}</span>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Created</span>
+          <span class="meta-value">{{ outfit.created_at|date:"M d, Y" }}</span>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Garments</span>
+          <span class="meta-value">{{ outfit_garments|length }} piece{{ outfit_garments|length|pluralize }}</span>
+        </div>
+
+      </div>
+
+      <!-- Notes Section -->
+      {% if outfit.notes %}
+      <div class="notes-section">
+        <h3 class="notes-title">Notes</h3>
+        <p class="notes-text">{{ outfit.notes }}</p>
+      </div>
+      {% endif %}
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="#" class="btn-cta btn-primary-cta btn-action">Edit Outfit</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Garments Section -->
+  {% if outfit_garments %}
+  <div class="related-section">
+    <div class="section-header">
+      <h2 class="section-title">Garments in This Outfit</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="garments-grid">
+      {% for garment in outfit_garments %}
+        <article class="garment-card">
+          <div class="garment-image">
+            {% if garment.image %}
+              <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="garment-img">
+            {% else %}
+              <div class="garment-emoji">👕</div>
+            {% endif %}
+          </div>
+          <div class="garment-content">
+            <div class="garment-header">
+              <h3 class="garment-title">{{ garment.title }}</h3>
+              <span class="garment-category">{{ garment.get_category_display }}</span>
+            </div>
+            <div class="garment-meta">
+              <span class="garment-brand">{{ garment.brand.name }}</span>
+              <span class="garment-color">{{ garment.color }}</span>
+            </div>
+            <a href="{% url 'wardrobe:garment_details' garment.pk %}" class="garment-link">View Details →</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="related-section">
+    <div class="empty-garments">
+      <span class="empty-garments-icon">✨</span>
+      <p class="empty-garments-text">No garments added to this outfit yet.</p>
+      <a href="#" class="btn-cta btn-secondary-cta btn-cta-sm">Add Garments</a>
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}
