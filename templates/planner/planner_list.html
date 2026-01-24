@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load section_header %}
+{% load empty_collection %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/planner_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="collection-section">
+  {% section_header "Outfit Planner" %}
+
+  <!-- Results -->
+  {% if plans %}
+    <div class="plans-grid">
+      {% for plan in plans %}
+        <article class="plan-card">
+          <!-- Date Header -->
+          <div class="plan-header">
+            <span class="plan-date">{{ plan.date }}</span>
+            <span class="plan-day-badge">Planned</span>
+          </div>
+
+          <!-- Outfit Info -->
+          <div class="plan-outfit-section">
+            {% if plan.outfit.image %}
+              <div class="plan-outfit-image">
+                <img src="{{ plan.outfit.image.url }}" alt="{{ plan.outfit.title }}" class="plan-outfit-img">
+              </div>
+            {% else %}
+              <div class="plan-outfit-image plan-outfit-placeholder">
+                <span class="plan-outfit-emoji">✨</span>
+              </div>
+            {% endif %}
+
+            <div class="plan-outfit-details">
+              <h3 class="plan-outfit-title">{{ plan.outfit.title }}</h3>
+              <div class="plan-outfit-meta">
+                <span class="plan-meta-item">{{ plan.outfit.occasion.name }}</span>
+                <span class="plan-meta-divider">•</span>
+                <span class="plan-meta-item">{{ plan.outfit.season }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          {% if plan.note %}
+          <div class="plan-notes">
+            <span class="plan-notes-label">Note:</span>
+            <p class="plan-notes-text">{{ plan.note }}</p>
+          </div>
+          {% endif %}
+
+          <!-- Actions -->
+          <div class="plan-actions">
+            <a href="{% url 'outfits:outfit_details' id=plan.outfit.pk %}" class="plan-action-link">View Outfit →</a>
+            <span class="plan-created">Added {{ plan.created_at }}</span>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    {% empty_collection "📅" "No plans scheduled yet. Start planning your outfits!" %}
+  {% endif %}
+
+</section>
+
+{% endblock %}
