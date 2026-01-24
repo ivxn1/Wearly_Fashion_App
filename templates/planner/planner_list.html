@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load capitalize %}
+{% load static %}
+{% load section_header %}
+{% load empty_collection %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/planner_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="collection-section">
+  {% section_header "Outfit Planner" %}
+
+  <!-- Hero Section -->
+  <div class="planner-hero">
+    <div class="planner-hero-content">
+      <p class="planner-hero-text">
+        Plan your outfits ahead of time. Organize what you'll wear for upcoming events,
+        meetings, or special occasions. Stay stylish and prepared every day.
+      </p>
+      <a href="#" class="btn-cta btn-primary-cta">+ Create New Plan</a>
+    </div>
+  </div>
+
+  <!-- Results -->
+  {% if plans %}
+    <div class="plans-grid">
+      {% for plan in plans %}
+        <article class="plan-card">
+          <!-- Date Header -->
+          <div class="plan-header">
+            <span class="plan-date">{{ plan.date|date:"d M, Y" }}</span>
+            <span class="plan-day-badge">Planned</span>
+          </div>
+
+          <!-- Outfit Info -->
+          <div class="plan-outfit-section">
+            {% if plan.outfit.image %}
+              <div class="plan-outfit-image">
+                <img src="{{ plan.outfit.image.url }}" alt="{{ plan.outfit.title }}" class="plan-outfit-img">
+              </div>
+            {% else %}
+              <div class="plan-outfit-image plan-outfit-placeholder">
+                <span class="plan-outfit-emoji">✨</span>
+              </div>
+            {% endif %}
+
+            <div class="plan-outfit-details">
+              <h3 class="plan-outfit-title">{{ plan.outfit.title|capitalize }}</h3>
+              <div class="plan-outfit-meta">
+                <span class="plan-meta-item">{{ plan.outfit.occasion.name|capitalize }}</span>
+                <span class="plan-meta-divider">•</span>
+                <span class="plan-meta-item">{{ plan.outfit.season|capfirst }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="plan-actions">
+            <div class="plan-action-left">
+              <a href="" class="plan-action-link">View Details →</a>
+              <span class="plan-created">Added {{ plan.created_at|date:"M d, Y" }}</span>
+            </div>
+            <div class="plan-action-buttons">
+              <a href="#" class="plan-btn plan-btn-edit" title="Edit Plan">
+                <span class="plan-btn-icon">✏️</span>
+              </a>
+              <a href="#" class="plan-btn plan-btn-delete" title="Delete Plan">
+                <span class="plan-btn-icon">🗑️</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    {% empty_collection "📅" "No plans scheduled yet. Start planning your outfits!" %}
+  {% endif %}
+
+</section>
+
+{% endblock %}

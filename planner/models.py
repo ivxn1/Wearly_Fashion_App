@@ -32,7 +32,7 @@ class PlanEntry(models.Model):
     )
 
     class Meta:
-        ordering = ('-date',)
+        ordering = ('date',)
         indexes = [
             models.Index(fields=('date',))
         ]
