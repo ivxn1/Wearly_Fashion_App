@@ -5,6 +5,62 @@
   padding: 40px 0;
 }
 
+/* Planner Hero Section */
+.planner-hero {
+  margin-bottom: 48px;
+  padding: 48px 40px;
+  background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.6) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.planner-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+  z-index: 1;
+}
+
+.planner-hero::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.planner-hero-content {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.planner-hero-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #4a4a4a;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
 /* Plans Grid */
 .plans-grid {
   display: grid;
@@ -91,7 +147,7 @@
 .plan-outfit-section {
   display: flex;
   gap: 16px;
-  align-items: flex-start;
+  align-items: center;
   position: relative;
   z-index: 2;
 }
@@ -215,7 +271,15 @@
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   position: relative;
   z-index: 2;
-  gap: 12px;
+  gap: 16px;
+}
+
+.plan-action-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .plan-action-link {
@@ -230,6 +294,7 @@
   border-bottom: 1px solid rgba(26, 26, 26, 0.3);
   padding-bottom: 2px;
   transition: all 0.25s ease;
+  width: fit-content;
 }
 
 .plan-action-link:hover {
@@ -243,11 +308,63 @@
   color: #8a8a8a;
   font-weight: 500;
   letter-spacing: 0.2px;
-  white-space: nowrap;
+}
+
+/* Plan Action Buttons */
+.plan-action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.plan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(26, 26, 26, 0.15);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.plan-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(26, 26, 26, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.plan-btn-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.plan-btn-edit:hover {
+  border-color: rgba(26, 26, 26, 0.4);
+}
+
+.plan-btn-delete:hover {
+  background: rgba(255, 235, 235, 0.8);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 /* Responsive Design */
 @media (max-width: 992px) {
+  .planner-hero {
+    margin-bottom: 40px;
+    padding: 40px 32px;
+  }
+
+  .planner-hero-text {
+    font-size: 0.95rem;
+  }
+
   .plans-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
@@ -257,6 +374,20 @@
 @media (max-width: 768px) {
   .collection-section {
     padding: 32px 0;
+  }
+
+  .planner-hero {
+    margin-bottom: 32px;
+    padding: 32px 24px;
+  }
+
+  .planner-hero-content {
+    gap: 20px;
+  }
+
+  .planner-hero-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
   }
 
   .plans-grid {
@@ -295,6 +426,15 @@
 }
 
 @media (max-width: 576px) {
+  .planner-hero {
+    padding: 28px 20px;
+    margin-bottom: 28px;
+  }
+
+  .planner-hero-text {
+    font-size: 0.85rem;
+  }
+
   .plan-card {
     padding: 18px;
   }
@@ -323,5 +463,27 @@
 
   .plan-notes-text {
     font-size: 0.8rem;
+  }
+
+  .plan-actions {
+    flex-wrap: wrap;
+  }
+
+  .plan-action-left {
+    width: 100%;
+  }
+
+  .plan-action-buttons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .plan-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .plan-btn-icon {
+    font-size: 0.95rem;
   }
 }
