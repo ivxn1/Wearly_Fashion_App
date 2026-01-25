@@ -1,0 +1,643 @@
+/* ===== Plan Entry Details Page - Premium Liquid Glass Aesthetic ===== */
+
+/* Details Navigation - Unique to plan entry */
+.details-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 24px;
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid rgba(26, 26, 26, 0.15);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.nav-back:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(26, 26, 26, 0.3);
+  transform: translateX(-4px);
+}
+
+/* Navigation Arrows */
+.nav-arrows {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-arrow-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(26, 26, 26, 0.15);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: #1a1a1a;
+}
+
+.nav-arrow-link:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(26, 26, 26, 0.3);
+  transform: scale(1.05);
+}
+
+.nav-arrow-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.arrow-icon {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Main Grid Layout */
+.plan-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 56px;
+}
+
+/* Left Column - Plan Info */
+.plan-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Date Card */
+.date-card {
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  font-weight: 600;
+}
+
+.date-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.3px;
+}
+
+.date-day {
+  font-size: 0.9rem;
+  color: #4a4a4a;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Outfit Card */
+.outfit-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.outfit-image-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.outfit-image-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.outfit-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.outfit-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Outfit Info */
+.outfit-info {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.outfit-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+/* Outfit Meta */
+.outfit-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meta-row {
+  display: flex;
+    gap:12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.meta-row:last-child {
+  border-bottom: none;
+}
+
+.meta-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  font-weight: 600;
+}
+
+.meta-value {
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* View Outfit Button */
+.view-outfit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  text-decoration: none;
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+}
+
+.view-outfit-btn:hover {
+  opacity: 0.7;
+  gap: 10px;
+}
+
+/* Right Column - Actions */
+.plan-actions-column {
+  display: flex;
+  flex-direction: column;
+  gap: 31px;
+}
+
+/* Notes Card */
+.notes-card {
+  padding: 28px;
+  background: rgba(250, 250, 250, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.notes-text {
+  font-size: 0.95rem;
+  color: #4a4a4a;
+  line-height: 1.7;
+  margin: 0;
+  letter-spacing: 0.2px;
+  white-space: pre-wrap;
+}
+
+.notes-empty {
+  font-size: 0.9rem;
+  color: #8a8a8a;
+  font-style: italic;
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+/* Meta Card */
+.meta-card {
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta-item-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  font-weight: 600;
+}
+
+.meta-item-value {
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-full {
+  width: 100%;
+  text-align: center;
+  padding: 14px 32px;
+}
+
+/* Garments Section */
+.garments-section {
+  padding: 48px 0 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-title-main {
+  font-size: 1.8rem;
+  font-weight: 300;
+  letter-spacing: 1.2px;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+}
+
+.section-line {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, #1a1a1a 0%, transparent 100%);
+}
+
+/* Garments Grid - Mini Cards */
+.garments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.garment-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.garment-card-mini {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.garment-card-link:hover {
+  transform: translateY(-3px);
+}
+
+.garment-card-link:hover .garment-card-mini {
+  box-shadow:
+    0 10px 36px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.garment-image-mini {
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.garment-img-mini {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.garment-card-link:hover .garment-img-mini {
+  transform: scale(1.05);
+}
+
+.garment-emoji-mini {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+.garment-info-mini {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.garment-title-mini {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+}
+
+.garment-category-mini {
+  font-size: 0.7rem;
+  color: #8a8a8a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.garment-brand-mini {
+  font-size: 0.8rem;
+  color: #4a4a4a;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .plan-details-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .garments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .details-section {
+    padding: 32px 0;
+  }
+
+  .details-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .nav-arrows {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .date-card {
+    padding: 24px;
+  }
+
+  .date-value {
+    font-size: 1.6rem;
+  }
+
+  .outfit-info {
+    padding: 20px;
+  }
+
+  .outfit-title {
+    font-size: 1.3rem;
+  }
+
+  .notes-card,
+  .meta-card {
+    padding: 20px;
+  }
+
+  .section-title-main {
+    font-size: 1.5rem;
+  }
+
+  .garments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .garment-image-mini {
+    height: 140px;
+  }
+}
+
+@media (max-width: 576px) {
+  .details-nav {
+    gap: 12px;
+  }
+
+  .nav-back {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .nav-arrow-link {
+    width: 40px;
+    height: 40px;
+  }
+
+  .arrow-icon {
+    font-size: 1rem;
+  }
+
+  .plan-details-grid {
+    gap: 24px;
+  }
+
+  .date-card {
+    padding: 20px;
+  }
+
+  .date-value {
+    font-size: 1.4rem;
+  }
+
+  .outfit-title {
+    font-size: 1.2rem;
+  }
+
+  .meta-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .notes-card,
+  .meta-card {
+    padding: 18px;
+  }
+
+  .section-title {
+    font-size: 1rem;
+  }
+
+  .section-title-main {
+    font-size: 1.3rem;
+  }
+
+  .garments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+  }
+
+  .garment-image-mini {
+    height: 120px;
+  }
+
+  .garment-info-mini {
+    padding: 14px;
+  }
+
+  .garment-title-mini {
+    font-size: 0.85rem;
+  }
+
+  .garment-category-mini {
+    font-size: 0.65rem;
+  }
+
+  .garment-brand-mini {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .garments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .garment-image-mini {
+    height: 200px;
+  }
+}

@@ -63,7 +63,7 @@
           <!-- Actions -->
           <div class="plan-actions">
             <div class="plan-action-left">
-              <a href="" class="plan-action-link">View Details →</a>
+              <a href="{% url 'planner:plan_details' plan.pk %}" class="plan-action-link">View Details →</a>
               <span class="plan-created">Added {{ plan.created_at|date:"M d, Y" }}</span>
             </div>
             <div class="plan-action-buttons">
