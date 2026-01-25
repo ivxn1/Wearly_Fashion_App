@@ -1,0 +1,165 @@
+{% extends "core/base.html" %}
+{% load category_filter %}
+{% load capitalize %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/plan_entry_details.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="details-section">
+
+  <!-- Navigation Bar -->
+  <div class="details-nav">
+    <a href="{% url 'planner:list' %}" class="nav-link nav-back">← Back to Planner</a>
+
+    <div class="nav-arrows">
+      {% if prev_plan %}
+        <a href="{% url 'planner:plan_details' prev_plan.pk %}" class="nav-arrow-link" title="Previous Plan">
+          <span class="arrow-icon">←</span>
+        </a>
+      {% else %}
+        <span class="nav-arrow-link nav-arrow-disabled">
+          <span class="arrow-icon">←</span>
+        </span>
+      {% endif %}
+
+      {% if next_plan %}
+        <a href="{% url 'planner:plan_details' next_plan.pk %}" class="nav-arrow-link" title="Next Plan">
+          <span class="arrow-icon">→</span>
+        </a>
+      {% else %}
+        <span class="nav-arrow-link nav-arrow-disabled">
+          <span class="arrow-icon">→</span>
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="plan-details-grid">
+
+    <!-- Left Column - Date & Outfit Info -->
+    <div class="plan-info-column">
+
+      <!-- Date Card -->
+      <div class="date-card">
+        <div class="date-label">Planned Date</div>
+        <div class="date-value">{{ plan_entry.date|date:'d M, Y' }}</div>
+        <div class="date-day">{{ plan_entry.date|date:"l" }}</div>
+      </div>
+
+      <!-- Outfit Card -->
+      <div class="outfit-card">
+        <div class="outfit-image-container">
+          {% if plan_entry.outfit.image %}
+            <img src="{{ plan_entry.outfit.image.url }}" alt="{{ plan_entry.outfit.title }}" class="outfit-image">
+          {% else %}
+            <div class="outfit-image-placeholder">
+              <span class="placeholder-emoji">✨</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column - Notes & Actions -->
+    <div class="plan-actions-column">
+
+      <!-- Outfit Info -->
+      <div class="outfit-info">
+        <h2 class="outfit-title">{{ plan_entry.outfit.title|capitalize }}</h2>
+
+        <div class="outfit-meta">
+          <div class="meta-row">
+            <span class="meta-label">Occasion</span>
+            <span class="meta-value">{{ plan_entry.outfit.occasion.name }}</span>
+          </div>
+
+          <div class="meta-row">
+            <span class="meta-label">Season</span>
+            <span class="meta-value">{{ plan_entry.outfit.season.title }}</span>
+          </div>
+        </div>
+
+        <a href="{% url 'outfits:outfit_details' id=plan_entry.outfit.pk %}" class="view-outfit-btn">
+          View Full Outfit Details →
+        </a>
+      </div>
+
+
+      <!-- Notes Section -->
+      <div class="notes-card">
+        <h3 class="section-title">Plan Notes</h3>
+        {% if plan_entry.note %}
+          <p class="notes-text">{{ plan_entry.note }}</p>
+        {% else %}
+          <p class="notes-empty">No notes added for this plan.</p>
+        {% endif %}
+      </div>
+
+      <!-- Meta Info -->
+      <div class="meta-card">
+        <h3 class="section-title">Plan Information</h3>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-item-label">Created</span>
+            <span class="meta-item-value">{{ plan_entry.created_at|date:"d M, Y" }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-item-label">Time</span>
+            <span class="meta-item-value">{{ plan_entry.created_at|date:"G:i" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="#" class="btn-cta btn-primary-cta btn-full">Edit Plan</a>
+        <a href="#" class="btn-cta btn-secondary-cta btn-full">Delete Plan</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Garments Section -->
+  {% if plan_entry.outfit.garments.all %}
+  <div class="garments-section">
+    <div class="section-header">
+      <h2 class="section-title-main">Garments in This Outfit</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="garments-grid">
+      {% for garment in plan_entry.outfit.garments.all %}
+        <a href="{% url 'wardrobe:garment_details' slug=garment.slug %}" class="garment-card-link">
+          <article class="garment-card-mini">
+            <div class="garment-image-mini">
+              {% if garment.image %}
+                <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="garment-img-mini">
+              {% else %}
+                <div class="garment-emoji-mini">{{ garment.category.title|category_filter }}</div>
+              {% endif %}
+            </div>
+            <div class="garment-info-mini">
+              <h4 class="garment-title-mini">{{ garment.title|capitalize }}</h4>
+              <span class="garment-category-mini">{{ garment.get_category_display|upper }}</span>
+              <span class="garment-brand-mini">{{ garment.brand.name|capitalize }}</span>
+            </div>
+          </article>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}
