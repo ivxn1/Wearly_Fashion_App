@@ -3,58 +3,45 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from outfits.models import Outfit
+from wardrobe.choices import GARMENT_CATEGORY_CHOICES
+from wardrobe.forms import GarmentSearchForm
 from wardrobe.models import Garment, Brand
 
 
 # Create your views here.
 
 def garment_list_view(request: HttpRequest) -> HttpResponse:
-    qs = Garment.objects.select_related("brand").all()
+    garments = Garment.objects.select_related("brand").all()
 
-    brand_id = request.GET.get("brand", "")
-    category = request.GET.get("category", "")
-    season = request.GET.get("season", "")
-    title = request.GET.get("title", "")
-    sort = request.GET.get("sort", "")
+    form = GarmentSearchForm(request.GET or None)
+    if form.is_valid():
+        if form.cleaned_data.get('brand'):
+            garments = garments.filter(brand=form.cleaned_data['brand'])
+        if form.cleaned_data.get('category'):
+            garments = garments.filter(category=form.cleaned_data['category'])
+        if form.cleaned_data.get('season'):
+            garments = garments.filter(season=form.cleaned_data['season'])
+        if form.cleaned_data.get('title'):
+            garments = garments.filter(title__icontains=form.cleaned_data['title'])
+        if form.cleaned_data.get('sort') == 'price_asc':
+            garments = garments.order_by('price')
+        elif form.cleaned_data.get('sort') == 'price_desc':
+            garments = garments.order_by('-price')
+        elif form.cleaned_data.get('sort') == 'newest':
+            garments = garments.order_by('-created_at')
+
     page_number = request.GET.get("page", 1)
 
-    # filtering
-    if brand_id:
-        qs = qs.filter(brand_id=brand_id)
-
-    if category:
-        qs = qs.filter(category=category)
-
-    if season:
-        qs = qs.filter(season=season)
-
-    if title:
-        qs = qs.filter(title__icontains=title)
-
-    # sorting
-    if sort == "price_asc":
-        qs = qs.order_by("price", "-id")
-    elif sort == "price_desc":
-        qs = qs.order_by("-price", "-id")
-    else:
-        qs = qs.order_by("-created_at")
-
     # pagination
-    paginator = Paginator(qs, 12)
+    paginator = Paginator(garments, 12)
     page_obj = paginator.get_page(page_number)
 
     context = {
         "wardrobe": page_obj.object_list,
         "page_obj": page_obj,
         "is_paginated": page_obj.has_other_pages(),
-        "brands": Brand.objects.order_by("name"),
-        "category_choices": Garment.CATEGORY_CHOICES,
-        "current_brand": brand_id,
-        "current_category": category,
-        "current_season": season,
-        "current_title": title,
-        "current_sort": sort,
         'page_title': 'Wearly Wardrobe',
+        'form': form
     }
     return render(request, "wardrobe/garments_list.html", context)
 
