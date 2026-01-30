@@ -11,82 +11,66 @@
 
 {% block container %}
 
-<section class="collection-section">
-  <div class="section-header">
-    <h1 class="section-title">Garments</h1>
-    <div class="section-line"></div>
-  </div>
 
-  <!-- Filters: glass panel -->
-  <form method="get" class="filters-glass" autocomplete="off">
-    <div class="filters-grid">
-
-      <div class="filter-field">
-        <label class="filter-label" for="id_title">Search</label>
-        <input
-          id="id_title"
-          type="text"
-          name="title"
-          class="filter-input"
-          placeholder="Search by title…"
-          value="{{ current_title }}"
-        >
-      </div>
-
-      <div class="filter-field">
-        <label class="filter-label" for="id_brand">Brand</label>
-        <select id="id_brand" name="brand" class="filter-select">
-          <option value="">All</option>
-          {% for brand in brands %}
-            <option value="{{ brand.id }}" {% if current_brand == brand.id|stringformat:"s" %}selected{% endif %}>
-              {{ brand.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="filter-field">
-        <label class="filter-label" for="id_category">Category</label>
-        <select id="id_category" name="category" class="filter-select">
-          <option value="">All</option>
-          {% for group_name, group_choices in category_choices %}
-            <optgroup label="{{ group_name }}">
-              {% for category_value, category_label in group_choices %}
-                <option value="{{ category_value }}" {% if current_category == category_value %}selected{% endif %}>
-                  {{ category_label }}
-                </option>
-              {% endfor %}
-            </optgroup>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="filter-field">
-        <label class="filter-label" for="id_season">Season</label>
-        <select id="id_season" name="season" class="filter-select">
-          <option value="">All</option>
-          <option value="summer" {% if current_season == "summer" %}selected{% endif %}>Summer</option>
-          <option value="winter" {% if current_season == "winter" %}selected{% endif %}>Winter</option>
-          <option value="all" {% if current_season == "all" %}selected{% endif %}>All year</option>
-        </select>
-      </div>
-
-      <div class="filter-field">
-        <label class="filter-label" for="id_sort">Sort</label>
-        <select id="id_sort" name="sort" class="filter-select">
-          <option value="" {% if current_sort == "" %}selected{% endif %}>Newest</option>
-          <option value="price_asc" {% if current_sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
-          <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
-        </select>
-      </div>
-
-      <div class="filter-actions">
-        <button type="submit" class="btn-cta btn-primary-cta btn-cta-sm">Apply</button>
-        <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-secondary-cta btn-cta-sm">Reset</a>
-      </div>
-
+<!-- Hero Section -->
+<section class="hero-section hero-section--compact">
+  <div class="hero-content">
+    <h1 class="hero-title hero-title--compact">Your Wardrobe</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">Discover, search, and manage your clothing collection. Filter by brand, category, or season to find exactly what you need.</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn-cta btn-primary-cta">+ Add New Garment</a>
+        <a href="#" class="btn-cta btn-secondary-cta">+ Add New Brand</a>
     </div>
-  </form>
+  </div>
+</section>
+
+<section class="collection-section">
+
+  <!-- Search & Filter Form -->
+  <div class="filters-glass">
+    <form method="get" action="{% url 'wardrobe:garment_list' %}" class="filters-form">
+      <div class="filters-grid">
+
+        <!-- Title Search -->
+        <div class="filter-field filter-field--search">
+          <label for="{{ form.title.id_for_label }}" class="filter-label">{{ form.title.label }}</label>
+          {{ form.title }}
+        </div>
+
+        <!-- Brand Filter -->
+        <div class="filter-field">
+          <label for="{{ form.brand.id_for_label }}" class="filter-label">{{ form.brand.label }}</label>
+          {{ form.brand }}
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-field">
+          <label for="{{ form.category.id_for_label }}" class="filter-label">{{ form.category.label }}</label>
+          {{ form.category }}
+        </div>
+
+        <!-- Season Filter -->
+        <div class="filter-field">
+          <label for="{{ form.season.id_for_label }}" class="filter-label">{{ form.season.label }}</label>
+          {{ form.season }}
+        </div>
+
+        <!-- Sort -->
+        <div class="filter-field">
+          <label for="{{ form.sort.id_for_label }}" class="filter-label">{{ form.sort.label }}</label>
+          {{ form.sort }}
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="filter-actions">
+        <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
+        <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+      </div>
+    </form>
+  </div>
 
   <!-- Results -->
   {% if wardrobe %}
