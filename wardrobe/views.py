@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from outfits.models import Outfit
 from wardrobe.choices import GARMENT_CATEGORY_CHOICES
-from wardrobe.forms import GarmentSearchForm
+from wardrobe.forms import GarmentSearchForm, GarmentCreateForm
 from wardrobe.models import Garment, Brand
 
 
@@ -57,6 +57,21 @@ def garment_details(request: HttpRequest, slug:str) -> HttpResponse:
     }
 
     return render(request, "wardrobe/garment_details.html", context)
+
+def create_garment(request: HttpRequest) -> HttpResponse:
+    form = GarmentCreateForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect('wardrobe:garment_list')
+
+    context = {
+        'page_title': 'Add Garment',
+        'form': form,
+    }
+
+    return render(request, 'wardrobe/garment_add_form.html', context)
+
 
 def garment_confirm_delete(request:HttpRequest, slug:str) -> HttpResponse:
     garm = get_object_or_404(Garment, slug=slug)

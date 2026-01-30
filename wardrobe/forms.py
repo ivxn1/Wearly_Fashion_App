@@ -127,6 +127,13 @@ class GarmentBaseForm(forms.ModelForm):
         self.fields['price'].required = False
         self.fields['image'].required = False
 
+        # Add placeholders for better UX
+        self.fields['title'].widget.attrs.update({'placeholder': 'e.g., Classic Blue Jeans'})
+        self.fields['color'].widget.attrs.update({'placeholder': 'e.g., Navy Blue'})
+        self.fields['size'].widget.attrs.update({'placeholder': 'e.g., M, 32, L'})
+        self.fields['material'].widget.attrs.update({'placeholder': 'e.g., Cotton, Denim, Wool'})
+        self.fields['price'].widget.attrs.update({'placeholder': '0.00', 'step': '0.01', 'min': '0'})
+
     def clean(self):
         cleaned_data = super().clean()
         title = cleaned_data.get('title')
