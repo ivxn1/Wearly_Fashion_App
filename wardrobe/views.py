@@ -81,3 +81,19 @@ def garment_confirm_delete(request:HttpRequest, slug:str) -> HttpResponse:
         return redirect('garment_list')
 
     return render(request, 'wardrobe/garment_confirm_delete.html', {'garment': garm})
+
+def edit_garment(request:HttpRequest, slug:str) -> HttpResponse:
+    garm = get_object_or_404(Garment, slug=slug)
+    form = GarmentCreateForm(request.POST or None, instance=garm)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect('wardrobe:garment_list')
+
+    context = {
+        'page_title': f'Edit Garment - {garm.title}',
+        'garment': garm,
+        'form': form,
+    }
+
+    return render(request, 'wardrobe/garment_edit_form.html', context)
