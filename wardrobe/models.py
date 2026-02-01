@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.text import slugify
 
 from wardrobe.choices import SeasonChoices, GARMENT_CATEGORY_CHOICES
+from wardrobe.validators import ImageSizeValidator
 
 
 # Create your models here.
@@ -93,7 +94,10 @@ class Garment(models.Model):
     image = models.ImageField(
         upload_to='wardrobe/',
         blank=True,
-        null=True
+        null=True,
+        validators=[
+            ImageSizeValidator("Image size should not exceed 5MB"),
+        ]
     )
     created_at = models.DateTimeField(
         auto_now_add=True
