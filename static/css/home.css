@@ -109,6 +109,7 @@
 }
 
 .btn-secondary-cta {
+    text-align:center;
     background-color: transparent;
     color: #1a1a1a;
 }

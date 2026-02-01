@@ -2,6 +2,8 @@ from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 
+from wardrobe.choices import SeasonChoices, GARMENT_CATEGORY_CHOICES
+
 
 # Create your models here.
 
@@ -29,69 +31,9 @@ class Brand(models.Model):
 
 class Garment(models.Model):
 
-    class SeasonChoices(models.TextChoices):
-        ALL = 'all', 'All-Season'
-        SPRING = 'spring', 'Spring'
-        SUMMER = 'summer', 'Summer'
-        AUTUMN = 'autumn', 'Autumn'
-        WINTER = 'winter', 'Winter'
-
-    class Category(models.TextChoices):
-        TSHIRT = "tshirt", "T-Shirt"
-        SHIRT = "shirt", "Shirt"
-        SWEATER = "sweater", "Sweater"
-        HOODIE = "hoodie", "Hoodie"
-
-        JEANS = "jeans", "Jeans"
-        TROUSERS = "trousers", "Trousers"
-        SHORTS = "shorts", "Shorts"
-        SKIRT = "skirt", "Skirt"
-
-        JACKET = "jacket", "Jacket"
-        COAT = "coat", "Coat"
-
-        SNEAKERS = "sneakers", "Sneakers"
-        BOOTS = "boots", "Boots"
-        SANDALS = "sandals", "Sandals"
-
-        BAG = "bag", "Bag"
-        BELT = "belt", "Belt"
-        SCARF = "scarf", "Scarf"
-        SUNGLASSES = "sunglasses", "Sunglasses"
-
-    CATEGORY_CHOICES = [
-        ("Tops", [
-            (Category.TSHIRT, "T-Shirt"),
-            (Category.SHIRT, "Shirt"),
-            (Category.SWEATER, "Sweater"),
-            (Category.HOODIE, "Hoodie"),
-        ]),
-        ("Bottoms", [
-            (Category.JEANS, "Jeans"),
-            (Category.TROUSERS, "Trousers"),
-            (Category.SHORTS, "Shorts"),
-            (Category.SKIRT, "Skirt"),
-        ]),
-        ("Outerwear", [
-            (Category.JACKET, "Jacket"),
-            (Category.COAT, "Coat"),
-        ]),
-        ("Footwear", [
-            (Category.SNEAKERS, "Sneakers"),
-            (Category.BOOTS, "Boots"),
-            (Category.SANDALS, "Sandals"),
-        ]),
-        ("Accessories", [
-            (Category.BAG, "Bag"),
-            (Category.BELT, "Belt"),
-            (Category.SCARF, "Scarf"),
-            (Category.SUNGLASSES, "Sunglasses"),
-        ]),
-    ]
-
     category = models.CharField(
         max_length=30,
-        choices=CATEGORY_CHOICES,
+        choices=GARMENT_CATEGORY_CHOICES,
     )
 
     title = models.CharField(

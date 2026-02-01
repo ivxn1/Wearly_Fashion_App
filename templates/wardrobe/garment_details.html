@@ -111,8 +111,8 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <a href="#" class="btn-cta btn-primary-cta btn-action">Edit Garment</a>
-{#        <a href="{% url 'wardrobe:garment_confirm_delete' garment.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Garment</a>#}
+        <a href="{% url 'wardrobe:garment_edit' garment.slug %}" class="btn-cta btn-primary-cta btn-action">Edit Garment</a>
+        <a href="{% url 'wardrobe:garment_delete' garment.slug %}" class="btn-cta btn-secondary-cta btn-action">Delete Garment</a>
       </div>
 
     </div>
