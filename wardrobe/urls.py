@@ -11,6 +11,7 @@ urlpatterns = [
         path('<slug:slug>/', include([
             path('', wardrobe.views.garment_details, name='garment_details'),
             path('edit/', wardrobe.views.edit_garment, name='garment_edit'),
+            path('delete/', wardrobe.views.garment_confirm_delete, name='garment_delete'),
         ]))
     ])
          )

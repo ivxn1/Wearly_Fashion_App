@@ -78,7 +78,7 @@ def garment_confirm_delete(request:HttpRequest, slug:str) -> HttpResponse:
 
     if request.method == 'POST':
         garm.delete()
-        return redirect('garment_list')
+        return redirect('wardrobe:garment_list')
 
     return render(request, 'wardrobe/garment_confirm_delete.html', {'garment': garm})
 

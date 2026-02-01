@@ -1,6 +1,5 @@
 from django import forms
 
-from core.mixins import DeleteFormMixin
 from wardrobe.choices import GARMENT_CATEGORY_CHOICES, SeasonChoices
 from wardrobe.models import Brand, Garment
 
@@ -64,8 +63,6 @@ class BrandCreateForm(BrandBaseForm):
 class BrandEditForm(BrandBaseForm):
     pass
 
-class BrandDeleteForm(DeleteFormMixin, BrandBaseForm):
-    pass
 
 
 class GarmentBaseForm(forms.ModelForm):
@@ -160,10 +157,6 @@ class GarmentCreateForm(GarmentBaseForm):
 
 class GarmentEditForm(GarmentBaseForm):
     pass
-
-class GarmentDeleteForm(DeleteFormMixin, GarmentBaseForm):
-    pass
-
 
 class GarmentSearchForm(forms.Form):
     title = forms.CharField(
