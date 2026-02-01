@@ -88,7 +88,7 @@ def edit_garment(request:HttpRequest, slug:str) -> HttpResponse:
 
     if request.method == "POST" and form.is_valid():
         form.save()
-        return redirect('wardrobe:garment_list')
+        return redirect('wardrobe:garment_details', slug=garm.slug)
 
     context = {
         'page_title': f'Edit Garment - {garm.title}',
