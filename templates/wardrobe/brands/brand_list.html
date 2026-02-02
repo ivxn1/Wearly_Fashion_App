@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+{% load capitalize %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/brand_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<!-- Hero Section -->
+<section class="hero-section hero-section--compact">
+  <div class="hero-content">
+    <h1 class="hero-title hero-title--compact">Brands</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">Browse all brands in your wardrobe collection. Manage and organize your favorite fashion labels.</p>
+    <div class="cta-buttons">
+      <a href="{% url 'wardrobe:brand_create' %}" class="btn-cta btn-primary-cta">+ Add New Brand</a>
+    </div>
+  </div>
+</section>
+
+<section class="collection-section">
+
+  <!-- Brand Statistics -->
+  {% if most_used_in_outfits or most_expensive_brand or most_garments_brand %}
+
+  <div class="brand-stats-section">
+    {% if most_used_in_outfits and most_used_in_outfits.outfit_count > 0 %}
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-content">
+          <h3 class="stat-title">Most Used in Outfits</h3>
+          <p class="stat-brand-name">{{ most_used_in_outfits.name }}</p>
+          <p class="stat-details">{{ most_used_in_outfits.outfit_count }} outfit{{ most_used_in_outfits.outfit_count|pluralize }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if most_expensive_brand and most_expensive_brand.avg_price %}
+      <div class="stat-card">
+        <div class="stat-icon">💎</div>
+        <div class="stat-content">
+          <h3 class="stat-title">Most Expensive</h3>
+          <p class="stat-brand-name">{{ most_expensive_brand.name }}</p>
+          <p class="stat-details">Avg. ${{ most_expensive_brand.avg_price|floatformat:2 }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+      {% if most_garments_brand and most_garments_brand.garment_count > 0 %}
+      <div class="stat-card">
+        <div class="stat-icon">👗</div>
+        <div class="stat-content">
+          <h3 class="stat-title">Brand With Most Garments</h3>
+        <p class="stat-brand-name">{{ most_garments_brand.name }}</p>
+        <p class="stat-details">{{ most_garments_brand.garment_count }} garment{{ most_garments_brand.garment_count|pluralize }}</p>
+        </div>
+        </div>
+      {% endif %}
+  </div>
+  {% endif %}
+
+
+  <!-- Brands List -->
+  {% if brands %}
+    <div class="brands-grid">
+      {% for brand in brands %}
+        <article class="brand-card">
+          <div class="brand-content">
+            <h3 class="brand-name">{{ brand.name }}</h3>
+
+            {% if brand.country %}
+              <p class="brand-country">
+                <span class="country-label">Country:</span>
+                <span class="country-value">{{ brand.country }}</span>
+              </p>
+            {% endif %}
+
+            <div class="brand-stats">
+              <span class="stat-item">
+                <span class="stat-number">{{ brand.garment_count }}</span>
+                <span class="stat-label">Garment{{ brand.garment_count|pluralize }}</span>
+              </span>
+            </div>
+
+            <div class="brand-actions">
+              <a href="{% url 'wardrobe:brand_details' pk=brand.pk %}" class="brand-link">View Details →</a>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">🏷️</span>
+      <p class="empty-text">No brands in your collection yet. Add your first brand to get started!</p>
+      <a href="{% url 'wardrobe:brand_create' %}" class="btn-cta btn-primary-cta">+ Add New Brand</a>
+    </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}
