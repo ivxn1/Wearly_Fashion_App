@@ -32,21 +32,16 @@ class BrandBaseForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
-        website = cleaned_data.get('website')
         country = cleaned_data.get('country')
 
         if name and not name.replace(" ", "").isalpha():
             self.add_error('name', "Brand name must contain only alphabetic characters and spaces.")
 
         if country:
-            if country.replace(" ", "").isalpha():
+            if not country.replace(" ", "").isalpha():
                 self.add_error('country', "Country name must contain only alphabetic characters and spaces.")
             elif len(country) > 20:
                 self.add_error('country', "Country name cannot exceed 20 characters.")
-
-        if website:
-            if not (website.startswith("http://") or website.startswith("https://")):
-                self.add_error('website', "Website URL must start with 'http://' or 'https://'.")
 
         return cleaned_data
 
