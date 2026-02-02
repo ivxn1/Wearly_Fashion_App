@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+{% load category_filter %}
+{% load capitalize %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/details_page.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="details-section">
+
+  <!-- Back Navigation -->
+  <div class="back-nav">
+    <a href="{% url 'wardrobe:brand_list' %}" class="back-link">← Back to Brands</a>
+  </div>
+
+  <!-- Main Details Grid -->
+  <div class="details-grid">
+
+    <!-- Brand Info -->
+    <div class="details-info">
+      <div class="details-header">
+        <h1 class="details-title">{{ brand.name }}</h1>
+      </div>
+
+      <!-- Meta Grid -->
+      <div class="meta-grid">
+        {% if brand.country %}
+          <div class="meta-item">
+            <span class="meta-label">Country</span>
+            <span class="meta-value">{{ brand.country }}</span>
+          </div>
+        {% endif %}
+
+        <div class="meta-item">
+          <span class="meta-label">Total Garments</span>
+          <span class="meta-value">{{ brand.garment_count }}</span>
+        </div>
+
+        {% if brand.website %}
+          <div class="meta-item">
+            <span class="meta-label">Website</span>
+            <span class="meta-value">
+              <a href="{{ brand.website }}" target="_blank" rel="noopener" class="website-link">
+                Visit Site →
+              </a>
+            </span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="{% url 'wardrobe:brand_edit' pk=brand.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Brand</a>
+        <a href="{% url 'wardrobe:brand_delete' pk=brand.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Brand</a>
+      </div>
+    </div>
+
+    <!-- Brand Garments Gallery -->
+    <div class="brand-gallery-container">
+      {% if brand.wardrobe.all %}
+        <div class="brand-gallery-header">
+          <h3 class="gallery-title">Brand Collection</h3>
+          <span class="gallery-count">{{ brand.garment_count }} item{{ brand.garment_count|pluralize }}</span>
+        </div>
+
+        <div class="brand-mini-gallery">
+          {% for garment in brand.wardrobe.all %}
+            <a href="{% url 'wardrobe:garment_details' slug=garment.slug %}" class="mini-garment-card-link">
+              <article class="mini-garment-card">
+                <div class="mini-garment-image">
+                  {% if garment.image %}
+                    <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="mini-garment-img">
+                  {% else %}
+                    <span class="mini-garment-emoji">{{ garment.category.title|lower|category_filter }}</span>
+                  {% endif %}
+                </div>
+                <div class="mini-garment-info">
+                  <h4 class="mini-garment-title">{{ garment.title|capitalize }}</h4>
+                  <span class="mini-garment-category">{{ garment.category.title }}</span>
+                </div>
+              </article>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="brand-gallery-empty">
+          <span class="gallery-empty-icon">🏷️</span>
+          <p class="gallery-empty-text">{{ brand.name }}</p>
+          <p class="gallery-empty-subtitle">No garments yet</p>
+          <a href="{% url 'wardrobe:garment_create' %}" class="btn-cta btn-primary-cta btn-action">+ Add Garment</a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+</section>
+
+{% endblock %}
