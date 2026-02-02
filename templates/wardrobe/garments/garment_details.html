@@ -1,11 +1,12 @@
 {% extends "core/base.html" %}
+{% load category_filter %}
 {% load static %}
 
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/garment_details.css' %}">
+  <link rel="stylesheet" href="{% static 'css/details_page.css' %}">
 {% endblock %}
 
 {% block container %}
@@ -25,7 +26,7 @@
         <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="details-image">
       {% else %}
         <div class="details-image-placeholder">
-          <span class="placeholder-emoji">👕</span>
+          <span class="placeholder-emoji">{{ garment.category.title|lower|category_filter }}</span>
           <p class="placeholder-text">No image available</p>
         </div>
       {% endif %}
