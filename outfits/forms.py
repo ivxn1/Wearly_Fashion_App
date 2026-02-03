@@ -1,45 +1,46 @@
-# TODO - CREATE FORM FOR OUTFITS
-
 from django import forms
 
 from outfits.models import Outfit
+from wardrobe.models import Garment
 
 
 class OutfitBaseForm(forms.ModelForm):
+    garments = forms.ModelMultipleChoiceField(
+        queryset=Garment.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+        label='Select Garments'
+    )
+
     class Meta:
         model = Outfit
         fields = ['title', 'occasion', 'season', 'notes', 'image', 'garments']
         labels = {
-            'title': 'Title',
+            'title': 'Outfit Title',
             'occasion': 'Occasion',
             'season': 'Season',
             'notes': 'Notes',
-            'image': 'Image',
-            'garments': 'Garments',
+            'image': 'Outfit Image',
         }
         widgets = {
-            'occasion': forms.Select,
+            'title': forms.TextInput,
+            'occasion': forms.TextInput,
             'season': forms.Select,
             'notes': forms.Textarea,
             'image': forms.ClearableFileInput,
-            'garments': forms.ModelMultipleChoiceField,
         }
         error_messages = {
             'title': {
                 'required': "Please enter the outfit name.",
-                'length': "Brand name cannot exceed 120 characters.",
-                'unique': "This brand name already exists.",
+                'max_length': "Outfit title cannot exceed 120 characters.",
             },
             'occasion': {
-                'length': "Country name cannot exceed 50 characters.",
-                'required': "Please enter the country of origin.",
+                'max_length': "Occasion cannot exceed 50 characters.",
+                'required': "Please enter the occasion.",
             },
             'season': {
-                'required': "Please enter the outfit season.",
+                'required': "Please select the outfit season.",
             },
-            'garments': {
-                'required': "Please select at least one garment for the outfit.",
-            }
         }
 
     def clean(self):
@@ -59,16 +60,22 @@ class OutfitBaseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Assign garments queryset
+        self.fields['garments'].queryset = Garment.objects.select_related('brand').all()
+
+        # Required/Not required fields
         self.fields['title'].required = True
         self.fields['occasion'].required = True
         self.fields['season'].required = True
         self.fields['notes'].required = False
         self.fields['image'].required = False
         self.fields['garments'].required = True
-        self.fields['notes'].widget.attrs.update({'placeholder': 'Additional notes about the outfit...'})
-        self.fields['title'].widget.attrs.update({'placeholder': 'e.g. Summer Casual'})
-        self.fields['occasion'].widget.attrs.update({'placeholder': 'e.g. Beach Party'})
-        self.fields['notes'].widget.attrs.update({'rows': 4, 'cols': 40}, {'placeholder': 'Additional notes about the outfit...'})
+
+        # Placeholders
+        self.fields['title'].widget.attrs.update({'placeholder': 'e.g., Summer Beach Party'})
+        self.fields['occasion'].widget.attrs.update({'placeholder': 'e.g., Beach Party, Business Meeting'})
+        self.fields['notes'].widget.attrs.update({'placeholder': 'Additional notes about this outfit...', 'rows': 4})
 
 class OutfitCreateForm(OutfitBaseForm):
     pass
