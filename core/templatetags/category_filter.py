@@ -1,5 +1,6 @@
 from django import template
-from wardrobe.models import Garment
+
+from wardrobe.choices import GARMENT_CATEGORY_CHOICES
 
 register = template.Library()
 
@@ -39,7 +40,7 @@ def category_display(cat_value: str) -> str:
     Example: 'tshirt' -> 'T-Shirt'
     """
     category_dict = {}
-    for group_name, choices in Garment.CATEGORY_CHOICES:
+    for group_name, choices in GARMENT_CATEGORY_CHOICES:
         for value, label in choices:
             category_dict[value] = label
 
