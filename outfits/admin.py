@@ -1,14 +1,10 @@
 from django.contrib import admin
 
-from outfits.models import Occasion, Outfit, OutfitGarment
+from outfits.models import Outfit, OutfitGarment
 
 
 # Register your models here.
 
-@admin.register(Occasion)
-class OccasionAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
 
 class OutfitGarmentAdmin(admin.TabularInline):
     model = OutfitGarment

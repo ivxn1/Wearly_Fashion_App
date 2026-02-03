@@ -1,0 +1,322 @@
+/* ===== Outfit Form - Premium Liquid Glass Aesthetic ===== */
+
+/* Wide container for outfit form */
+.form-container--wide {
+  max-width: 1200px;
+}
+
+/* Outfit form specific grid */
+.form-grid--outfit {
+  margin-bottom: 48px;
+}
+
+/* Garments Selection Section */
+.garments-selection-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 2px solid rgba(0, 0, 0, 0.06);
+}
+
+.section-header-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.form-label--section {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.selected-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6a6a6a;
+  letter-spacing: 0.3px;
+  padding: 6px 16px;
+  background: rgba(26, 26, 26, 0.04);
+  border-radius: 20px;
+}
+
+.selected-count #selected-count {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.field-errors--section {
+  margin-bottom: 20px;
+}
+
+/* Garment Cards Grid */
+.garment-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+/* Garment Selection Card */
+.garment-selection-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.garment-checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.garment-card-label {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+  height: 100%;
+}
+
+.garment-card-label:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(26, 26, 26, 0.15);
+}
+
+/* Selected state */
+.garment-selection-card.selected .garment-card-label {
+  border-color: #1a1a1a;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 3px rgba(26, 26, 26, 0.1);
+}
+
+.garment-selection-card.selected .selection-overlay {
+  opacity: 1;
+}
+
+/* Garment Card Image */
+.garment-card-image {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, rgba(245, 245, 245, 0.8) 0%, rgba(240, 240, 240, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.garment-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.garment-card-label:hover .garment-img {
+  transform: scale(1.05);
+}
+
+.garment-emoji {
+  font-size: 3.5rem;
+  opacity: 0.4;
+}
+
+/* Selection Overlay */
+.selection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 26, 26, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.checkmark {
+  font-size: 3rem;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Garment Card Info */
+.garment-card-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.garment-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  letter-spacing: 0.2px;
+}
+
+.garment-card-meta {
+  font-size: 0.75rem;
+  color: #6a6a6a;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.garment-card-season {
+  font-size: 0.7rem;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  width: fit-content;
+}
+
+/* Empty garments message */
+.empty-garments-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.empty-garments-message .empty-icon {
+  font-size: 4rem;
+  opacity: 0.4;
+}
+
+.empty-garments-message p {
+  font-size: 1.1rem;
+  color: #6a6a6a;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .garment-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .garment-card-image {
+    height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container--wide {
+    max-width: 100%;
+  }
+
+  .garments-selection-section {
+    margin-top: 40px;
+    padding-top: 28px;
+  }
+
+  .section-header-inline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .garment-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+
+  .garment-card-image {
+    height: 140px;
+  }
+
+  .garment-card-info {
+    padding: 14px;
+  }
+
+  .garment-card-title {
+    font-size: 0.9rem;
+  }
+
+  .checkmark {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .garments-selection-section {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .garment-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .garment-card-image {
+    height: 120px;
+  }
+
+  .garment-card-info {
+    padding: 12px;
+    gap: 4px;
+  }
+
+  .garment-card-title {
+    font-size: 0.85rem;
+  }
+
+  .garment-card-meta {
+    font-size: 0.7rem;
+  }
+
+  .garment-card-season {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+  }
+
+  .checkmark {
+    font-size: 2rem;
+  }
+
+  .empty-garments-message {
+    padding: 60px 20px;
+  }
+
+  .empty-garments-message .empty-icon {
+    font-size: 3rem;
+  }
+
+  .empty-garments-message p {
+    font-size: 1rem;
+  }
+}
