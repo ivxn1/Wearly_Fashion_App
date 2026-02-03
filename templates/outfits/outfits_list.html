@@ -4,8 +4,6 @@
 {% load section_header %}
 {% load empty_collection %}
 
-{% block title %}{{ block.super }}{% endblock %}
-
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
   <link rel="stylesheet" href="{% static 'css/outfits_list.css' %}">
@@ -13,8 +11,21 @@
 
 {% block container %}
 
+<!-- Hero Section -->
+<section class="hero-section hero-section--compact">
+  <div class="hero-content">
+    <h1 class="hero-title hero-title--compact">Your Outfits</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">Browse and manage your complete outfit combinations. Create new looks by pairing garments from your wardrobe for every occasion.</p>
+    <div class="cta-buttons">
+      <a href="{% url 'outfits:add_outfit' %}" class="btn-cta btn-primary-cta">+ Create New Outfit</a>
+    </div>
+  </div>
+</section>
+
+
 <section class="collection-section">
-  {% section_header "Outfits" %}
+
 
   <!-- Results -->
   {% if outfits %}

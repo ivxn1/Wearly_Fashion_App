@@ -20,8 +20,8 @@
         <div class="hero-divider"></div>
         <p class="hero-subtitle">Your personal fashion planning assistant</p>
         <div class="cta-buttons">
-            <a href="#" class="btn-cta btn-primary-cta">Explore Wardrobe</a>
-            <a href="#" class="btn-cta btn-secondary-cta">Create Outfit</a>
+            <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-primary-cta">Explore Wardrobe</a>
+            <a href="{% url 'outfits:add_outfit' %}" class="btn-cta btn-secondary-cta">Create Outfit</a>
         </div>
     </div>
 </section>

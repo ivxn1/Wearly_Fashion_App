@@ -2,8 +2,6 @@
 {% load category_filter %}
 {% load static %}
 
-{% block title %}{{ page_title }}{% endblock %}
-
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/outfit_details.css' %}">
@@ -41,7 +39,7 @@
 {#          TODO: CREATE FILTER TO CAPITALIZE EACH WORD OF TITLE        #}
 
         <h1 class="details-title">{{ outfit.title|capfirst }}</h1>
-        <span class="occasion-badge-large">{{ outfit.occasion.name|capfirst }}</span>
+        <span class="occasion-badge-large">{{ outfit.occasion|capfirst }}</span>
       </div>
 
       <!-- Meta Info Grid -->
@@ -49,7 +47,7 @@
 
         <div class="meta-item">
           <span class="meta-label">Occasion</span>
-          <span class="meta-value">{{ outfit.occasion.name|capfirst }}</span>
+          <span class="meta-value">{{ outfit.occasion|capfirst }}</span>
         </div>
 
         <div class="meta-item">
@@ -70,17 +68,17 @@
       </div>
 
       <!-- Notes Section -->
-      {% if outfit.notes %}
+
       <div class="notes-section">
         <h3 class="notes-title">Notes</h3>
-        <p class="notes-text">{{ outfit.notes }}</p>
+        <p class="notes-text">{{ outfit.notes|default:"No notes available..." }}</p>
       </div>
-      {% endif %}
+
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <a href="#" class="btn-cta btn-primary-cta btn-action">Edit Outfit</a>
-        <a href="#" class="btn-cta btn-secondary-cta btn-action">Delete Outfit</a>
+        <a href="{% url 'outfits:edit_outfit' outfit.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Outfit</a>
+        <a href="{% url 'outfits:confirm_delete_outfit' outfit.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Outfit</a>
       </div>
 
     </div>
