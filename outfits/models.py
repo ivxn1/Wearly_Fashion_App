@@ -2,29 +2,12 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 
 import wardrobe.models
-
+from wardrobe.validators import ImageSizeValidator
+from outfits.choices import SeasonChoices, RoleChoices
 
 # Create your models here.
 
-class Occasion(models.Model):
-    name = models.CharField(
-        max_length=50,
-        unique=True,
-        blank=False,
-        null=False
-    )
-
-    def __str__(self):
-        return self.name
-
 class Outfit(models.Model):
-
-    class SeasonChoices(models.TextChoices):
-        ALL = 'all', 'All-Season'
-        SPRING = 'spring', 'Spring'
-        SUMMER = 'summer', 'Summer'
-        AUTUMN = 'autumn', 'Autumn'
-        WINTER = 'winter', 'Winter'
 
     title = models.CharField(
         max_length=120,
@@ -34,15 +17,16 @@ class Outfit(models.Model):
             MinLengthValidator(2, "Title must be at least 2 characters long!")
         ]
     )
-    occasion = models.ForeignKey(
-        to=Occasion,
+    occasion = models.CharField(
+        max_length=50,
         blank=False,
-        null=False,
-        on_delete=models.PROTECT
+        null=False
     )
     season = models.CharField(
         choices=SeasonChoices,
-        default=SeasonChoices.ALL
+        default=SeasonChoices.ALL,
+        blank=False,
+        null=False
     )
     notes = models.TextField(
         blank=True,
@@ -51,7 +35,8 @@ class Outfit(models.Model):
     image = models.ImageField(
         blank=True,
         null=True,
-        upload_to='outfits/'
+        upload_to='outfits/',
+        validators=[ImageSizeValidator("Image size should not exceed 5MB!")]
     )
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -60,20 +45,14 @@ class Outfit(models.Model):
     garments = models.ManyToManyField(
         'wardrobe.Garment',
         through='OutfitGarment',
-        related_name='outfits'
+        related_name='outfits',
+        blank=False,
     )
 
     def __str__(self):
-        return self.title + ' - ' + self.occasion.name + ' - ' +  self.season
+        return self.title + ' - ' + self.occasion + ' - ' +  self.season
 
 class OutfitGarment(models.Model):
-
-    class RoleChoices(models.TextChoices):
-        TOP = 'top', 'Top'
-        BOTTOM = 'bottom', 'Bottom'
-        SHOES = 'shoes', 'Shoes'
-        OUTERWEAR = 'outerwear', 'Outerwear'
-        ACCESSORY = 'accessory', 'Accessory'
 
     outfit = models.ForeignKey(
         to=Outfit,
