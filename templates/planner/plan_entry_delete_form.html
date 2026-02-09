@@ -1,2 +1,301 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<!-- Hero Section -->
+<section class="hero-section hero-section--compact hero-section--danger">
+  <div class="hero-content">
+    <h1 class="hero-title hero-title--compact">Delete Plan Entry</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">This action cannot be undone. Please confirm you want to delete this plan entry.</p>
+  </div>
+</section>
+
+<!-- Confirmation Section -->
+<section class="form-section">
+  <div class="form-container">
+
+    <!-- Confirmation Card -->
+    <div class="form-card">
+
+      <!-- Warning Icon & Message -->
+      <div class="delete-warning">
+        <div class="warning-icon-wrapper">
+          <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="warning-title">Are you sure you want to delete this plan entry?</h2>
+        <p class="warning-subtitle">This will permanently remove it from your planner.</p>
+      </div>
+
+      <!-- Plan Entry Preview -->
+      <div class="plan-preview-delete">
+        <div class="plan-date-badge">
+          <span class="date-month">{{ plan_entry.date|date:"M" }}</span>
+          <span class="date-day">{{ plan_entry.date|date:"d" }}</span>
+          <span class="date-year">{{ plan_entry.date|date:"Y" }}</span>
+        </div>
+
+        <div class="plan-info-delete">
+          <h3 class="plan-title-delete">{{ plan_entry.date|date:"l, F j, Y" }}</h3>
+          <div class="plan-outfit-info">
+            <span class="outfit-label">Outfit:</span>
+            <span class="outfit-name">{{ plan_entry.outfit.title }}</span>
+          </div>
+          {% if plan_entry.outfit.occasion %}
+            <div class="plan-meta-delete">
+              <span class="meta-item-delete">{{ plan_entry.outfit.occasion }}</span>
+              <span class="meta-separator">•</span>
+              <span class="meta-item-delete">{{ plan_entry.outfit.get_season_display }}</span>
+            </div>
+          {% endif %}
+          {% if plan_entry.note %}
+            <div class="plan-note-delete">
+              <span class="note-label">Note:</span>
+              <span class="note-value">{{ plan_entry.note }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Outfit Preview -->
+      {% if plan_entry.outfit.image %}
+        <div class="outfit-image-preview">
+          <img src="{{ plan_entry.outfit.image.url }}" alt="{{ plan_entry.outfit.title }}" class="outfit-preview-img">
+          <div class="outfit-preview-overlay">
+            <span class="outfit-preview-label">{{ plan_entry.outfit.title }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Delete Form -->
+      <form method="post" class="delete-form">
+        {% csrf_token %}
+
+        <!-- Form Actions -->
+        <div class="form-actions form-actions--delete">
+          <a href="{% url 'planner:plan_details' pk=plan_entry.pk %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
+          <button type="submit" class="btn-cta btn-danger-cta btn-form">Delete Plan Entry</button>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+</section>
+
+<style>
+/* Plan Entry Delete Preview Styles */
+.plan-preview-delete {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  background: rgba(250, 250, 250, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+
+.plan-date-badge {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-date-badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.date-month {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.date-day {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.date-year {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
+}
+
+.plan-info-delete {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan-title-delete {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.plan-outfit-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.outfit-label {
+  font-weight: 600;
+  color: #6a6a6a;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.outfit-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.2px;
+}
+
+.plan-meta-delete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #6a6a6a;
+}
+
+.meta-item-delete {
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.meta-separator {
+  color: #ccc;
+}
+
+.plan-note-delete {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 8px;
+}
+
+.note-label {
+  font-weight: 600;
+  color: #6a6a6a;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.note-value {
+  color: #4a4a4a;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+.outfit-image-preview {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  height: 300px;
+  background: linear-gradient(135deg, rgba(245, 245, 245, 0.8) 0%, rgba(240, 240, 240, 0.8) 100%);
+}
+
+.outfit-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.outfit-preview-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+}
+
+.outfit-preview-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 768px) {
+  .plan-preview-delete {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .plan-info-delete {
+    align-items: center;
+  }
+
+  .plan-outfit-info {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .plan-date-badge {
+    width: 80px;
+    height: 80px;
+  }
+
+  .date-day {
+    font-size: 2rem;
+  }
+
+  .plan-title-delete {
+    font-size: 1.1rem;
+  }
+
+  .outfit-image-preview {
+    height: 200px;
+  }
+}
+</style>
 
 {% endblock %}
