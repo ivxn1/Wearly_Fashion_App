@@ -79,7 +79,7 @@
         <div class="outfit-meta">
           <div class="meta-row">
             <span class="meta-label">Occasion</span>
-            <span class="meta-value">{{ plan_entry.outfit.occasion.name }}</span>
+            <span class="meta-value">{{ plan_entry.outfit.occasion }}</span>
           </div>
 
           <div class="meta-row">
@@ -121,8 +121,8 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <a href="#" class="btn-cta btn-primary-cta btn-full">Edit Plan</a>
-        <a href="#" class="btn-cta btn-secondary-cta btn-full">Delete Plan</a>
+        <a href="{% url 'planner:edit_plan_entry' plan_entry.pk %}" class="btn-cta btn-primary-cta btn-full">Edit Plan</a>
+        <a href="{% url 'planner:delete_plan_entry' plan_entry.pk %}" class="btn-cta btn-secondary-cta btn-full">Delete Plan</a>
       </div>
 
     </div>

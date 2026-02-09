@@ -1,0 +1,42 @@
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn-cta btn-primary-cta btn-form">Save Changes</button>
+          <a href="{% url 'planner:plan_details' pk=plan_entry.pk %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const radioButtons = document.querySelectorAll('.outfit-radio-input');
+
+  radioButtons.forEach(radio => {
+    radio.addEventListener('change', function() {
+      // Remove selected class from all cards
+      document.querySelectorAll('.outfit-selection-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+
+      // Add selected class to the parent card
+      if (this.checked) {
+        this.closest('.outfit-selection-card').classList.add('selected');
+      }
+    });
+
+    // Initialize selected state on page load
+    if (radio.checked) {
+      radio.closest('.outfit-selection-card').classList.add('selected');
+    }
+  });
+});
+</script>
+{% endblock %}
+

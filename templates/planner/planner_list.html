@@ -13,19 +13,19 @@
 
 {% block container %}
 
-<section class="collection-section">
-  {% section_header "Outfit Planner" %}
-
-  <!-- Hero Section -->
-  <div class="planner-hero">
-    <div class="planner-hero-content">
-      <p class="planner-hero-text">
-        Plan your outfits ahead of time. Organize what you'll wear for upcoming events,
-        meetings, or special occasions. Stay stylish and prepared every day.
-      </p>
-      <a href="#" class="btn-cta btn-primary-cta">+ Create New Plan</a>
+<!-- Hero Section -->
+<section class="hero-section hero-section--compact">
+  <div class="hero-content">
+    <h1 class="hero-title hero-title--compact">Outfit Planner</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-subtitle">Plan your outfits ahead of time. Organize what you'll wear for upcoming events, meetings, or special occasions. Stay stylish and prepared every day.</p>
+    <div class="cta-buttons">
+      <a href="{% url 'planner:add_plan_entry' %}" class="btn-cta btn-primary-cta">+ Create New Plan</a>
     </div>
   </div>
+</section>
+
+<section class="collection-section">
 
   <!-- Results -->
   {% if plans %}
@@ -53,7 +53,7 @@
             <div class="plan-outfit-details">
               <h3 class="plan-outfit-title">{{ plan.outfit.title|capitalize }}</h3>
               <div class="plan-outfit-meta">
-                <span class="plan-meta-item">{{ plan.outfit.occasion.name|capitalize }}</span>
+                <span class="plan-meta-item">{{ plan.outfit.occasion|capitalize }}</span>
                 <span class="plan-meta-divider">•</span>
                 <span class="plan-meta-item">{{ plan.outfit.season|capfirst }}</span>
               </div>
@@ -67,10 +67,10 @@
               <span class="plan-created">Added {{ plan.created_at|date:"M d, Y" }}</span>
             </div>
             <div class="plan-action-buttons">
-              <a href="#" class="plan-btn plan-btn-edit" title="Edit Plan">
+              <a href="{% url 'planner:edit_plan_entry' plan.pk %}" class="plan-btn plan-btn-edit" title="Edit Plan">
                 <span class="plan-btn-icon">✏️</span>
               </a>
-              <a href="#" class="plan-btn plan-btn-delete" title="Delete Plan">
+              <a href="{% url 'planner:delete_plan_entry' plan.pk %}" class="plan-btn plan-btn-delete" title="Delete Plan">
                 <span class="plan-btn-icon">🗑️</span>
               </a>
             </div>
