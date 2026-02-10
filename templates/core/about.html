@@ -4,21 +4,16 @@
 {% block title %}{{ block.super }}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/about.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/about.css' %}">
 {% endblock %}
 
 {% block container %}
-<!-- About Hero Section -->
-<section class="about-hero">
-    <div class="hero-content">
-        <h1 class="about-title">About Wearly</h1>
-        <div class="hero-divider"></div>
-        <p class="about-subtitle">Simplifying Fashion, One Outfit at a Time</p>
-    </div>
-</section>
+
+{% include 'core/partials/hero_section.html' with title="About Wearly" subtitle="Simplifying Fashion, One Outfit at a Time" %}
 
 <div class="about-wrapper">
-    <!-- Introduction Section -->
+
     <section class="about-section introduction-section">
         <div class="section-content">
             <h2 class="section-title">Our Mission</h2>
@@ -36,32 +31,17 @@
         </div>
     </section>
 
-    <!-- Key Features Section -->
     <section class="about-section features-section">
         <div class="section-content">
             <h2 class="section-title">What We Offer</h2>
             <div class="section-line"></div>
             <div class="features-grid">
-                <article class="feature-card">
-                    <div class="feature-icon">👔</div>
-                    <h3 class="feature-title">Wardrobe Management</h3>
-                    <p class="feature-text">Organize and catalog all your garments in one centralized location with detailed information about each piece.</p>
-                </article>
-                <article class="feature-card">
-                    <div class="feature-icon">✨</div>
-                    <h3 class="feature-title">Outfit Creation</h3>
-                    <p class="feature-text">Mix and match your garments to create stylish outfits tailored to different occasions and seasons.</p>
-                </article>
-                <article class="feature-card">
-                    <div class="feature-icon">📅</div>
-                    <h3 class="feature-title">Outfit Planning</h3>
-                    <p class="feature-text">Plan your outfits for upcoming days and stay ahead of your fashion choices with our intuitive planner.</p>
-                </article>
+                {% include 'core/partials/cards/feature_card.html' with emoji="👔" title="Wardrobe Management" text="Organize and catalog all your garments in one centralized location with detailed information about each piece."%}
+                {% include 'core/partials/cards/feature_card.html' with emoji="✨" title="Outfit Creation" text="Mix and match your garments to create stylish outfits tailored to different occasions and seasons."%}
+                {% include 'core/partials/cards/feature_card.html' with emoji="📅" title="Outfit Planning" text="Plan your outfits for upcoming days and stay ahead of your fashion choices with our intuitive planner."%}
             </div>
         </div>
     </section>
-
-    <!-- Contact Section -->
 
     <section class="about-section contact-section">
         <div class="section-content">
@@ -76,8 +56,6 @@
         </div>
     </section>
 
-
-    <!-- Call to Action Section -->
     <section class="about-section cta-section">
         <div class="section-content">
             <h2 class="section-title">Ready to Elevate Your Style?</h2>

@@ -8,34 +8,26 @@
 {% block title %}{{ block.super }}{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/garments_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/wardrobe/garments/garments_list.css' %}">
 {% endblock %}
 
 {% block container %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-content">
-        <h1 class="hero-title">Wearly</h1>
-        <div class="hero-divider"></div>
-        <p class="hero-subtitle">Your personal fashion planning assistant</p>
-        <div class="cta-buttons">
-            <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-primary-cta">Explore Wardrobe</a>
-            <a href="{% url 'outfits:add_outfit' %}" class="btn-cta btn-secondary-cta">Create Outfit</a>
-        </div>
+
+    {% url 'wardrobe:garment_list' as wardrobe_list %}
+    {% url 'outfits:outfits_list' as outfit_list %}
+    {% include 'core/partials/hero_section.html' with has_secondary_cta=True is_compact=False title="Wearly" subtitle="Your personal fashion planning assistant" has_cta=True first_url=wardrobe_list first_url_text="Explore Wardrobe" secondary_url=outfit_list secondary_url_text="Create Outfit" %}
+
+    <div class="content-wrapper">
+        {% url 'wardrobe:garment_create' as garment_create_url %}
+        {% collection_section 'Latest Garments' wardrobe 'wardrobe' '👗' garment_create_url %}
+
+        {% url 'outfits:add_outfit' as outfit_create_url %}
+        {% collection_section 'Latest Outfits' outfits 'outfits' '✨' outfit_create_url %}
+
+        {% url 'planner:add_plan_entry' as plan_create_url %}
+        {% collection_section "What's planned" plans 'plans' '📅' plan_create_url %}
     </div>
-</section>
-
-<div class="content-wrapper">
-    <!-- Recent Garments Section -->
-    {% collection_section 'Latest additions' wardrobe 'wardrobe' '👗'%}
-
-    <!-- Recent Outfits Section -->
-    {% collection_section 'Your Outfits' outfits 'outfits' '✨' %}
-
-    <!-- Upcoming Plans Section -->
-    {% collection_section "What's planned" plans 'plans' '📅' %}
-</div>
 
 {% endblock %}
 
