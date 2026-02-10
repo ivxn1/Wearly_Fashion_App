@@ -1,67 +1,7 @@
 /* ===== About Page Styles - Premium Liquid Glass Aesthetic ===== */
 
-/* ===== About Hero Section ===== */
-.about-hero {
-    margin: 0 -24px;
-    padding: 100px 24px;
-    background: linear-gradient(180deg, #fafafa 0%, #fafafa 50%, #ffffff 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.about-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
-    z-index: 1;
-}
-
-.about-hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-    pointer-events: none;
-}
-
-.hero-content {
-    max-width: 700px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-.about-title {
-    font-size: 3rem;
-    font-weight: 300;
-    letter-spacing: 2px;
-    color: #1a1a1a;
-    margin: 0 0 24px 0;
-    text-transform: uppercase;
-}
-
-.hero-divider {
-    width: 60px;
-    height: 1.5px;
-    background: linear-gradient(90deg, transparent 0%, #1a1a1a 50%, transparent 100%);
-    margin: 0 auto 24px;
-}
-
-.about-subtitle {
-    font-size: 1.2rem;
-    color: #4a4a4a;
-    font-weight: 300;
-    letter-spacing: 0.5px;
-    margin: 0;
-}
+/* Note: Hero section now uses the standard hero-section classes from core/partials/hero_section.html */
+/* The styling is inherited from home.css which is loaded in the template */
 
 /* ===== About Wrapper ===== */
 .about-wrapper {
