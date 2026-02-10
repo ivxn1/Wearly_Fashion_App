@@ -1,15 +1,46 @@
+{% load capitalize %}
 <article class="plan-card">
-    <div class="plan-header">
-        <span class="plan-date">{{ item.date|date:"l, F j, Y" }}</span>
-    </div>
-    <div class="plan-content">
-        {% if item.outfit %}
-            <h4 class="plan-outfit-name">{{ item.outfit.name }}</h4>
-            {% if item.outfit.occasion %}
-                <p class="plan-occasion">{{ item.outfit.occasion.name }}</p>
+          <!-- Date Header -->
+          <div class="plan-header">
+            <span class="plan-date">{{ item.date|date:"d M, Y" }}</span>
+            <span class="plan-day-badge">Planned</span>
+          </div>
+
+          <!-- Outfit Info -->
+          <div class="plan-outfit-section">
+            {% if item.outfit.image %}
+              <div class="plan-outfit-image">
+                <img src="{{ item.outfit.image.url }}" alt="{{ item.outfit.title }}" class="plan-outfit-img">
+              </div>
+            {% else %}
+              <div class="plan-outfit-image plan-outfit-placeholder">
+                <span class="plan-outfit-emoji">✨</span>
+              </div>
             {% endif %}
-        {% else %}
-            <p class="plan-outfit-name empty-plan">Outfit to be assigned</p>
-        {% endif %}
-    </div>
-</article>
+
+            <div class="plan-outfit-details">
+              <h3 class="plan-outfit-title">{{ item.outfit.title|capitalize }}</h3>
+              <div class="plan-outfit-meta">
+                <span class="plan-meta-item">{{ item.outfit.occasion|capitalize }}</span>
+                <span class="plan-meta-divider">•</span>
+                <span class="plan-meta-item">{{ item.outfit.season|capfirst }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="plan-actions">
+            <div class="plan-action-left">
+              <a href="{% url 'planner:plan_details' item.pk %}" class="plan-action-link">View Details →</a>
+              <span class="plan-created">Added {{ item.created_at|date:"M d, Y" }}</span>
+            </div>
+            <div class="plan-action-buttons">
+              <a href="{% url 'planner:edit_plan_entry' item.pk %}" class="plan-btn plan-btn-edit" title="Edit Plan">
+                <span class="plan-btn-icon">✏️</span>
+              </a>
+              <a href="{% url 'planner:delete_plan_entry' item.pk %}" class="plan-btn plan-btn-delete" title="Delete Plan">
+                <span class="plan-btn-icon">🗑️</span>
+              </a>
+            </div>
+          </div>
+        </article>
