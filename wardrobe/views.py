@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Avg
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 
 from outfits.models import Outfit
 from wardrobe.choices import GARMENT_CATEGORY_CHOICES
@@ -174,7 +175,20 @@ def brand_delete_view(request:HttpRequest, pk:int) -> HttpResponse:
         garment_count=Count('wardrobe')).first()
 
     if request.method == 'POST':
+        if brand.garment_count > 0:
+            messages.error(
+                request,
+                f'Cannot delete "{brand.name}" because it has {brand.garment_count} garment(s) connected to it. '
+                f'Please remove or reassign all garments before deleting this brand.'
+            )
+            return redirect('wardrobe:brand_details', pk=brand.pk)
+
         brand.delete()
+        messages.success(request, f'Brand "{brand.name}" has been successfully deleted.')
         return redirect('wardrobe:brand_list')
 
-    return render(request, 'wardrobe/brands/brand_confirm_delete.html', {'brand': brand})
+    context = {
+        'brand': brand,
+        'page_title': f'Delete Brand - {brand.name}',
+    }
+    return render(request, 'wardrobe/brands/brand_confirm_delete.html', context)
