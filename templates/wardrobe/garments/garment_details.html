@@ -42,7 +42,7 @@
         {% include 'core/partials/meta_item.html' with label="Size" value=garment.size %}
         {% include 'core/partials/meta_item.html' with label="Material" value=garment.material %}
         {% include 'core/partials/meta_item.html' with label="Season" value=garment.season|capfirst %}
-        {% include 'core/partials/meta_item.html' with label="Price" value=garment.price|stringformat:"s €" value_class="meta-price" %}
+        {% include 'core/partials/meta_item.html' with label="Price" value=garment.price|stringformat:"s" value_class="meta-price" price=True %}
         {% include 'core/partials/meta_item.html' with label="Added" value=garment.created_at %}
 
       </div>
