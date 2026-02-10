@@ -99,6 +99,7 @@
 
 /* Details Info Section */
 .details-info {
+  justify-content: space-between;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -277,73 +278,35 @@
   gap: 24px;
 }
 
-.related-outfit-card {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
-  transition: all 0.35s ease;
-  cursor: pointer;
-}
+/* Outfit cards now use unified styles from home.css */
+/* All .outfit-card, .outfit-container, .outfit-image, .outfit-img, .outfit-emoji, .outfit-content, .outfit-name styles are inherited from home.css */
 
-.related-outfit-card:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 12px 48px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+.related-outfit-card {
+  /* Uses .outfit-card styles from home.css */
 }
 
 .related-outfit-image {
-  width: 100%;
-  height: 160px;
-  background: linear-gradient(135deg, rgba(250, 250, 250, 0.8) 0%, rgba(245, 245, 245, 0.8) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  /* Uses .outfit-image styles from home.css */
 }
 
 .related-outfit-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.35s ease;
-}
-
-.related-outfit-card:hover .related-outfit-img {
-  transform: scale(1.05);
+  /* Uses .outfit-img styles from home.css */
 }
 
 .related-outfit-emoji {
-  font-size: 2.5rem;
-  opacity: 0.4;
+  /* Uses .outfit-emoji styles from home.css */
 }
 
 .related-outfit-content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  /* Uses .outfit-content styles from home.css */
 }
 
 .related-outfit-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0;
-  letter-spacing: 0.2px;
-  line-height: 1.3;
+  /* Uses .outfit-name styles from home.css */
 }
 
 .related-outfit-occasion {
+  /* Uses .detail-item styles from home.css */
   font-size: 0.75rem;
   color: #6a6a6a;
   font-weight: 500;
@@ -368,10 +331,6 @@
   gap: 10px;
 }
 
-.outfit-details::after {
-  content: '→';
-  transition: transform 0.25s ease;
-}
 
 .outfit-details:hover::after {
   transform: translateX(4px);
