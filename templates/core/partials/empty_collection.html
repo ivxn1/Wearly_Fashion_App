@@ -2,5 +2,9 @@
     <div class="empty-state">
         <div class="empty-icon">{{ emoji }}</div>
         <p class="empty-text">{{ message }}</p>
+        {% if action_url %}
+        <a href="{{ action_url }}" class="btn-cta btn-primary-cta btn-cta-sm">{{ action_text|default:"+ Add Item" }}</a>
+        {% endif %}
     </div>
 </section>
+

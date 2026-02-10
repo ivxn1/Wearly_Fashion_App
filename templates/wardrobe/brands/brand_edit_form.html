@@ -4,31 +4,21 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/form_page.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
 {% endblock %}
 
 {% block container %}
 
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Edit Brand</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">Update the brand details. Make changes to keep your brand information accurate and up-to-date.</p>
-  </div>
-</section>
+    {% include 'core/partials/hero_section.html' with title="Edit Brand" subtitle="Update the brand details. Make changes to keep your brand information accurate and up-to-date." is_compact=True has_cta=False%}
 
-<!-- Form Section -->
 <section class="form-section">
   <div class="form-container">
 
-    <!-- Form Card -->
     <div class="form-card">
       <form method="post" class="garment-form" novalidate>
         {% csrf_token %}
 
-        <!-- Display non-field errors -->
         {% if form.non_field_errors %}
           <div class="form-errors">
             {% for error in form.non_field_errors %}
@@ -37,60 +27,16 @@
           </div>
         {% endif %}
 
-        <!-- Form Fields Grid -->
         <div class="form-grid">
 
-          <!-- Brand Name Field -->
-          <div class="form-field form-field--full">
-            <label for="{{ form.name.id_for_label }}" class="form-label">
-              {{ form.name.label }}
-              {% if form.name.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.name }}
-            {% if form.name.errors %}
-              <div class="field-errors">
-                {% for error in form.name.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+        {% include 'core/partials/form_field.html' with field=form.name wrapper_class="form-field--full" %}
 
-          <!-- Country Field -->
-          <div class="form-field">
-            <label for="{{ form.country.id_for_label }}" class="form-label">
-              {{ form.country.label }}
-              {% if form.country.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.country }}
-            {% if form.country.errors %}
-              <div class="field-errors">
-                {% for error in form.country.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.country %}
 
-          <!-- Website Field -->
-          <div class="form-field">
-            <label for="{{ form.website.id_for_label }}" class="form-label">
-              {{ form.website.label }}
-              {% if form.website.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.website }}
-            {% if form.website.errors %}
-              <div class="field-errors">
-                {% for error in form.website.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.website %}
 
         </div>
 
-        <!-- Form Actions -->
         <div class="form-actions">
           <button type="submit" class="btn-cta btn-primary-cta btn-form">Save Changes</button>
           <a href="{% url 'wardrobe:brand_details' pk=brand.pk %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>

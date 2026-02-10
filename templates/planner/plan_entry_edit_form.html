@@ -1,5 +1,126 @@
+{% extends 'core/base.html' %}
+{% load static %}
 
-        <!-- Form Actions -->
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
+  <link rel="stylesheet" href="{% static 'css/planner/plan_form.css' %}">
+{% endblock %}
+
+{% block container %}
+
+{% include 'core/partials/hero_section.html' with title="Edit Plan Entry" subtitle="Update your planned outfit for this occasion" is_compact=True %}
+
+<section class="form-section">
+  <div class="form-container">
+
+    <div class="form-card">
+      <form method="post" class="plan-form" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="form-errors">
+            {% for error in form.non_field_errors %}
+              <p class="error-message">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="form-grid">
+
+          <div class="form-field form-field--full">
+            <label for="{{ form.date.id_for_label }}" class="form-label">
+              {{ form.date.label }}
+              {% if form.date.field.required %}<span class="required">*</span>{% endif %}
+            </label>
+            {{ form.date }}
+            {% if form.date.errors %}
+              <div class="field-errors">
+                {% for error in form.date.errors %}
+                  <span class="error-text">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <p class="field-help">Change the date for this outfit plan</p>
+          </div>
+
+          <div class="form-field form-field--full outfit-selection-field">
+            <label class="form-label form-label--section">
+              {{ form.outfit.label }}
+              {% if form.outfit.field.required %}<span class="required">*</span>{% endif %}
+            </label>
+
+            {% if form.outfit.errors %}
+              <div class="field-errors field-errors--section">
+                {% for error in form.outfit.errors %}
+                  <span class="error-text">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <p class="field-help field-help--cards">Select a different outfit by clicking on a card</p>
+
+            <div class="outfit-cards-grid">
+              {% for outfit in form.outfit.field.queryset %}
+                <div class="outfit-selection-card" data-outfit-id="{{ outfit.id }}">
+                  <input
+                    type="radio"
+                    name="{{ form.outfit.html_name }}"
+                    value="{{ outfit.id }}"
+                    id="outfit_{{ outfit.id }}"
+                    class="outfit-radio-input"
+                    {% if plan_entry.outfit.id == outfit.id %}checked{% endif %}
+                  >
+                  <label for="outfit_{{ outfit.id }}" class="outfit-card-label">
+                    <div class="outfit-card-image">
+                      {% if outfit.image %}
+                        <img src="{{ outfit.image.url }}" alt="{{ outfit.title }}" class="outfit-img">
+                      {% else %}
+                        <span class="outfit-emoji">✨</span>
+                      {% endif %}
+                      <div class="outfit-selection-overlay">
+                        <span class="outfit-checkmark">✓</span>
+                      </div>
+                    </div>
+                    <div class="outfit-card-info">
+                      <h4 class="outfit-card-title">{{ outfit.title }}</h4>
+                      <div class="outfit-card-meta">
+                        <span class="outfit-badge">{{ outfit.occasion }}</span>
+                        <span class="outfit-badge">{{ outfit.get_season_display }}</span>
+                      </div>
+                      <div class="outfit-garments-count">
+                        {{ outfit.garments.count }} garment{{ outfit.garments.count|pluralize }}
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              {% empty %}
+                <div class="empty-outfits-message">
+                  <span class="empty-icon">✨</span>
+                  <p>No outfits available. Create an outfit first!</p>
+                  <a href="{% url 'outfits:add_outfit' %}" class="btn-cta btn-primary-cta">+ Create Outfit</a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="form-field form-field--full">
+            <label for="{{ form.note.id_for_label }}" class="form-label">
+              {{ form.note.label }}
+              {% if form.note.field.required %}<span class="required">*</span>{% endif %}
+            </label>
+            {{ form.note }}
+            {% if form.note.errors %}
+              <div class="field-errors">
+                {% for error in form.note.errors %}
+                  <span class="error-text">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="btn-cta btn-primary-cta btn-form">Save Changes</button>
           <a href="{% url 'planner:plan_details' pk=plan_entry.pk %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
@@ -14,29 +135,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const radioButtons = document.querySelectorAll('.outfit-radio-input');
-
-  radioButtons.forEach(radio => {
-    radio.addEventListener('change', function() {
-      // Remove selected class from all cards
-      document.querySelectorAll('.outfit-selection-card').forEach(card => {
-        card.classList.remove('selected');
-      });
-
-      // Add selected class to the parent card
-      if (this.checked) {
-        this.closest('.outfit-selection-card').classList.add('selected');
-      }
-    });
-
-    // Initialize selected state on page load
-    if (radio.checked) {
-      radio.closest('.outfit-selection-card').classList.add('selected');
-    }
-  });
-});
-</script>
+<script src="{% static 'js/../../static/scripts/plan_form.js' %}"></script>
 {% endblock %}
 

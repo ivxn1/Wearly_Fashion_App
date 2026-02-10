@@ -1,87 +1,23 @@
 {% extends 'core/base.html' %}
+{% load collection_section %}
 {% load capitalize %}
 {% load static %}
 {% load section_header %}
 {% load empty_collection %}
 
-{% block title %}{{ page_title }}{% endblock %}
-
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/planner_list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/planner/planner_list.css' %}">
 {% endblock %}
 
 {% block container %}
 
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Outfit Planner</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">Plan your outfits ahead of time. Organize what you'll wear for upcoming events, meetings, or special occasions. Stay stylish and prepared every day.</p>
-    <div class="cta-buttons">
-      <a href="{% url 'planner:add_plan_entry' %}" class="btn-cta btn-primary-cta">+ Create New Plan</a>
-    </div>
-  </div>
-</section>
+    {% url 'planner:add_plan_entry' as add_plan_entry %}
+    {% include 'core/partials/hero_section.html' with is_compact=True title="Outfit Planner" subtitle="Plan your outfits ahead of time. Organize what you'll wear for upcoming events, meetings, or special occasions. Stay stylish and prepared every day." has_cta=True has_secondary_cta=False first_url=add_plan_entry first_url_text="+ Create New Plan"%}
 
-<section class="collection-section">
+    <section class="collection-section">
 
-  <!-- Results -->
-  {% if plans %}
-    <div class="plans-grid">
-      {% for plan in plans %}
-        <article class="plan-card">
-          <!-- Date Header -->
-          <div class="plan-header">
-            <span class="plan-date">{{ plan.date|date:"d M, Y" }}</span>
-            <span class="plan-day-badge">Planned</span>
-          </div>
-
-          <!-- Outfit Info -->
-          <div class="plan-outfit-section">
-            {% if plan.outfit.image %}
-              <div class="plan-outfit-image">
-                <img src="{{ plan.outfit.image.url }}" alt="{{ plan.outfit.title }}" class="plan-outfit-img">
-              </div>
-            {% else %}
-              <div class="plan-outfit-image plan-outfit-placeholder">
-                <span class="plan-outfit-emoji">✨</span>
-              </div>
-            {% endif %}
-
-            <div class="plan-outfit-details">
-              <h3 class="plan-outfit-title">{{ plan.outfit.title|capitalize }}</h3>
-              <div class="plan-outfit-meta">
-                <span class="plan-meta-item">{{ plan.outfit.occasion|capitalize }}</span>
-                <span class="plan-meta-divider">•</span>
-                <span class="plan-meta-item">{{ plan.outfit.season|capfirst }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="plan-actions">
-            <div class="plan-action-left">
-              <a href="{% url 'planner:plan_details' plan.pk %}" class="plan-action-link">View Details →</a>
-              <span class="plan-created">Added {{ plan.created_at|date:"M d, Y" }}</span>
-            </div>
-            <div class="plan-action-buttons">
-              <a href="{% url 'planner:edit_plan_entry' plan.pk %}" class="plan-btn plan-btn-edit" title="Edit Plan">
-                <span class="plan-btn-icon">✏️</span>
-              </a>
-              <a href="{% url 'planner:delete_plan_entry' plan.pk %}" class="plan-btn plan-btn-delete" title="Delete Plan">
-                <span class="plan-btn-icon">🗑️</span>
-              </a>
-            </div>
-          </div>
-        </article>
-      {% endfor %}
-    </div>
-
-  {% else %}
-    {% empty_collection "📅" "No plans scheduled yet. Start planning your outfits!" %}
-  {% endif %}
+        {% collection_section "All plans" plans 'plans' '📅' add_plan_entry %}
 
 </section>
 

@@ -25,8 +25,15 @@
                     {% plans_card item %}
                 {% endfor %}
             </div>
+
+        {% elif section_type == 'brands' %}
+            <div class="brands-grid">
+                {% for item in items %}
+                    {% brand_card item %}
+                {% endfor %}
+            </div>
         {% endif %}
-    {% else %}
-        {% empty_collection icon empty_message %}
+        {% else %}
+        {% empty_collection icon empty_message action_url action_text %}
     {% endif %}
 </section>

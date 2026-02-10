@@ -1,0 +1,23 @@
+<article class="brand-card">
+    <div class="brand-content">
+        <h3 class="brand-name">{{ brand.name }}</h3>
+
+        {% if brand.country %}
+            <p class="brand-country">
+                <span class="country-label">Country:</span>
+                <span class="country-value">{{ brand.country }}</span>
+            </p>
+        {% endif %}
+
+        <div class="brand-stats">
+              <span class="stat-item">
+                <span class="stat-number">{{ brand.garment_count }}</span>
+                <span class="stat-label">Garment{{ brand.garment_count|pluralize }}</span>
+              </span>
+        </div>
+
+        <div class="brand-actions">
+            <a href="{% url 'wardrobe:brand_details' pk=brand.pk %}" class="brand-link">View Details →</a>
+        </div>
+    </div>
+</article>

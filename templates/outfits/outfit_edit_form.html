@@ -1,212 +1,145 @@
 {% extends 'core/base.html' %}
+{% load category_filter %}
 {% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/form_page.css' %}">
-  <link rel="stylesheet" href="{% static 'css/outfit_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/outfits/outfit_form.css' %}">
 {% endblock %}
 
 {% block container %}
 
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Edit Outfit</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">Update your outfit details and modify the garment selections to perfect your look.</p>
-  </div>
-</section>
+    {% include 'core/partials/hero_section.html' with title="Edit Outfit" subtitle="Update your outfit details and modify the garment selections to perfect your look." is_compact=True %}
 
-<!-- Form Section -->
-<section class="form-section">
-  <div class="form-container form-container--wide">
+    <section class="form-section">
+        <div class="form-container form-container--wide">
 
-    <!-- Form Card -->
-    <div class="form-card">
-      <form method="post" enctype="multipart/form-data" class="outfit-form" novalidate>
-        {% csrf_token %}
+            <div class="form-card">
+                <form method="post" enctype="multipart/form-data" class="outfit-form" novalidate>
+                    {% csrf_token %}
 
-        <!-- Display non-field errors -->
-        {% if form.non_field_errors %}
-          <div class="form-errors">
-            {% for error in form.non_field_errors %}
-              <p class="error-message">{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
+                    {% if form.non_field_errors %}
+                        <div class="form-errors">
+                            {% for error in form.non_field_errors %}
+                                <p class="error-message">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-        <!-- Form Fields Grid -->
-        <div class="form-grid form-grid--outfit">
+                    <div class="form-grid form-grid--outfit">
 
-          <!-- Title Field -->
-          <div class="form-field form-field--full">
-            <label for="{{ form.title.id_for_label }}" class="form-label">
-              {{ form.title.label }}
-              {% if form.title.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.title }}
-            {% if form.title.errors %}
-              <div class="field-errors">
-                {% for error in form.title.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+                        {% include 'core/partials/form_field.html' with field=form.title wrapper_class="form-field--full" %}
 
-          <!-- Occasion Field -->
-          <div class="form-field">
-            <label for="{{ form.occasion.id_for_label }}" class="form-label">
-              {{ form.occasion.label }}
-              {% if form.occasion.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.occasion }}
-            {% if form.occasion.errors %}
-              <div class="field-errors">
-                {% for error in form.occasion.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+                        {% include 'core/partials/form_field.html' with field=form.occasion %}
 
-          <!-- Season Field -->
-          <div class="form-field">
-            <label for="{{ form.season.id_for_label }}" class="form-label">
-              {{ form.season.label }}
-              {% if form.season.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.season }}
-            {% if form.season.errors %}
-              <div class="field-errors">
-                {% for error in form.season.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+                        {% include 'core/partials/form_field.html' with field=form.season %}
 
-          <!-- Notes Field -->
-          <div class="form-field form-field--full">
-            <label for="{{ form.notes.id_for_label }}" class="form-label">
-              {{ form.notes.label }}
-              {% if form.notes.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.notes }}
-            {% if form.notes.errors %}
-              <div class="field-errors">
-                {% for error in form.notes.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+                        {% include 'core/partials/form_field.html' with field=form.notes wrapper_class="form-field--full" %}
 
-          <!-- Image Field -->
-          <div class="form-field form-field--full">
-            <label for="{{ form.image.id_for_label }}" class="form-label">
-              {{ form.image.label }}
-              {% if form.image.field.required %}<span class="required">*</span>{% endif %}
-            </label>
+                        <div class="form-field form-field--full">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">
+                                {{ form.image.label }}
+                                {% if form.image.field.required %}<span class="required">*</span>{% endif %}
+                            </label>
 
-            <!-- Current Image Preview -->
-            {% if outfit.image %}
-              <div class="current-image-preview">
-                <img src="{{ outfit.image.url }}" alt="{{ outfit.title }}" class="preview-image">
-                <span class="preview-label">Current Image</span>
-              </div>
-            {% endif %}
+                            {% if outfit.image %}
+                                <div class="current-image-preview">
+                                    <img src="{{ outfit.image.url }}" alt="{{ outfit.title }}" class="preview-image">
+                                    <span class="preview-label">Current Image</span>
+                                </div>
+                            {% endif %}
 
-            <div class="file-input-wrapper">
-              {{ form.image }}
-            </div>
-            {% if form.image.errors %}
-              <div class="field-errors">
-                {% for error in form.image.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-            <p class="field-help">Upload a new image to replace the current one. Accepted formats: JPG, PNG, WebP (Max 5MB)</p>
-          </div>
+                            <div class="file-input-wrapper">
+                                {{ form.image }}
+                            </div>
+                            {% if form.image.errors %}
+                                <div class="field-errors">
+                                    {% for error in form.image.errors %}
+                                        <span class="error-text">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <p class="field-help">Upload a new image to replace the current one. Accepted formats: JPG,
+                                PNG, WebP (Max 5MB)</p>
+                        </div>
 
-        </div>
+                    </div>
 
-        <!-- Garments Selection Section -->
-        <div class="garments-selection-section">
-          <div class="section-header-inline">
-            <label class="form-label form-label--section">
-              Select Garments
-              <span class="required">*</span>
-            </label>
-            <span class="selected-count">
+                    <div class="garments-selection-section">
+                        <div class="section-header-inline">
+                            <label class="form-label form-label--section">
+                                Select Garments
+                                <span class="required">*</span>
+                            </label>
+                            <span class="selected-count">
               <span id="selected-count">0</span> selected
             </span>
-          </div>
+                        </div>
 
-          {% if form.garments.errors %}
-            <div class="field-errors field-errors--section">
-              {% for error in form.garments.errors %}
-                <span class="error-text">{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% endif %}
+                        {% if form.garments.errors %}
+                            <div class="field-errors field-errors--section">
+                                {% for error in form.garments.errors %}
+                                    <span class="error-text">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
-          <!-- Garment Cards Grid -->
-          <div class="garment-cards-grid">
-            {% for garment in form.garments.field.queryset %}
-              <div class="garment-selection-card" data-garment-id="{{ garment.id }}">
-                <input
-                  type="checkbox"
-                  name="garments"
-                  value="{{ garment.id }}"
-                  id="garment_{{ garment.id }}"
-                  class="garment-checkbox"
-                  {% if garment in outfit.garments.all %}checked{% endif %}
-                >
-                <label for="garment_{{ garment.id }}" class="garment-card-label">
-                  <div class="garment-card-image">
-                    {% if garment.image %}
-                      <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="garment-img">
-                    {% else %}
-                      <span class="garment-emoji">👕</span>
-                    {% endif %}
-                    <div class="selection-overlay">
-                      <span class="checkmark">✓</span>
+                        <div class="garment-cards-grid">
+                            {% for garment in form.garments.field.queryset %}
+                                <div class="garment-selection-card" data-garment-id="{{ garment.id }}">
+                                    <input
+                                            type="checkbox"
+                                            name="garments"
+                                            value="{{ garment.id }}"
+                                            id="garment_{{ garment.id }}"
+                                            class="garment-checkbox"
+                                            {% if garment in outfit.garments.all %}checked{% endif %}
+                                    >
+                                    <label for="garment_{{ garment.id }}" class="garment-card-label">
+                                        <div class="garment-card-image">
+                                            {% if garment.image %}
+                                                <img src="{{ garment.image.url }}" alt="{{ garment.title }}"
+                                                     class="garment-img">
+                                            {% else %}
+                                                <span class="garment-emoji">{{ garment.category.title|lower|category_filter }}</span>
+                                            {% endif %}
+                                            <div class="selection-overlay">
+                                                <span class="checkmark">✓</span>
+                                            </div>
+                                        </div>
+                                        <div class="garment-card-info">
+                                            <h4 class="garment-card-title">{{ garment.title }}</h4>
+                                            <span class="garment-card-meta">{{ garment.brand.name }} • {{ garment.get_category_display }}</span>
+                                            <span class="garment-card-season">{{ garment.get_season_display }}</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            {% empty %}
+                                <div class="empty-garments-message">
+                                    <span class="empty-icon">👕</span>
+                                    <p>No garments available. Add some garments to your wardrobe first!</p>
+                                    <a href="{% url 'wardrobe:garment_create' %}" class="btn-cta btn-primary-cta">+ Add
+                                        Garment</a>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                  </div>
-                  <div class="garment-card-info">
-                    <h4 class="garment-card-title">{{ garment.title }}</h4>
-                    <span class="garment-card-meta">{{ garment.brand.name }} • {{ garment.get_category_display }}</span>
-                    <span class="garment-card-season">{{ garment.get_season_display }}</span>
-                  </div>
-                </label>
-              </div>
-            {% empty %}
-              <div class="empty-garments-message">
-                <span class="empty-icon">👕</span>
-                <p>No garments available. Add some garments to your wardrobe first!</p>
-                <a href="{% url 'wardrobe:garment_create' %}" class="btn-cta btn-primary-cta">+ Add Garment</a>
-              </div>
-            {% endfor %}
-          </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-cta btn-primary-cta btn-form">Save Changes</button>
+                        <a href="{% url 'outfits:outfit_details' id=outfit.id %}"
+                           class="btn-cta btn-secondary-cta btn-form">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+
         </div>
-
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="submit" class="btn-cta btn-primary-cta btn-form">Save Changes</button>
-          <a href="{% url 'outfits:outfit_details' id=outfit.id %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
-        </div>
-
-      </form>
-    </div>
-
-  </div>
-</section>
+    </section>
 
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'scripts/outfit_form.js' %}"></script>
+    <script src="{% static 'scripts/outfit_form.js' %}"></script>
 {% endblock %}

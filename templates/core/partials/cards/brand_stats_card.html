@@ -1,0 +1,16 @@
+<div class="stat-card">
+        <div class="stat-icon">{{ emoji }}</div>
+        <div class="stat-content">
+          <h3 class="stat-title">{{ title }}</h3>
+          <p class="stat-brand-name">{{ curr_brand.name }}</p>
+            {% if most_used|default:False %}
+                <p class="stat-details">{{ curr_brand.outfit_count }} outfit{{ curr_brand.outfit_count|pluralize }}</p>
+            {% endif %}
+            {% if most_expensive|default:False %}
+                <p class="stat-details">Avg. ${{ curr_brand.avg_price|floatformat:2 }}</p>
+            {% endif %}
+            {% if most_garments|default:False %}
+                <p class="stat-details">{{ curr_brand.garment_count }} garment{{ curr_brand.garment_count|pluralize }}</p>
+            {% endif %}
+        </div>
+      </div>

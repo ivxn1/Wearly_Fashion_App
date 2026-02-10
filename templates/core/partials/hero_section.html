@@ -1,0 +1,17 @@
+<section class="hero-section {% if is_compact %}hero-section--compact{% endif %} {% if is_danger %}hero-section--danger{% endif %}">
+  <div class="hero-content">
+    <h1 class="hero-title {% if is_compact %}hero-title--compact{% endif %}">{{ title }}</h1>
+    <div class="hero-divider"></div>
+    {% if subtitle %}
+        <p class="hero-subtitle">{{ subtitle }}</p>
+    {% endif %}
+    {% if has_cta %}
+     <div class="cta-buttons">
+      <a href="{{ first_url }}" class="btn-cta btn-primary-cta">{{ first_url_text }}</a>
+         {% if has_secondary_cta %}
+      <a href="{{ secondary_url }}" class="btn-cta btn-secondary-cta">{{ secondary_url_text }}</a>
+        {% endif %}
+             </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,61 +1,44 @@
 {% extends "core/base.html" %}
+{% load collection_section %}
 {% load static %}
 {% load cards %}
 
-{% block title %}{{ block.super }}{% endblock %}
-
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/garments_list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/wardrobe/garments/garments_list.css' %}">
 {% endblock %}
 
 {% block container %}
 
-
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Your Wardrobe</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">Discover, search, and manage your clothing collection. Filter by brand, category, or season to find exactly what you need.</p>
-    <div class="cta-buttons">
-      <a href="{% url 'wardrobe:garment_create' %}" class="btn-cta btn-primary-cta">+ Add New Garment</a>
-    </div>
-  </div>
-</section>
+    {% url 'wardrobe:garment_create' as garment_create %}
+    {% include 'core/partials/hero_section.html' with has_secondary_cta=False has_cta=True is_compact=True title="Your Wardrobe" subtitle="Discover, search, and manage your clothing collection. Filter by brand, category, or season to find exactly what you need." first_url=garment_create first_url_text="+ Add New Garment" %}
 
 <section class="collection-section">
 
-  <!-- Search & Filter Form -->
   <div class="filters-glass">
     <form method="get" action="{% url 'wardrobe:garment_list' %}" class="filters-form">
       <div class="filters-grid">
 
-        <!-- Title Search -->
         <div class="filter-field filter-field--search">
           <label for="{{ form.title.id_for_label }}" class="filter-label">{{ form.title.label }}</label>
           {{ form.title }}
         </div>
 
-        <!-- Brand Filter -->
         <div class="filter-field">
           <label for="{{ form.brand.id_for_label }}" class="filter-label">{{ form.brand.label }}</label>
           {{ form.brand }}
         </div>
 
-        <!-- Category Filter -->
         <div class="filter-field">
           <label for="{{ form.category.id_for_label }}" class="filter-label">{{ form.category.label }}</label>
           {{ form.category }}
         </div>
 
-        <!-- Season Filter -->
         <div class="filter-field">
           <label for="{{ form.season.id_for_label }}" class="filter-label">{{ form.season.label }}</label>
           {{ form.season }}
         </div>
 
-        <!-- Sort -->
         <div class="filter-field">
           <label for="{{ form.sort.id_for_label }}" class="filter-label">{{ form.sort.label }}</label>
           {{ form.sort }}
@@ -63,7 +46,6 @@
 
       </div>
 
-      <!-- Action Buttons -->
       <div class="filter-actions">
         <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
         <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
@@ -71,15 +53,9 @@
     </form>
   </div>
 
-  <!-- Results -->
-  {% if wardrobe %}
-    <div class="garments-grid garments-grid--list">
-      {% for g in wardrobe %}
-        {% garment_card g %}
-      {% endfor %}
-    </div>
+ {% url 'wardrobe:garment_create' as add_garment_url %}
+    {% collection_section "All Garments" wardrobe 'wardrobe' '👗' add_garment_url %}
 
-    <!-- Pagination: preserve filters -->
     {% if is_paginated %}
       <nav class="pagination-glass">
         {% if page_obj.has_previous %}
@@ -106,12 +82,6 @@
       </nav>
     {% endif %}
 
-  {% else %}
-    <div class="empty-state">
-      <span class="empty-icon">👗</span>
-      <p class="empty-text">No garments found for the selected filters.</p>
-    </div>
-  {% endif %}
 </section>
 
 {% endblock %}

@@ -28,3 +28,13 @@ def plans_card(item):
     return {
         'item': item,
     }
+
+@register.inclusion_tag('core/partials/cards/brand_card.html')
+def brand_card(item):
+    """
+    Renders a brand card.
+    """
+    return {
+        'brand': item,
+    }
+

@@ -1,20 +1,18 @@
 {% extends "core/base.html" %}
+{% load collection_section %}
 {% load category_filter %}
 {% load capitalize %}
 {% load static %}
 
-{% block title %}{{ page_title }}{% endblock %}
-
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/plan_entry_details.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/planner/plan_entry_details.css' %}">
 {% endblock %}
 
 {% block container %}
 
 <section class="details-section">
 
-  <!-- Navigation Bar -->
   <div class="details-nav">
     <a href="{% url 'planner:list' %}" class="nav-link nav-back">← Back to Planner</a>
 
@@ -41,20 +39,16 @@
     </div>
   </div>
 
-  <!-- Main Content Grid -->
   <div class="plan-details-grid">
 
-    <!-- Left Column - Date & Outfit Info -->
     <div class="plan-info-column">
 
-      <!-- Date Card -->
       <div class="date-card">
         <div class="date-label">Planned Date</div>
         <div class="date-value">{{ plan_entry.date|date:'d M, Y' }}</div>
         <div class="date-day">{{ plan_entry.date|date:"l" }}</div>
       </div>
 
-      <!-- Outfit Card -->
       <div class="outfit-card">
         <div class="outfit-image-container">
           {% if plan_entry.outfit.image %}
@@ -69,10 +63,8 @@
 
     </div>
 
-    <!-- Right Column - Notes & Actions -->
     <div class="plan-actions-column">
 
-      <!-- Outfit Info -->
       <div class="outfit-info">
         <h2 class="outfit-title">{{ plan_entry.outfit.title|capitalize }}</h2>
 
@@ -93,8 +85,6 @@
         </a>
       </div>
 
-
-      <!-- Notes Section -->
       <div class="notes-card">
         <h3 class="section-title">Plan Notes</h3>
         {% if plan_entry.note %}
@@ -104,7 +94,6 @@
         {% endif %}
       </div>
 
-      <!-- Meta Info -->
       <div class="meta-card">
         <h3 class="section-title">Plan Information</h3>
         <div class="meta-grid">
@@ -119,7 +108,6 @@
         </div>
       </div>
 
-      <!-- Action Buttons -->
       <div class="action-buttons">
         <a href="{% url 'planner:edit_plan_entry' plan_entry.pk %}" class="btn-cta btn-primary-cta btn-full">Edit Plan</a>
         <a href="{% url 'planner:delete_plan_entry' plan_entry.pk %}" class="btn-cta btn-secondary-cta btn-full">Delete Plan</a>
@@ -129,35 +117,11 @@
 
   </div>
 
-  <!-- Garments Section -->
   {% if plan_entry.outfit.garments.all %}
-  <div class="garments-section">
-    <div class="section-header">
-      <h2 class="section-title-main">Garments in This Outfit</h2>
-      <div class="section-line"></div>
-    </div>
 
-    <div class="garments-grid">
-      {% for garment in plan_entry.outfit.garments.all %}
-        <a href="{% url 'wardrobe:garment_details' slug=garment.slug %}" class="garment-card-link">
-          <article class="garment-card-mini">
-            <div class="garment-image-mini">
-              {% if garment.image %}
-                <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="garment-img-mini">
-              {% else %}
-                <div class="garment-emoji-mini">{{ garment.category.title|category_filter }}</div>
-              {% endif %}
-            </div>
-            <div class="garment-info-mini">
-              <h4 class="garment-title-mini">{{ garment.title|capitalize }}</h4>
-              <span class="garment-category-mini">{{ garment.get_category_display|upper }}</span>
-              <span class="garment-brand-mini">{{ garment.brand.name|capitalize }}</span>
-            </div>
-          </article>
-        </a>
-      {% endfor %}
-    </div>
-  </div>
+        {% url 'planner:edit_plan_entry' pk=plan_entry.pk as edit_plan_url %}
+        {% collection_section "Garments in This Planned Outfit" plan_entry.outfit.garments.all 'wardrobe' '✨' edit_plan_url %}
+
   {% endif %}
 
 </section>

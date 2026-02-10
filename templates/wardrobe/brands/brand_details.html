@@ -4,41 +4,28 @@
 {% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/details_page.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/details_page.css' %}">
 {% endblock %}
 
 {% block container %}
 
 <section class="details-section">
 
-  <!-- Back Navigation -->
   <div class="back-nav">
     <a href="{% url 'wardrobe:brand_list' %}" class="back-link">← Back to Brands</a>
   </div>
 
-  <!-- Main Details Grid -->
   <div class="details-grid">
 
-    <!-- Brand Info -->
     <div class="details-info">
       <div class="details-header">
         <h1 class="details-title">{{ brand.name }}</h1>
       </div>
 
-      <!-- Meta Grid -->
       <div class="meta-grid">
-        {% if brand.country %}
-          <div class="meta-item">
-            <span class="meta-label">Country</span>
-            <span class="meta-value">{{ brand.country }}</span>
-          </div>
-        {% endif %}
-
-        <div class="meta-item">
-          <span class="meta-label">Total Garments</span>
-          <span class="meta-value">{{ brand.garment_count }}</span>
-        </div>
+        {% include 'core/partials/meta_item.html' with label="Country" value=brand.country %}
+        {% include 'core/partials/meta_item.html' with label="Total Garments" value=brand.garment_count %}
 
         {% if brand.website %}
           <div class="meta-item">
@@ -52,14 +39,12 @@
         {% endif %}
       </div>
 
-      <!-- Action Buttons -->
       <div class="action-buttons">
         <a href="{% url 'wardrobe:brand_edit' pk=brand.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Brand</a>
-        <a href="{% url 'wardrobe:brand_delete' pk=brand.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Brand</a>
+          <a href="{% url 'wardrobe:brand_delete' pk=brand.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Brand</a>
       </div>
     </div>
 
-    <!-- Brand Garments Gallery -->
     <div class="brand-gallery-container">
       {% if brand.wardrobe.all %}
         <div class="brand-gallery-header">

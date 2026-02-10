@@ -1,24 +1,22 @@
 {% extends 'core/base.html' %}
+{% load collection_section %}
 {% load category_filter %}
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/outfit_details.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/outfits/outfit_details.css' %}">
 {% endblock %}
 
 {% block container %}
 
 <section class="details-section">
-  <!-- Back Button -->
   <div class="back-nav">
     <a href="{% url 'outfits:outfits_list' %}" class="back-link">← Back to Outfits</a>
   </div>
 
-  <!-- Main Content Grid -->
   <div class="details-grid">
 
-    <!-- Image Section -->
     <div class="details-image-container">
       {% if outfit.image %}
         <img src="{{ outfit.image.url }}" alt="{{ outfit.title }}" class="details-image">
@@ -30,52 +28,31 @@
       {% endif %}
     </div>
 
-    <!-- Info Section -->
     <div class="details-info">
 
-      <!-- Title & Occasion Badge -->
       <div class="details-header">
-
-{#          TODO: CREATE FILTER TO CAPITALIZE EACH WORD OF TITLE        #}
 
         <h1 class="details-title">{{ outfit.title|capfirst }}</h1>
         <span class="occasion-badge-large">{{ outfit.occasion|capfirst }}</span>
       </div>
 
-      <!-- Meta Info Grid -->
       <div class="meta-grid">
 
-        <div class="meta-item">
-          <span class="meta-label">Occasion</span>
-          <span class="meta-value">{{ outfit.occasion|capfirst }}</span>
-        </div>
+          {% include 'core/partials/meta_item.html' with label="Occasion" value=outfit.occasion|capfirst %}
 
-        <div class="meta-item">
-          <span class="meta-label">Season</span>
-          <span class="meta-value">{{ outfit.season.title }}</span>
-        </div>
+          {% include 'core/partials/meta_item.html' with label="Season" value=outfit.season.title %}
 
-        <div class="meta-item">
-          <span class="meta-label">Created</span>
-          <span class="meta-value">{{ outfit.created_at|date:"d M, Y G:i" }}</span>
-        </div>
+          {% include 'core/partials/meta_item.html' with label="Created" value=outfit.created_at %}
 
-        <div class="meta-item">
-          <span class="meta-label">Garments</span>
-          <span class="meta-value">{{ outfit_garments|length }} piece{{ outfit_garments|length|pluralize }}</span>
-        </div>
+          {% include 'core/partials/meta_item.html' with label="Garments" garments_count=True value=outfit_garments|length  %}
 
       </div>
-
-      <!-- Notes Section -->
 
       <div class="notes-section">
         <h3 class="notes-title">Notes</h3>
         <p class="notes-text">{{ outfit.notes|default:"No notes available..." }}</p>
       </div>
 
-
-      <!-- Action Buttons -->
       <div class="action-buttons">
         <a href="{% url 'outfits:edit_outfit' outfit.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Outfit</a>
         <a href="{% url 'outfits:confirm_delete_outfit' outfit.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Outfit</a>
@@ -85,50 +62,11 @@
 
   </div>
 
-  <!-- Garments Section -->
   {% if outfit_garments %}
-  <div class="related-section">
-    <div class="section-header">
-      <h2 class="section-title">Garments in This Outfit</h2>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="garments-grid">
-
-{#  TODO: COME UP WITH SOME INCLUSION TAG TO REPLACE REDUNDANCY OF THE CARDS BELOW AND ON OTHER PAGES TOO #}
-
-      {% for garment in outfit_garments %}
-        <article class="garment-card">
-          <div class="garment-image">
-            {% if garment.image %}
-              <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="garment-img">
-            {% else %}
-              <div class="garment-emoji">{{ garment.category.title|lower|category_filter }}</div>
-            {% endif %}
-          </div>
-          <div class="garment-content">
-            <div class="garment-header">
-              <h3 class="garment-title">{{ garment.title|capfirst }}</h3>
-              <span class="garment-category">{{ garment.category.title|capfirst }} ~ {{ garment.category.title|lower|category_filter }}</span>
-            </div>
-            <div class="garment-meta">
-              <span class="garment-brand">{{ garment.brand.name|capfirst }}</span>
-              <span class="garment-color">{{ garment.color|capfirst }}</span>
-            </div>
-            <a href="{% url 'wardrobe:garment_details' slug=garment.slug %}" class="garment-link">View Details →</a>
-          </div>
-        </article>
-      {% endfor %}
-    </div>
-  </div>
+          {% url 'outfits:edit_outfit' outfit.pk as edit_outfit_url %}
+          {% collection_section "Garments in This Outfit" outfit_garments 'wardrobe' '✨' edit_outfit_url %}
   {% else %}
-  <div class="related-section">
-    <div class="empty-garments">
-      <span class="empty-garments-icon">✨</span>
-      <p class="empty-garments-text">No garments added to this outfit yet.</p>
-      <a href="#" class="btn-cta btn-secondary-cta btn-cta-sm">Add Garments</a>
-    </div>
-  </div>
+
   {% endif %}
 
 </section>

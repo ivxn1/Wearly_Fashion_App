@@ -5,29 +5,19 @@
 {% block title %}Delete {{ brand.name }}?{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/form_page.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
 {% endblock %}
 
 {% block container %}
 
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact hero-section--danger">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Delete Brand</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">This action cannot be undone. Please confirm you want to delete this brand from your collection.</p>
-  </div>
-</section>
+    {% include 'core/partials/hero_section.html' with title="Delete Brand" subtitle="This action cannot be undone. Please confirm you want to delete this brand from your collection." is_compact=True is_danger=True has_cta=False %}
 
-<!-- Confirmation Section -->
 <section class="form-section">
   <div class="form-container">
 
-    <!-- Confirmation Card -->
     <div class="form-card">
 
-      <!-- Warning Icon & Message -->
       <div class="delete-warning">
         <div class="warning-icon-wrapper">
           <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -36,9 +26,17 @@
         </div>
         <h2 class="warning-title">Are you sure you want to delete this brand?</h2>
         <p class="warning-subtitle">This will permanently remove it from your brand collection.</p>
+
+        {% if brand.garment_count > 0 %}
+          <div class="form-errors" style="margin-top: 20px;">
+            <p class="error-message">
+              ⚠️ Cannot delete this brand! It has {{ brand.garment_count }} garment{{ brand.garment_count|pluralize }} connected to it.
+              Please remove or reassign all garments before deleting this brand.
+            </p>
+          </div>
+        {% endif %}
       </div>
 
-      <!-- Brand Preview -->
       <div class="garment-preview-delete">
         <div class="preview-image-wrapper preview-placeholder">
           <span class="placeholder-emoji">🏷️</span>
@@ -62,14 +60,16 @@
         </div>
       </div>
 
-      <!-- Delete Form -->
       <form method="post" class="delete-form">
         {% csrf_token %}
 
-        <!-- Form Actions -->
         <div class="form-actions form-actions--delete">
-          <a href="{% url 'wardrobe:brand_details' pk=brand.pk %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
-          <button type="submit" class="btn-cta btn-danger-cta btn-form">Delete Brand</button>
+          <a href="{% url 'wardrobe:brand_details' pk=brand.pk %}" class="btn-cta btn-secondary-cta btn-form">
+            {% if brand.garment_count > 0 %}Back to Brand{% else %}Cancel{% endif %}
+          </a>
+          <button type="submit" class="btn-cta btn-danger-cta btn-form" {% if brand.garment_count > 0 %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
+            {% if brand.garment_count > 0 %}Cannot Delete ({{ brand.garment_count }} Garment{{ brand.garment_count|pluralize }}){% else %}Delete Brand{% endif %}
+          </button>
         </div>
       </form>
 
