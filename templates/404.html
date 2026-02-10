@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Wearly</title>
+    <link rel="stylesheet" href="{% static 'css/base/base.css' %}">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-icon">👗</div>
+            <h1 class="error-code">404</h1>
+            <div class="error-divider"></div>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-message">
+                Oops! It looks like this page has gone out of style. The page you're looking for doesn't exist or has been moved.
+            </p>
+
+            <div class="error-actions">
+                <a href="{% url 'core:home' %}" class="btn-404 btn-primary-404">Back to Home</a>
+                <a href="javascript:history.back()" class="btn-404 btn-secondary-404">Go Back</a>
+            </div>
+
+            <div class="error-suggestions">
+                <p class="suggestions-title">Popular Pages</p>
+                <div class="suggestions-links">
+                    <a href="{% url 'wardrobe:garment_list' %}" class="suggestion-link">Wardrobe</a>
+                    <a href="{% url 'outfits:outfits_list' %}" class="suggestion-link">Outfits</a>
+                    <a href="{% url 'planner:list' %}" class="suggestion-link">Planner</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
