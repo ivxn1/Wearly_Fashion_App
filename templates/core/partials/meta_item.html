@@ -1,6 +1,6 @@
 {% if value %}
 <div class="meta-item">
   <span class="meta-label">{{ label }}</span>
-  <span class="meta-value {% if value_class %}{{ value_class }}{% endif %}">{{ value }}{% if garment_count %} pieces{{ outfit_garments|length|pluralize }}{% endif %}</span>
+  <span class="meta-value {% if value_class %}{{ value_class }}{% endif %}">{% if value != None %}{{ value }}{% if garment_count %} pieces{{ outfit_garments|length|pluralize }}{% endif %}{% if price %} ${% endif %}{% else %}None{% endif %}</span>
 </div>
 {% endif %}
