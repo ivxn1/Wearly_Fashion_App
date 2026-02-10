@@ -1,8 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}{{ page_title }}{% endblock %}
-
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
   <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
@@ -11,25 +9,15 @@
 
 {% block container %}
 
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Add Plan Entry</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">Schedule an outfit for a specific date. Plan your wardrobe ahead and stay organized.</p>
-  </div>
-</section>
+{% include 'core/partials/hero_section.html' with title="Add Plan Entry" subtitle="Schedule an outfit for a specific date. Plan your wardrobe ahead and stay organized." is_compact=True %}
 
-<!-- Form Section -->
 <section class="form-section">
   <div class="form-container">
 
-    <!-- Form Card -->
     <div class="form-card">
       <form method="post" class="plan-form" novalidate>
         {% csrf_token %}
 
-        <!-- Display non-field errors -->
         {% if form.non_field_errors %}
           <div class="form-errors">
             {% for error in form.non_field_errors %}
@@ -38,10 +26,8 @@
           </div>
         {% endif %}
 
-        <!-- Form Fields Grid -->
         <div class="form-grid">
 
-          <!-- Date Field -->
           <div class="form-field form-field--full">
             <label for="{{ form.date.id_for_label }}" class="form-label">
               {{ form.date.label }}
@@ -58,7 +44,6 @@
             <p class="field-help">Select a date for this outfit plan</p>
           </div>
 
-          <!-- Outfit Field -->
           <div class="form-field form-field--full outfit-selection-field">
             <label class="form-label form-label--section">
               {{ form.outfit.label }}
@@ -75,7 +60,6 @@
 
             <p class="field-help field-help--cards">Select an outfit from your collection by clicking on a card</p>
 
-            <!-- Outfit Cards Grid -->
             <div class="outfit-cards-grid">
               {% for outfit in form.outfit.field.queryset %}
                 <div class="outfit-selection-card" data-outfit-id="{{ outfit.id }}">
@@ -120,7 +104,6 @@
             </div>
           </div>
 
-          <!-- Note Field -->
           <div class="form-field form-field--full">
             <label for="{{ form.note.id_for_label }}" class="form-label">
               {{ form.note.label }}
@@ -138,7 +121,6 @@
 
         </div>
 
-        <!-- Form Actions -->
         <div class="form-actions">
           <button type="submit" class="btn-cta btn-primary-cta btn-form">Add Plan Entry</button>
           <a href="{% url 'planner:list' %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
@@ -153,5 +135,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/plan_form.js' %}"></script>
+<script src="{% static 'js/../../static/scripts/plan_form.js' %}"></script>
 {% endblock %}

@@ -1,34 +1,22 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}{{ page_title }}{% endblock %}
-
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/form_page.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
 {% endblock %}
 
 {% block container %}
 
-<!-- Hero Section -->
-<section class="hero-section hero-section--compact">
-  <div class="hero-content">
-    <h1 class="hero-title hero-title--compact">Add New Garment</h1>
-    <div class="hero-divider"></div>
-    <p class="hero-subtitle">Add a new piece to your wardrobe collection. Fill in the details below to keep track of your clothing items.</p>
-  </div>
-</section>
+    {% include 'core/partials/hero_section.html' with has_cta=False has_secondary_cta=False is_compact=True title="Add New Garment" subtitle="Add a new piece to your wardrobe collection. Fill in the details below to keep track of your clothing items." %}
 
-<!-- Form Section -->
 <section class="form-section">
   <div class="form-container">
 
-    <!-- Form Card -->
     <div class="form-card">
       <form method="post" enctype="multipart/form-data" class="garment-form">
         {% csrf_token %}
 
-        <!-- Display non-field errors -->
         {% if form.non_field_errors %}
           <div class="form-errors">
             {% for error in form.non_field_errors %}
@@ -37,138 +25,24 @@
           </div>
         {% endif %}
 
-        <!-- Form Fields Grid -->
         <div class="form-grid">
 
-          <!-- Title Field -->
-          <div class="form-field form-field--full">
-            <label for="{{ form.title.id_for_label }}" class="form-label">
-              {{ form.title.label }}
-              {% if form.title.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.title }}
-            {% if form.title.errors %}
-              <div class="field-errors">
-                {% for error in form.title.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+        {% include 'core/partials/form_field.html' with field=form.title wrapper_class="form-field--full" %}
 
-          <!-- Category Field -->
-          <div class="form-field">
-            <label for="{{ form.category.id_for_label }}" class="form-label">
-              {{ form.category.label }}
-              {% if form.category.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.category }}
-            {% if form.category.errors %}
-              <div class="field-errors">
-                {% for error in form.category.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.category %}
 
-          <!-- Brand Field -->
-          <div class="form-field">
-            <label for="{{ form.brand.id_for_label }}" class="form-label">
-              {{ form.brand.label }}
-              {% if form.brand.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.brand }}
-            {% if form.brand.errors %}
-              <div class="field-errors">
-                {% for error in form.brand.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.brand %}
 
-          <!-- Color Field -->
-          <div class="form-field">
-            <label for="{{ form.color.id_for_label }}" class="form-label">
-              {{ form.color.label }}
-              {% if form.color.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.color }}
-            {% if form.color.errors %}
-              <div class="field-errors">
-                {% for error in form.color.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.color %}
 
-          <!-- Size Field -->
-          <div class="form-field">
-            <label for="{{ form.size.id_for_label }}" class="form-label">
-              {{ form.size.label }}
-              {% if form.size.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.size }}
-            {% if form.size.errors %}
-              <div class="field-errors">
-                {% for error in form.size.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.size %}
 
-          <!-- Material Field -->
-          <div class="form-field">
-            <label for="{{ form.material.id_for_label }}" class="form-label">
-              {{ form.material.label }}
-              {% if form.material.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.material }}
-            {% if form.material.errors %}
-              <div class="field-errors">
-                {% for error in form.material.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.material %}
 
-          <!-- Season Field -->
-          <div class="form-field">
-            <label for="{{ form.season.id_for_label }}" class="form-label">
-              {{ form.season.label }}
-              {% if form.season.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.season }}
-            {% if form.season.errors %}
-              <div class="field-errors">
-                {% for error in form.season.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.season %}
 
-          <!-- Price Field -->
-          <div class="form-field">
-            <label for="{{ form.price.id_for_label }}" class="form-label">
-              {{ form.price.label }}
-              {% if form.price.field.required %}<span class="required">*</span>{% endif %}
-            </label>
-            {{ form.price }}
-            {% if form.price.errors %}
-              <div class="field-errors">
-                {% for error in form.price.errors %}
-                  <span class="error-text">{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+            {% include 'core/partials/form_field.html' with field=form.price %}
 
-          <!-- Image Field -->
           <div class="form-field form-field--full">
             <label for="{{ form.image.id_for_label }}" class="form-label">
               {{ form.image.label }}
@@ -189,7 +63,6 @@
 
         </div>
 
-        <!-- Form Actions -->
         <div class="form-actions">
           <button type="submit" class="btn-cta btn-primary-cta btn-form">Add Garment</button>
           <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
