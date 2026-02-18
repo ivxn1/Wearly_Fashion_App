@@ -1,194 +1,263 @@
-from django.core.paginator import Paginator
+"""
+Views for the wardrobe application.
+
+This module contains class-based views for managing garments and brands,
+including list, detail, create, update, and delete operations.
+"""
+
 from django.db.models import Count, Avg
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views.generic import ListView, FormView, DetailView, CreateView, DeleteView, UpdateView
 
 from outfits.models import Outfit
-from wardrobe.choices import GARMENT_CATEGORY_CHOICES
-from wardrobe.forms import GarmentSearchForm, GarmentCreateForm, BrandCreateForm
+from wardrobe.forms import GarmentSearchForm, GarmentCreateForm, BrandCreateForm, GarmentEditForm, BrandSearchForm
 from wardrobe.models import Garment, Brand
 
 
-# Create your views here.
-
 # -------- GARMENT VIEWS --------- #
 
-def garment_list_view(request: HttpRequest) -> HttpResponse:
-    garments = Garment.objects.select_related("brand").all()
+class GarmentListView(ListView, FormView):
+    """
+    Display a paginated list of garments with search and filter functionality.
 
-    form = GarmentSearchForm(request.GET or None)
-    if form.is_valid():
-        if form.cleaned_data.get('brand'):
-            garments = garments.filter(brand=form.cleaned_data['brand'])
-        if form.cleaned_data.get('category'):
-            garments = garments.filter(category=form.cleaned_data['category'])
-        if form.cleaned_data.get('season'):
-            garments = garments.filter(season=form.cleaned_data['season'])
-        if form.cleaned_data.get('title'):
-            garments = garments.filter(title__icontains=form.cleaned_data['title'])
-        if form.cleaned_data.get('sort') == 'price_asc':
-            garments = garments.order_by('price')
-        elif form.cleaned_data.get('sort') == 'price_desc':
-            garments = garments.order_by('-price')
-        elif form.cleaned_data.get('sort') == 'newest':
-            garments = garments.order_by('-created_at')
+    Supports filtering by brand, category, season, and title search.
+    Also supports sorting by price and creation date.
+    """
 
-    page_number = request.GET.get("page", 1)
+    model = Garment
+    template_name = 'wardrobe/garments/garments_list.html'
+    context_object_name = 'wardrobe'
+    paginate_by = 9
+    form_class = GarmentSearchForm
+    success_url = reverse_lazy('wardrobe:garment_list')
 
-    # pagination
-    paginator = Paginator(garments, 12)
-    page_obj = paginator.get_page(page_number)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data'] = self.request.GET or None
+        return kwargs
 
-    context = {
-        "wardrobe": page_obj.object_list,
-        "page_obj": page_obj,
-        "is_paginated": page_obj.has_other_pages(),
-        'page_title': 'Wearly Wardrobe',
-        'form': form
+    def get_queryset(self):
+        qs = Garment.objects.select_related('brand').all()
+        form = self.get_form()
+        if form.is_valid():
+            data = form.cleaned_data
+            if data.get('brand'):
+                qs = qs.filter(brand=data['brand'])
+            if data.get('category'):
+                qs = qs.filter(category=data['category'])
+            if data.get('season'):
+                qs = qs.filter(season=data['season'])
+            if data.get('title'):
+                qs = qs.filter(title__icontains=data['title'])
+            sort = data.get('sort', '').lower()
+            if sort == 'price_asc':
+                qs = qs.order_by('price')
+            elif sort == 'price_desc':
+                qs = qs.order_by('-price')
+            elif sort == 'newest':
+                qs = qs.order_by('-created_at')
+        return qs
+
+    def get_context_data(self, *args,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        context['page_title'] = 'Wearly Wardrobe'
+        return context
+
+class GarmentDetailsView(DetailView):
+    """
+    Display detailed information about a single garment.
+
+    Includes the outfits that contain this garment.
+    """
+
+    model = Garment
+    template_name = 'wardrobe/garments/garment_details.html'
+    context_object_name = 'garment'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        garment = self.get_object()
+        in_outfits = Outfit.objects.filter(outfitgarment__garment=garment).distinct()
+        context['in_outfits'] = in_outfits
+        context['page_title'] = f'Garment Details - {garment.title}'
+        return context
+
+class GarmentCreateView(CreateView):
+    """Handle the creation of new garment entries."""
+
+    template_name = 'wardrobe/garments/garment_add_form.html'
+    form_class = GarmentCreateForm
+    success_url = reverse_lazy('wardrobe:garment_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Garment'
+        return context
+
+
+class GarmentDeleteView(DeleteView):
+    """
+    Handle garment deletion with protection for garments in outfits.
+
+    Prevents deletion if the garment is part of any outfit.
+    """
+
+    model = Garment
+    template_name = 'wardrobe/garments/garment_confirm_delete.html'
+    success_url = reverse_lazy('wardrobe:garment_list')
+    fields = '__all__'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.outfitgarment_set.exists():
+            messages.error(request, f'Cannot delete "{self.object.title}" because it is part of one or more outfits. Please remove it from all outfits before deleting.')
+            return redirect('wardrobe:garment_details', slug=self.object.slug)
+        return super().post(request, *args, **kwargs)
+
+    extra_context = {
+        'page_title': 'Wearly - Delete Garment',
     }
-    return render(request, "wardrobe/garments/garments_list.html", context)
 
 
-def garment_details(request: HttpRequest, slug:str) -> HttpResponse:
-    garm = get_object_or_404(Garment, slug=slug)
-    in_outfits = Outfit.objects.filter(outfitgarment__garment=garm).distinct()
+class GarmentEditView(UpdateView):
+    """Handle updating existing garment information."""
 
-    context = {
-        'page_title': f'Garment Details - {garm.title}',
-        "garment": garm,
-        "in_outfits": in_outfits
+    model = Garment
+    form_class = GarmentEditForm
+    template_name = 'wardrobe/garments/garment_edit_form.html'
+    success_url = reverse_lazy('wardrobe:garment_list')
+
+    extra_context = {
+        'page_title': 'Wearly - Edit Garment',
     }
 
-    return render(request, "wardrobe/garments/garment_details.html", context)
-
-def create_garment(request: HttpRequest) -> HttpResponse:
-    form = GarmentCreateForm(request.POST or None, files=request.FILES or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('wardrobe:garment_list')
-
-    context = {
-        'page_title': 'Add Garment',
-        'form': form,
-    }
-
-    return render(request, 'wardrobe/garments/garment_add_form.html', context)
-
-
-def garment_confirm_delete(request:HttpRequest, slug:str) -> HttpResponse:
-    garm = get_object_or_404(Garment, slug=slug)
-
-    if request.method == 'POST':
-        garm.delete()
-        return redirect('wardrobe:garment_list')
-
-    return render(request, 'wardrobe/garments/garment_confirm_delete.html', {'garment': garm})
-
-def edit_garment(request:HttpRequest, slug:str) -> HttpResponse:
-    garm = get_object_or_404(Garment, slug=slug)
-    form = GarmentCreateForm(request.POST or None, instance=garm, files=request.FILES or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('wardrobe:garment_details', slug=garm.slug)
-
-    context = {
-        'page_title': f'Edit Garment - {garm.title}',
-        'garment': garm,
-        'form': form,
-    }
-
-    return render(request, 'wardrobe/garments/garment_edit_form.html', context)
 
 # --------- BRAND VIEWS --------- #
 
-def brand_list_view(request:HttpRequest) -> HttpResponse:
-    brands = Brand.objects.annotate(
-        garment_count=Count('wardrobe')
-    ).order_by('name').all()
+class BrandListView(ListView, FormView):
+    """
+    Display a paginated list of brands with search functionality and statistics.
 
-    most_used_in_outfits = Brand.objects.annotate(
-        outfit_count=Count('wardrobe__outfitgarment__outfit', distinct=True)
-    ).order_by('-outfit_count').first()
+    Shows brand statistics including most used in outfits, most expensive,
+    and brand with most garments.
+    """
 
-    most_expensive_brand = Brand.objects.annotate(
-        avg_price=Avg('wardrobe__price')
-    ).filter(avg_price__isnull=False).order_by('-avg_price').first()
+    model = Brand
+    template_name = 'wardrobe/brands/brand_list.html'
+    context_object_name = 'brands'
+    paginate_by = 9
+    form_class = BrandSearchForm
 
-    most_garments_brand = brands.order_by('-garment_count').first()
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data'] = self.request.GET or None
+        return kwargs
 
-    context = {
-        'page_title': 'Brands',
-        'brands': brands,
-        'most_used_in_outfits': most_used_in_outfits,
-        'most_expensive_brand': most_expensive_brand,
-        'most_garments_brand': most_garments_brand,
+    def get_queryset(self):
+        qs = Brand.objects.annotate(
+            garment_count=Count('wardrobe')
+        ).order_by('name').all()
+        form = self.get_form()
+        if form.is_valid():
+            data = form.cleaned_data
+            if data.get('name'):
+                qs = qs.filter(name__icontains=data['name'])
+            if data.get('country'):
+                qs = qs.filter(country__icontains=data['country'])
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['page_title'] = 'Brands'
+        context['most_used_in_outfits'] = Brand.objects.annotate(
+            outfit_count=Count('wardrobe__outfitgarment__outfit', distinct=True)
+        ).order_by('-outfit_count').first()
+        context['most_expensive_brand'] = Brand.objects.annotate(
+            avg_price=Avg('wardrobe__price')
+        ).filter(avg_price__isnull=False).order_by('-avg_price').first()
+        context['most_garments_brand'] = self.get_queryset().order_by('-garment_count').first()
+        context['form'] = self.get_form()
+        return context
+
+class BrandDetailsView(DetailView):
+    """Display detailed information about a single brand including garment count."""
+
+    template_name = 'wardrobe/brands/brand_details.html'
+    context_object_name = 'brand'
+
+    def get_queryset(self):
+        return Brand.objects.annotate(
+            garment_count=Count('wardrobe')
+        ).all()
+
+
+    extra_context = {
+        'page_title': 'Brand Details',
     }
 
-    return render(request, 'wardrobe/brands/brand_list.html', context)
 
-def brand_details_view(request:HttpRequest, pk:int) -> HttpResponse:
-    brand = Brand.objects.filter(pk=pk).annotate(
-        garment_count=Count('wardrobe')).first()
+class BrandCreateView(CreateView):
+    """Handle the creation of new brand entries."""
 
-    context = {
-        'page_title': f'Brand Details - {brand.name}',
-        'brand': brand,
-    }
+    model = Brand
+    form_class = BrandCreateForm
+    template_name = 'wardrobe/brands/brand_add_form.html'
+    success_url = reverse_lazy('wardrobe:brand_list')
 
-    return render(request, 'wardrobe/brands/brand_details.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Brand'
+        return context
 
-def brand_create_view(request:HttpRequest) -> HttpResponse:
-    form = BrandCreateForm(request.POST or None)
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('wardrobe:brand_list')
+class BrandEditView(UpdateView):
+    """Handle updating existing brand information."""
 
-    context = {
-        'page_title': 'Add Brand',
-        'form': form,
-    }
+    model = Brand
+    form_class = BrandCreateForm
+    template_name = 'wardrobe/brands/brand_edit_form.html'
+    context_object_name = 'brand'
 
-    return render(request, 'wardrobe/brands/brand_add_form.html', context)
+    def get_success_url(self):
+        return reverse_lazy('wardrobe:brand_details', kwargs={'pk': self.object.pk})
 
-def brand_edit_view(request:HttpRequest, pk:int) -> HttpResponse:
-    brand = get_object_or_404(Brand, pk=pk)
-    form = BrandCreateForm(request.POST or None, instance=brand)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Edit Brand - {self.object.name}'
+        return context
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('wardrobe:brand_details', pk=brand.pk)
 
-    context = {
-        'page_title': f'Edit Brand - {brand.name}',
-        'brand': brand,
-        'form': form,
-    }
+class BrandDeleteView(DeleteView):
+    """
+    Handle brand deletion with protection for brands with garments.
 
-    return render(request, 'wardrobe/brands/brand_edit_form.html', context)
+    Prevents deletion if the brand has any associated garments.
+    """
 
-def brand_delete_view(request:HttpRequest, pk:int) -> HttpResponse:
-    brand = Brand.objects.filter(pk=pk).annotate(
-        garment_count=Count('wardrobe')).first()
+    model = Brand
+    template_name = 'wardrobe/brands/brand_confirm_delete.html'
+    context_object_name = 'brand'
+    success_url = reverse_lazy('wardrobe:brand_list')
 
-    if request.method == 'POST':
-        if brand.garment_count > 0:
+    def get_queryset(self):
+        return Brand.objects.annotate(garment_count=Count('wardrobe'))
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.garment_count > 0:
             messages.error(
                 request,
-                f'Cannot delete "{brand.name}" because it has {brand.garment_count} garment(s) connected to it. '
+                f'Cannot delete "{self.object.name}" because it has {self.object.garment_count} garment(s) connected to it. '
                 f'Please remove or reassign all garments before deleting this brand.'
             )
-            return redirect('wardrobe:brand_details', pk=brand.pk)
+            return redirect('wardrobe:brand_details', pk=self.object.pk)
+        messages.success(request, f'Brand "{self.object.name}" has been successfully deleted.')
+        return super().post(request, *args, **kwargs)
 
-        brand.delete()
-        messages.success(request, f'Brand "{brand.name}" has been successfully deleted.')
-        return redirect('wardrobe:brand_list')
-
-    context = {
-        'brand': brand,
-        'page_title': f'Delete Brand - {brand.name}',
-    }
-    return render(request, 'wardrobe/brands/brand_confirm_delete.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Delete Brand - {self.object.name}'
+        return context

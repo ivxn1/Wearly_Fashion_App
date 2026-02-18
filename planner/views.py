@@ -1,69 +1,123 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+"""
+Views for the planner application.
 
-from planner.forms import PlanCreateForm
+This module contains class-based views for managing outfit plan entries,
+including list, detail, create, update, and delete operations.
+"""
+
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+
+from planner.forms import PlanCreateForm, PlanSearchForm
 from planner.models import PlanEntry
-# Create your views here.
 
-app_name = 'planner'
 
-def planner_list(request):
-    plans = PlanEntry.objects.prefetch_related('outfit').order_by('date')
-    return render(request, 'planner/planner_list.html', {'plans': plans, 'page_title': 'Wearly Planner'})
+class PlannerListView(ListView, FormView):
+    """
+    Display a paginated list of plan entries with search functionality.
 
-def plan_details(request: HttpRequest, pk:int) -> HttpResponse:
-    plan_entry = PlanEntry.objects.prefetch_related('outfit').get(pk=pk)
-    prev_plan = PlanEntry.objects.filter(date__lt=plan_entry.date).order_by('-date').first()
-    next_plan = PlanEntry.objects.filter(date__gt=plan_entry.date).order_by('date').first()
+    Supports filtering by date and note content.
+    """
 
-    context = {
-        'page_title': f'Plan for {plan_entry.date}',
-        'plan_entry': plan_entry,
-        'prev_plan': prev_plan,
-        'next_plan': next_plan,
-    }
+    model = PlanEntry
+    template_name = 'planner/planner_list.html'
+    context_object_name = 'plans'
+    paginate_by = 9
+    form_class = PlanSearchForm
 
-    return render(request, 'planner/plan_entry_details.html', context)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data'] = self.request.GET
+        return kwargs
 
-def add_plan_entry(request: HttpRequest) -> HttpResponse:
-    form = PlanCreateForm(request.POST or None)
+    def get_queryset(self):
+        qs = PlanEntry.objects.prefetch_related('outfit').order_by('date')
+        form = self.get_form()
+        if form.is_valid():
+            data = form.cleaned_data
+            if data.get('date'):
+                qs = qs.filter(date=data['date'])
+            if data.get('note'):
+                qs = qs.filter(note__icontains=data['note'])
+        return qs
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('planner:plan_details', pk=form.instance.pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Wearly Planner'
+        context['form'] = self.get_form()
+        return context
 
-    context = {
-        'page_title': 'Add Plan Entry',
-        'form': form,
-    }
-    return render(request, 'planner/plan_entry_add_form.html', context)
 
-def edit_plan_entry(request: HttpRequest, pk:int) -> HttpResponse:
-    plan_entry = PlanEntry.objects.select_related('outfit').get(pk=pk)
-    form = PlanCreateForm(request.POST or None, instance=plan_entry)
+class PlanDetailsView(DetailView):
+    """
+    Display detailed information about a single plan entry.
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('planner:plan_details', pk=plan_entry.pk)
+    Includes navigation to previous and next plan entries.
+    """
 
-    context = {
-        'page_title': f'Edit Plan Entry - {plan_entry.date}',
-        'form': form,
-        'plan_entry': plan_entry,
-    }
+    model = PlanEntry
+    template_name = 'planner/plan_entry_details.html'
+    context_object_name = 'plan_entry'
 
-    return render(request, 'planner/plan_entry_edit_form.html', context)
+    def get_queryset(self):
+        return PlanEntry.objects.prefetch_related('outfit')
 
-def confirm_delete_plan_entry(request: HttpRequest, pk:int) -> HttpResponse:
-    plan_entry = PlanEntry.objects.select_related('outfit').get(pk=pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Plan for {self.object.date}'
+        context['prev_plan'] = PlanEntry.objects.filter(date__lt=self.object.date).order_by('-date').first()
+        context['next_plan'] = PlanEntry.objects.filter(date__gt=self.object.date).order_by('date').first()
+        return context
 
-    if request.method == "POST":
-        plan_entry.delete()
-        return redirect('planner:planner_list')
 
-    context = {
-        'page_title': f'Delete Plan Entry - {plan_entry.date}',
-        'plan_entry': plan_entry,
-    }
+class AddPlanEntryView(CreateView):
+    """Handle the creation of new plan entries with outfit selection."""
 
-    return render(request, 'planner/plan_entry_delete_form.html', context)
+    model = PlanEntry
+    form_class = PlanCreateForm
+    template_name = 'planner/plan_entry_add_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Plan Entry'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('planner:plan_details', kwargs={'pk': self.object.pk})
+
+
+class EditPlanEntryView(UpdateView):
+    """Handle updating existing plan entry information."""
+
+    model = PlanEntry
+    form_class = PlanCreateForm
+    template_name = 'planner/plan_entry_edit_form.html'
+    context_object_name = 'plan_entry'
+
+    def get_queryset(self):
+        return PlanEntry.objects.select_related('outfit')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Edit Plan Entry - {self.object.date}'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('planner:plan_details', kwargs={'pk': self.object.pk})
+
+
+class DeletePlanEntryView(DeleteView):
+    """Handle plan entry deletion with confirmation."""
+
+    model = PlanEntry
+    template_name = 'planner/plan_entry_delete_form.html'
+    context_object_name = 'plan_entry'
+    success_url = reverse_lazy('planner:planner_list')
+
+    def get_queryset(self):
+        return PlanEntry.objects.select_related('outfit')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Delete Plan Entry - {self.object.date}'
+        return context

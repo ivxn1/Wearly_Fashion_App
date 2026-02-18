@@ -1,72 +1,118 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+"""
+Views for the outfits application.
 
-from outfits.forms import OutfitCreateForm
+This module contains class-based views for managing outfits,
+including list, detail, create, update, and delete operations.
+"""
+
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+
+from outfits.forms import OutfitCreateForm, OutfitSearchForm
 from outfits.models import Outfit
 
 
-# Create your views here.
-def outfits_list(request: HttpRequest) -> HttpResponse:
-    outfits = Outfit.objects.prefetch_related('garments')
+class OutfitsListView(ListView, FormView):
+    """
+    Display a paginated list of outfits with search and filter functionality.
 
-    context = {
-        'page_title': 'Wearly Outfits',
-        'outfits': outfits,
-    }
+    Supports filtering by title, occasion, and season.
+    """
 
-    return render(request, 'outfits/outfits_list.html', context)
+    model = Outfit
+    template_name = 'outfits/outfits_list.html'
+    context_object_name = 'outfits'
+    paginate_by = 9
+    form_class = OutfitSearchForm
 
-def outfit_details(request: HttpRequest, id:int) -> HttpResponse:
-    outfit = get_object_or_404(Outfit, id=id)
-    outfit_garments = outfit.garments.all()
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data'] = self.request.GET or None
+        return kwargs
 
-    context = {
-        'page_title': outfit.title,
-        'outfit': outfit,
-        'outfit_garments': outfit_garments,
-    }
+    def get_queryset(self):
+        qs = Outfit.objects.prefetch_related('garments')
+        form = self.get_form()
+        if form.is_valid():
+            data = form.cleaned_data
+            if data.get('title'):
+                qs = qs.filter(title__icontains=data['title'])
+            if data.get('occasion'):
+                qs = qs.filter(occasion__icontains=data['occasion'])
+            if data.get('season'):
+                qs = qs.filter(season=data['season'])
+        return qs
 
-    return render(request, 'outfits/outfit_details.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Wearly Outfits'
+        context['form'] = self.get_form()
+        return context
 
-def add_outfit(request: HttpRequest) -> HttpResponse:
-    form = OutfitCreateForm(request.POST or None, request.FILES or None)
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('outfits:outfit_details', id=form.instance.id)
+class OutfitDetailsView(DetailView):
+    """
+    Display detailed information about a single outfit.
 
-    context = {
-        'page_title': 'Add Outfit',
-        'form': form,
-    }
+    Shows all garments included in the outfit.
+    """
 
-    return render(request, 'outfits/outfit_add_form.html', context)
+    model = Outfit
+    template_name = 'outfits/outfit_details.html'
+    context_object_name = 'outfit'
+    pk_url_kwarg = 'id'
 
-def edit_outfit(request: HttpRequest, id:int) -> HttpResponse:
-    outfit = get_object_or_404(Outfit, id=id)
-    form = OutfitCreateForm(request.POST or None, instance=outfit, files=request.FILES or None)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.object.title
+        context['outfit_garments'] = self.object.garments.all()
+        return context
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('outfits:outfit_details', id=form.instance.id)
 
-    context = {
-        'page_title': f'Edit {outfit.title}',
-        'form': form,
-        'outfit': outfit,
-    }
+class AddOutfitView(CreateView):
+    """Handle the creation of new outfit entries with garment selection."""
 
-    return render(request, 'outfits/outfit_edit_form.html', context)
+    model = Outfit
+    form_class = OutfitCreateForm
+    template_name = 'outfits/outfit_add_form.html'
 
-def confirm_delete_outfit(request: HttpRequest, id:int) -> HttpResponse:
-    outfit = get_object_or_404(Outfit, id=id)
-    if request.method == "POST":
-        outfit.delete()
-        return redirect('outfits:outfits_list')
+    def get_success_url(self):
+        return reverse_lazy('outfits:outfit_details', kwargs={'id': self.object.id})
 
-    context = {
-        'page_title': f'Delete {outfit.title}',
-        'outfit': outfit,
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Outfit'
+        return context
 
-    return render(request, 'outfits/outfit_confirm_delete.html', context)
+
+class EditOutfitView(UpdateView):
+    """Handle updating existing outfit information and garment selection."""
+
+    model = Outfit
+    form_class = OutfitCreateForm
+    template_name = 'outfits/outfit_edit_form.html'
+    context_object_name = 'outfit'
+    pk_url_kwarg = 'id'
+
+    def get_success_url(self):
+        return reverse_lazy('outfits:outfit_details', kwargs={'id': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Edit {self.object.title}'
+        return context
+
+
+class DeleteOutfitView(DeleteView):
+    """Handle outfit deletion with confirmation."""
+
+    model = Outfit
+    template_name = 'outfits/outfit_confirm_delete.html'
+    context_object_name = 'outfit'
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('outfits:outfits_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Delete {self.object.title}'
+        return context
