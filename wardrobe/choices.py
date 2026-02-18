@@ -1,15 +1,21 @@
+"""
+Choice definitions for the wardrobe application.
+
+This module contains TextChoices enums and grouped choice lists
+for garment categories used in forms and models.
+"""
+
 from django.db import models
 
 
-class SeasonChoices(models.TextChoices):
-    ALL = '', 'All Seasons'
-    SPRING = 'spring', 'Spring'
-    SUMMER = 'summer', 'Summer'
-    AUTUMN = 'autumn', 'Autumn'
-    WINTER = 'winter', 'Winter'
-
-
 class GarmentCategory(models.TextChoices):
+    """
+    Enumeration of garment category options.
+
+    Categories are organized into groups: Tops, Bottoms, Outerwear,
+    Footwear, and Accessories.
+    """
+
     ALL = "", "All Categories"
 
     # Tops
@@ -73,3 +79,17 @@ GARMENT_CATEGORY_CHOICES = [
         (GarmentCategory.SUNGLASSES, GarmentCategory.SUNGLASSES.label),
     ]),
 ]
+
+
+class SeasonChoices(models.TextChoices):
+    """
+    Enumeration of season options for garments and outfits.
+
+    Includes an 'All Seasons' option for items suitable year-round.
+    """
+
+    ALL = '', 'All Seasons'
+    SPRING = 'spring', 'Spring'
+    SUMMER = 'summer', 'Summer'
+    AUTUMN = 'autumn', 'Autumn'
+    WINTER = 'winter', 'Winter'
