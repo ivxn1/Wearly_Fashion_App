@@ -7,23 +7,23 @@ app_name = 'wardrobe'
 urlpatterns = [
     # ------ Garment URLs ------ #
     path('garments/', include([
-        path('', wardrobe.views.garment_list_view, name='garment_list'),
-        path('create/', wardrobe.views.create_garment, name='garment_create'),
+        path('', wardrobe.views.GarmentListView.as_view(), name='garment_list'),
+        path('create/', wardrobe.views.GarmentCreateView.as_view(), name='garment_create'),
         path('<slug:slug>/', include([
-            path('', wardrobe.views.garment_details, name='garment_details'),
-            path('edit/', wardrobe.views.edit_garment, name='garment_edit'),
-            path('delete/', wardrobe.views.garment_confirm_delete, name='garment_delete'),
+            path('', wardrobe.views.GarmentDetailsView.as_view(), name='garment_details'),
+            path('edit/', wardrobe.views.GarmentEditView.as_view(), name='garment_edit'),
+            path('delete/', wardrobe.views.GarmentDeleteView.as_view(), name='garment_delete'),
         ]))
     ])
          ),
     # ------ Brand URLs ------ #
     path('brands/', include([
-        path('', wardrobe.views.brand_list_view, name='brand_list'),
-        path('create/', wardrobe.views.brand_create_view, name='brand_create'),
+        path('', wardrobe.views.BrandListView.as_view(), name='brand_list'),
+        path('create/', wardrobe.views.BrandCreateView.as_view(), name='brand_create'),
         path('<int:pk>/', include([
-            path('', wardrobe.views.brand_details_view, name='brand_details'),
-            path('edit/', wardrobe.views.brand_edit_view, name='brand_edit'),
-            path('delete/', wardrobe.views.brand_delete_view, name='brand_delete'),
+            path('', wardrobe.views.BrandDetailsView.as_view(), name='brand_details'),
+            path('edit/', wardrobe.views.BrandEditView.as_view(), name='brand_edit'),
+            path('delete/', wardrobe.views.BrandDeleteView.as_view(), name='brand_delete'),
         ])),
     ])
          )

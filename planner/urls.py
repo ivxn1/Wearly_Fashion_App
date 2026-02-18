@@ -1,19 +1,19 @@
 from django.urls import path, include
 
-from planner.views import planner_list, plan_details, add_plan_entry, edit_plan_entry, confirm_delete_plan_entry
+from planner.views import PlannerListView, PlanDetailsView, AddPlanEntryView, EditPlanEntryView, DeletePlanEntryView
 
 app_name = 'planner'
 
 urlpatterns = [
     path('planner/', include([
-        path('', planner_list, name='list'),
+        path('', PlannerListView.as_view(), name='list'),
         path('<int:pk>/', include([
-            path('', plan_details, name='plan_details'),
-            path('edit/', edit_plan_entry, name='edit_plan_entry'),
-            path('delete/', confirm_delete_plan_entry, name='delete_plan_entry'),
+            path('', PlanDetailsView.as_view(), name='plan_details'),
+            path('edit/', EditPlanEntryView.as_view(), name='edit_plan_entry'),
+            path('delete/', DeletePlanEntryView.as_view(), name='delete_plan_entry'),
         ])),
 
-        path('add/', add_plan_entry, name='add_plan_entry'),
+        path('add/', AddPlanEntryView.as_view(), name='add_plan_entry'),
 
     ])),
 ]
