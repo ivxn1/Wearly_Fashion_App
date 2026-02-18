@@ -1,10 +1,26 @@
+"""
+Forms for the wardrobe application.
+
+This module contains ModelForms and regular forms for managing brands and garments,
+including create, edit, and search functionality.
+"""
+
 from django import forms
 
-from wardrobe.choices import GARMENT_CATEGORY_CHOICES, SeasonChoices
+from wardrobe.choices import GARMENT_CATEGORY_CHOICES
+from core.choices import SeasonChoices
+
 from wardrobe.models import Brand, Garment
 
 
 class BrandBaseForm(forms.ModelForm):
+    """
+    Base form for creating and editing Brand instances.
+
+    Provides validation for brand name and country fields,
+    ensuring they contain only alphabetic characters.
+    """
+
     class Meta:
         model = Brand
         fields = '__all__'
@@ -30,6 +46,12 @@ class BrandBaseForm(forms.ModelForm):
         }
 
     def clean(self):
+        """
+        Validate that name and country contain only alphabetic characters.
+
+        Returns:
+            dict: The cleaned form data.
+        """
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
         country = cleaned_data.get('country')
@@ -53,17 +75,52 @@ class BrandBaseForm(forms.ModelForm):
         self.fields['website'].widget.attrs.update({'placeholder': 'e.g. https://www.example.com'})
 
 class BrandCreateForm(BrandBaseForm):
+    """Form for creating new Brand instances."""
     pass
 
+
 class BrandEditForm(BrandBaseForm):
+    """Form for editing existing Brand instances."""
     pass
+
+
+class BrandSearchForm(forms.Form):
+    """
+    Search form for filtering brands by name and country.
+
+    All fields are optional to allow flexible filtering.
+    """
+
+    name = forms.CharField(
+        required=False,
+        label="Search by name",
+    )
+
+    country = forms.CharField(
+        required=False,
+        label="Country",
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ensure the blank "All Seasons" option remains for searching
+        self.fields['name'].widget.attrs.update({'placeholder': 'Brand name...'})
+        self.fields['country'].widget.attrs.update({'placeholder': 'Brand country...'})
 
 
 
 class GarmentBaseForm(forms.ModelForm):
+    """
+    Base form for creating and editing Garment instances.
+
+    Provides comprehensive validation for garment fields including
+    title, color, size, and material. The slug field is auto-generated
+    and displayed as read-only.
+    """
+
     class Meta:
         model = Garment
-        fields = ['title', 'category', 'brand', 'color', 'size', 'material', 'season', 'price', 'image']
+        fields = ['title', 'category', 'brand', 'color', 'size', 'material', 'slug', 'season', 'price', 'image']
         labels = {
             'title': 'Garment Title',
             'category': 'Category',
@@ -74,9 +131,11 @@ class GarmentBaseForm(forms.ModelForm):
             'season': 'Season',
             'price': 'Price ($)',
             'image': 'Image',
+            'slug': 'Slug (URL Identifier)',
         }
         widgets = {
             'title': forms.TextInput,
+            'slug': forms.TextInput,
             'category': forms.Select,
             'brand': forms.Select,
             'color': forms.TextInput,
@@ -118,6 +177,17 @@ class GarmentBaseForm(forms.ModelForm):
         self.fields['season'].required = True
         self.fields['price'].required = False
         self.fields['image'].required = False
+        self.fields['slug'].disabled = True
+        self.fields['slug'].widget.attrs['readonly'] = True
+
+        # Remove the blank "All Seasons" and "All Categories" options in create/edit forms
+        self.fields['season'].choices = [
+            (value, label) for value, label in SeasonChoices.choices if value
+        ]
+
+        self.fields['category'].choices = [
+            (value, label) for value, label in GARMENT_CATEGORY_CHOICES if value != "All"
+        ]
 
         # Add placeholders for better UX
         self.fields['title'].widget.attrs.update({'placeholder': 'e.g., Classic Blue Jeans'})
@@ -127,6 +197,12 @@ class GarmentBaseForm(forms.ModelForm):
         self.fields['price'].widget.attrs.update({'placeholder': '0.00', 'step': '0.01', 'min': '0'})
 
     def clean(self):
+        """
+        Validate garment fields for proper character content.
+
+        Returns:
+            dict: The cleaned form data.
+        """
         cleaned_data = super().clean()
         title = cleaned_data.get('title')
         color = cleaned_data.get('color')
@@ -148,15 +224,26 @@ class GarmentBaseForm(forms.ModelForm):
         return cleaned_data
 
 class GarmentCreateForm(GarmentBaseForm):
+    """Form for creating new Garment instances."""
     pass
+
 
 class GarmentEditForm(GarmentBaseForm):
+    """Form for editing existing Garment instances."""
     pass
 
+
 class GarmentSearchForm(forms.Form):
+    """
+    Search form for filtering garments by multiple criteria.
+
+    Supports filtering by title, brand, category, season, and sorting options.
+    All fields are optional to allow flexible filtering.
+    """
+
     title = forms.CharField(
         required=False,
-        label="Search",
+        label="Search by title",
     )
 
     brand = forms.ModelChoiceField(
@@ -191,7 +278,10 @@ class GarmentSearchForm(forms.Form):
         widget=forms.Select
     )
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['brand'].queryset = Brand.objects.all()
-        self.fields['title'].widget.attrs.update({'placeholder': 'Search by title...'})
+        # Ensure the blank "All Seasons" option remains for searching
+        self.fields['season'].choices = SeasonChoices.choices
+        self.fields['title'].widget.attrs.update({'placeholder': 'Garment title...'})
