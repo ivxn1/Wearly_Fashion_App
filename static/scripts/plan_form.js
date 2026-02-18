@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const radioButtons = document.querySelectorAll('.outfit-radio-input');
 
   if (radioButtons.length === 0) {
-    return; // Exit if no outfit selection on this page
+    return;
   }
 
   /**
@@ -36,50 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
       if (parentCard) {
         parentCard.classList.add('selected');
       }
-    }
-  });
-
-  /**
-   * Optional: Add keyboard navigation support
-   * Allows arrow key navigation between outfit cards
-   */
-  const outfitCards = document.querySelectorAll('.outfit-selection-card');
-
-  outfitCards.forEach((card, index) => {
-    const label = card.querySelector('.outfit-card-label');
-
-    if (label) {
-      label.addEventListener('keydown', function(e) {
-        let targetIndex = index;
-
-        // Arrow key navigation
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          targetIndex = (index + 1) % outfitCards.length;
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          targetIndex = (index - 1 + outfitCards.length) % outfitCards.length;
-        } else if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const radio = card.querySelector('.outfit-radio-input');
-          if (radio) {
-            radio.checked = true;
-            radio.dispatchEvent(new Event('change'));
-          }
-          return;
-        } else {
-          return; // Don't handle other keys
-        }
-
-        // Focus the target card
-        const targetLabel = outfitCards[targetIndex].querySelector('.outfit-card-label');
-        if (targetLabel) {
-          targetLabel.focus();
-        }
-      });
-
-      // Make labels focusable
-      label.setAttribute('tabindex', '0');
     }
   });
 });
