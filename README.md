@@ -123,8 +123,8 @@ cp .env.example .env
 # 6. Apply migrations (this automatically seeds all sample data and copies images)
 python manage.py migrate
 
-# 7. Run the development server
-python manage.py runserver
+# 7. Run the development server (add --insecure if 404 wants to be observed in DEBUG=True)
+python manage.py runserver --insecure
 
 # 8. Open in browser
 # Navigate to: http://127.0.0.1:8000/
