@@ -1,19 +1,29 @@
+"""
+Custom template tags for rendering collection sections.
+
+This module provides an inclusion tag for rendering collection sections
+with titles, items, and empty state handling.
+"""
+
 from django import template
 
 register = template.Library()
 
 
 @register.inclusion_tag('core/partials/collection_section.html')
-def collection_section(title, items, section_type, icon, action_url=None):
+def collection_section(title: str, items, section_type: str, icon: str, action_url: str = None) -> dict:
     """
-    Renders a collection section with a title, items, type, and icon.
+    Render a collection section with a title, items, type, and icon.
 
     Args:
-        title: Section title
-        items: Collection items to display
-        section_type: Type of collection ('wardrobe', 'outfits', 'plans', 'brands')
-        icon: Emoji icon for empty state
-        action_url: Optional custom URL for the empty state action button
+        title: Section title displayed as header.
+        items: Collection items to display (QuerySet or list).
+        section_type: Type of collection ('wardrobe', 'outfits', 'plans', 'brands').
+        icon: Emoji icon for empty state display.
+        action_url: Optional custom URL for the empty state action button.
+
+    Returns:
+        dict: Context for rendering the collection section template.
     """
     empty_messages = {
         'wardrobe': 'No wardrobe yet. Start building your wardrobe!',

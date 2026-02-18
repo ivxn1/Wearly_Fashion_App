@@ -28,8 +28,15 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "keepable-gonidioid-josephine.ngrok-free.dev",
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://keepable-gonidioid-josephine.ngrok-free.dev",
+]
 
 # Application definition
 PROJECT_APSS = [
@@ -40,7 +47,16 @@ PROJECT_APSS = [
 ]
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    "unfold.contrib.location_field",  # optional, if django-location-field package is used
+    "unfold.contrib.constance",  # optional, if django-constance package is used
+    "django.contrib.admin",
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -128,7 +144,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_ROOT = BASE_DIR / 'media'
