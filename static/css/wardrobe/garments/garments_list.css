@@ -1,157 +1,6 @@
 /* ===== Garments List Page (matches home liquid-glass aesthetic) ===== */
 
-/* Hero Section - Compact Variant */
-.hero-section--compact {
-  margin: 0 -24px 0 -24px;
-  padding: 80px 24px;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.hero-title--compact {
-  font-size: 2.5rem;
-  font-weight: 300;
-  letter-spacing: 2px;
-}
-
-.hero-section--compact .hero-subtitle {
-  max-width: 600px;
-  margin: 0 auto 32px auto;
-}
-
-.hero-section--compact .hero-divider {
-  margin: 20px auto;
-}
-
-.btn-cta-sm {
-  padding: 12px 26px;
-  font-size: 0.82rem;
-  letter-spacing: 0.6px;
-}
-
-/* Filters glass panel */
-.filters-glass {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 12px;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
-  padding: 32px;
-  margin-bottom: 56px;
-  position: relative;
-  overflow: hidden;
-}
-
-.filters-glass::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.filters-form {
-  position: relative;
-  z-index: 1;
-}
-
-.filters-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  gap: 20px;
-  align-items: end;
-  margin-bottom: 24px;
-}
-
-.filter-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filter-field--search {
-  grid-column: span 1;
-}
-
-.filter-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: #6a6a6a;
-  font-weight: 600;
-}
-
-/* Style all form inputs and selects */
-.filters-form input[type="text"],
-.filters-form select {
-  width: 100%;
-  height: 44px;
-  padding: 0 14px;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.7);
-  color: #1a1a1a;
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-  font-family: inherit;
-}
-
-.filters-form input[type="text"]::placeholder {
-  color: #9a9a9a;
-  font-style: italic;
-}
-
-.filters-form input[type="text"]:focus,
-.filters-form select:focus {
-  border-color: rgba(26, 26, 26, 0.28);
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.filters-form select {
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: rgba(255, 255, 255, 0.7);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a1a1a' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px 12px;
-  padding-right: 36px;
-}
-
-.filters-form select:focus {
-  background-color: rgba(255, 255, 255, 0.9);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a1a1a' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px 12px;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: center;
-  padding-top: 8px;
-}
-
-.btn-filter {
-  padding: 12px 32px;
-  font-size: 0.85rem;
-  letter-spacing: 0.7px;
-  min-width: 140px;
-}
+/* Hero Section styles inherited from base.css */
 
 /* Garments grid: same system, just tuned for list page */
 .garments-grid--list {
@@ -190,55 +39,9 @@
   opacity: 0.9;
 }
 
-/* Pagination: glass, minimal */
-.pagination-glass {
-  margin-top: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  box-shadow:
-    0 8px 28px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
+/* Pagination styles inherited from base.css */
 
-.page-btn {
-  font-size: 0.78rem;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #1a1a1a;
-  text-decoration: none;
-  padding: 10px 14px;
-  border: 1px solid rgba(26, 26, 26, 0.14);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.65);
-  transition: all 0.25s ease;
-}
-
-.page-btn:hover {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(26, 26, 26, 0.22);
-}
-
-.page-btn--disabled {
-  opacity: 0.45;
-  pointer-events: none;
-}
-
-.page-indicator {
-  font-size: 0.8rem;
-  color: #6a6a6a;
-  letter-spacing: 0.3px;
-}
-
-/* Responsive */
+/* Responsive - Filter adjustments only */
 @media (max-width: 1200px) {
   .filters-grid {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -247,15 +50,6 @@
 }
 
 @media (max-width: 992px) {
-  .hero-section--compact {
-    padding: 70px 28px;
-  }
-
-  .hero-title--compact {
-    font-size: 2.2rem;
-    letter-spacing: 1.8px;
-  }
-
   .filters-glass {
     padding: 28px;
   }
@@ -280,29 +74,6 @@
 }
 
 @media (max-width: 768px) {
-  .hero-section--compact {
-    padding: 60px 24px;
-    margin: 0 -18px 0 -18px;
-  }
-
-  .hero-title--compact {
-    font-size: 2rem;
-    letter-spacing: 1.5px;
-  }
-
-  .hero-section--compact .hero-subtitle {
-    font-size: 0.95rem;
-    margin-bottom: 28px;
-  }
-
-  .hero-section--compact .cta-buttons {
-    flex-direction: row;
-  }
-
-  .hero-section--compact .btn-cta {
-    width: auto;
-  }
-
   .filters-glass {
     padding: 24px;
     margin-bottom: 40px;
@@ -329,24 +100,6 @@
 }
 
 @media (max-width: 576px) {
-  .hero-section--compact {
-    padding: 50px 20px;
-    margin: 0 -14px 0 -14px;
-  }
-
-  .hero-title--compact {
-    font-size: 1.7rem;
-    letter-spacing: 1.2px;
-  }
-
-  .hero-section--compact .hero-subtitle {
-    font-size: 0.9rem;
-    margin-bottom: 24px;
-  }
-
-  .hero-section--compact .hero-divider {
-    margin: 16px auto;
-  }
 
   .filters-glass {
     padding: 20px;

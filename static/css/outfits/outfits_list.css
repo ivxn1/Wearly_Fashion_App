@@ -1,27 +1,5 @@
 /* ===== Outfits List Page (matches home liquid-glass aesthetic) ===== */
-
-/* Hero Section - Compact Variant */
-.hero-section--compact {
-  margin: 0 -24px 0 -24px;
-  padding: 80px 24px;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.hero-title--compact {
-  font-size: 2.5rem;
-  font-weight: 300;
-  letter-spacing: 2px;
-}
-
-.hero-section--compact .hero-subtitle {
-  max-width: 600px;
-  margin: 0 auto 32px auto;
-}
-
-.hero-section--compact .hero-divider {
-  margin: 20px auto;
-}
+/* Hero Section styles inherited from base.css */
 
 /* Outfits grid: same system as garments */
 .outfits-grid {
@@ -49,7 +27,6 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.03);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden;
 }
 
 .outfit-card::before {
@@ -249,31 +226,12 @@
 }
 
 @media (max-width: 992px) {
-  .hero-section--compact {
-    padding: 70px 28px;
-  }
-
-  .hero-title--compact {
-    font-size: 2.2rem;
-    letter-spacing: 1.8px;
+  .outfits-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .hero-section--compact {
-    padding: 60px 24px;
-    margin: 0 -18px 0 -18px;
-  }
-
-  .hero-title--compact {
-    font-size: 2rem;
-    letter-spacing: 1.5px;
-  }
-
-  .hero-section--compact .hero-subtitle {
-    font-size: 0.95rem;
-    margin-bottom: 28px;
-  }
 
   .outfits-grid {
     grid-template-columns: 1fr;
@@ -313,24 +271,6 @@
 }
 
 @media (max-width: 576px) {
-  .hero-section--compact {
-    padding: 50px 20px;
-    margin: 0 -14px 0 -14px;
-  }
-
-  .hero-title--compact {
-    font-size: 1.7rem;
-    letter-spacing: 1.2px;
-  }
-
-  .hero-section--compact .hero-subtitle {
-    font-size: 0.9rem;
-    margin-bottom: 24px;
-  }
-
-  .hero-section--compact .hero-divider {
-    margin: 16px auto;
-  }
 
   .outfits-grid {
     grid-template-columns: 1fr;
