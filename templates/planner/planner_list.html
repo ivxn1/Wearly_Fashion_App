@@ -6,19 +6,69 @@
 {% load empty_collection %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/planner/planner_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/planner/planner_list.css' %}">
 {% endblock %}
 
 {% block container %}
 
     {% url 'planner:add_plan_entry' as add_plan_entry %}
-    {% include 'core/partials/hero_section.html' with is_compact=True title="Outfit Planner" subtitle="Plan your outfits ahead of time. Organize what you'll wear for upcoming events, meetings, or special occasions. Stay stylish and prepared every day." has_cta=True has_secondary_cta=False first_url=add_plan_entry first_url_text="+ Create New Plan"%}
+    {% include 'core/partials/hero_section.html' with is_compact=True title="Outfit Planner" subtitle="Plan your outfits ahead of time. Organize what you'll wear for upcoming events, meetings, or special occasions. Stay stylish and prepared every day." has_cta=True has_secondary_cta=False first_url=add_plan_entry first_url_text="+ Create New Plan" %}
 
     <section class="collection-section">
 
+        <div class="filters-glass filters-glass--compact">
+            <form method="get" action="{% url 'planner:list' %}" class="filters-form">
+                <div class="filters-grid">
+
+                    <div class="filter-field filter-field--search">
+                        <label for="{{ form.date.id_for_label }}" class="filter-label">{{ form.date.label }}</label>
+                        {{ form.date }}
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="{{ form.note.id_for_label }}"
+                               class="filter-label">{{ form.note.label }}</label>
+                        {{ form.note }}
+                    </div>
+
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
+                    <a href="{% url 'planner:list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+                </div>
+            </form>
+        </div>
+
+
         {% collection_section "All plans" plans 'plans' '📅' add_plan_entry %}
 
-</section>
+        {% if is_paginated %}
+            <nav class="pagination-glass">
+                {% if page_obj.has_previous %}
+                    <a class="page-btn"
+                       href="?page={{ page_obj.previous_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="page-btn page-btn--disabled">Previous</span>
+                {% endif %}
+
+                <span class="page-indicator">
+          {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </span>
+
+                {% if page_obj.has_next %}
+                    <a class="page-btn"
+                       href="?page={{ page_obj.next_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="page-btn page-btn--disabled">Next</span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </section>
 
 {% endblock %}

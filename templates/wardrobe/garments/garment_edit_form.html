@@ -43,6 +43,11 @@
 
             {% include 'core/partials/form_field.html' with field=form.price %}
 
+            {% include 'core/partials/form_field.html' with field=form.slug %}
+
+            {% include 'core/partials/form_field.html' with field=form.created_at %}
+
+
           <div class="form-field form-field--full">
             <label for="{{ form.image.id_for_label }}" class="form-label">
               {{ form.image.label }}

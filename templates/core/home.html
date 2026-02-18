@@ -10,13 +10,14 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/wardrobe/garments/garments_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/planner/planner_list.css' %}">
 {% endblock %}
 
 {% block container %}
 
     {% url 'wardrobe:garment_list' as wardrobe_list %}
     {% url 'outfits:outfits_list' as outfit_list %}
-    {% include 'core/partials/hero_section.html' with has_secondary_cta=True is_compact=False title="Wearly" subtitle="Your personal fashion planning assistant" has_cta=True first_url=wardrobe_list first_url_text="Explore Wardrobe" secondary_url=outfit_list secondary_url_text="Create Outfit" %}
+    {% include 'core/partials/hero_section.html' with has_secondary_cta=True is_compact=False title="Wearly" subtitle="Introducing your personal fashion planning assistant. Organize your wardrobe into unique outfits and plan them for any occasion!" has_cta=True first_url=wardrobe_list first_url_text="Explore Wardrobe" secondary_url=outfit_list secondary_url_text="Create Outfit" %}
 
     <div class="content-wrapper">
         {% url 'wardrobe:garment_create' as garment_create_url %}

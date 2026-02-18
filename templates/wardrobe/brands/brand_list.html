@@ -4,8 +4,8 @@
 {% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/wardrobe/brand/brand_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/wardrobe/brand/brand_list.css' %}">
 {% endblock %}
 
 {% block container %}
@@ -13,30 +13,79 @@
     {% url 'wardrobe:brand_create' as brand_create %}
     {% include 'core/partials/hero_section.html' with is_compact=True title="Brands" subtitle="Browse all brands in your wardrobe collection. Manage and organize your favorite fashion labels." has_cta=True has_secondary_cta=False first_url=brand_create first_url_text="+ Add New Brand" %}
 
-<section class="collection-section">
+    <section class="collection-section">
 
-  {% if most_used_in_outfits or most_expensive_brand or most_garments_brand %}
+        {% if most_used_in_outfits or most_expensive_brand or most_garments_brand %}
 
-  <div class="brand-stats-section">
+            <div class="brand-stats-section">
 
-    {% if most_used_in_outfits and most_used_in_outfits.outfit_count > 0 %}
-        {% include 'core/partials/cards/brand_stats_card.html' with emoji="⭐" most_used=True most_expensive=False most_garments=False title="Most Used in Outfits" curr_brand=most_used_in_outfits %}
-    {% endif %}
+                {% if most_used_in_outfits and most_used_in_outfits.outfit_count > 0 %}
+                    {% include 'core/partials/cards/brand_stats_card.html' with emoji="⭐" most_used=True most_expensive=False most_garments=False title="Most Used in Outfits" curr_brand=most_used_in_outfits %}
+                {% endif %}
 
-    {% if most_expensive_brand and most_expensive_brand.avg_price %}
-        {% include 'core/partials/cards/brand_stats_card.html' with emoji="💎" most_expensive=True most_used=False most_garments=False title="Most Expensive" curr_brand=most_expensive_brand %}
-    {% endif %}
+                {% if most_expensive_brand and most_expensive_brand.avg_price %}
+                    {% include 'core/partials/cards/brand_stats_card.html' with emoji="💎" most_expensive=True most_used=False most_garments=False title="Most Expensive" curr_brand=most_expensive_brand %}
+                {% endif %}
 
-      {% if most_garments_brand and most_garments_brand.garment_count > 0 %}
-          {% include 'core/partials/cards/brand_stats_card.html' with emoji="👗" most_garments=True most_expensive=False most_used=False title="Brand With Most Garments" curr_brand=most_garments_brand %}
-      {% endif %}
-  </div>
+                {% if most_garments_brand and most_garments_brand.garment_count > 0 %}
+                    {% include 'core/partials/cards/brand_stats_card.html' with emoji="👗" most_garments=True most_expensive=False most_used=False title="Brand With Most Garments" curr_brand=most_garments_brand %}
+                {% endif %}
+            </div>
 
-  {% endif %}
+        {% endif %}
 
-    {% url 'wardrobe:brand_create' as brand_create_url %}
-    {% collection_section "All Brands" brands 'brands' '🏷️' brand_create_url %}
+        <div class="filters-glass filters-glass--compact">
+        <form method="get" action="{% url 'wardrobe:brand_list' %}" class="filters-form">
+            <div class="filters-grid">
 
-</section>
+                <div class="filter-field filter-field--search">
+                    <label for="{{ form.name.id_for_label }}" class="filter-label">{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="filter-field">
+                    <label for="{{ form.country.id_for_label }}" class="filter-label">{{ form.country.label }}</label>
+                    {{ form.country }}
+                </div>
+
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
+                <a href="{% url 'wardrobe:brand_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+            </div>
+        </form>
+    </div>
+
+
+        {% url 'wardrobe:brand_create' as brand_create_url %}
+        {% collection_section "All Brands" brands 'brands' '🏷️' brand_create_url %}
+
+        {% if is_paginated %}
+            <nav class="pagination-glass">
+                {% if page_obj.has_previous %}
+                    <a class="page-btn"
+                       href="?page={{ page_obj.previous_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="page-btn page-btn--disabled">Previous</span>
+                {% endif %}
+
+                <span class="page-indicator">
+          {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </span>
+
+                {% if page_obj.has_next %}
+                    <a class="page-btn"
+                       href="?page={{ page_obj.next_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="page-btn page-btn--disabled">Next</span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </section>
 
 {% endblock %}

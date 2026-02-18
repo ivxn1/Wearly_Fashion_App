@@ -4,17 +4,70 @@
 {% load section_header %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/outfits/outfits_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/outfits/outfits_list.css' %}">
 {% endblock %}
 
 {% block container %}
 
+
     {% url 'outfits:add_outfit' as add_outfit %}
     {% include 'core/partials/hero_section.html' with title="Your Outfits" subtitle="Browse and manage your complete outfit combinations. Create new looks by pairing garments from your wardrobe for every occasion." is_compact=True has_cta=True first_url=add_outfit first_url_text="+ Create New Outfit" %}
+
+    <div class="filters-glass filters-glass--compact">
+        <form method="get" action="{% url 'outfits:outfits_list' %}" class="filters-form">
+            <div class="filters-grid">
+
+                <div class="filter-field filter-field--search">
+                    <label for="{{ form.title.id_for_label }}" class="filter-label">{{ form.title.label }}</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="filter-field">
+                    <label for="{{ form.occasion.id_for_label }}" class="filter-label">{{ form.occasion.label }}</label>
+                    {{ form.occasion }}
+                </div>
+
+                <div class="filter-field">
+                    <label for="{{ form.season.id_for_label }}" class="filter-label">{{ form.season.label }}</label>
+                    {{ form.season }}
+                </div>
+
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
+                <a href="{% url 'outfits:outfits_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+            </div>
+        </form>
+    </div>
 
     {% url 'outfits:add_outfit' as add_outfit_url %}
     {% collection_section "All Outfits" outfits 'outfits' '✨' add_outfit_url %}
 
+    {% if is_paginated %}
+        <nav class="pagination-glass">
+            {% if page_obj.has_previous %}
+                <a class="page-btn"
+                   href="?page={{ page_obj.previous_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+                    Previous
+                </a>
+            {% else %}
+                <span class="page-btn page-btn--disabled">Previous</span>
+            {% endif %}
 
+            <span class="page-indicator">
+          {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </span>
+
+            {% if page_obj.has_next %}
+                <a class="page-btn"
+                   href="?page={{ page_obj.next_page_number }}&brand={{ current_brand }}&category={{ current_category }}&season={{ current_season }}&title={{ current_title|urlencode }}&sort={{ current_sort }}">
+                    Next
+                </a>
+            {% else %}
+                <span class="page-btn page-btn--disabled">Next</span>
+            {% endif %}
+        </nav>
+    {% endif %}
 {% endblock %}
