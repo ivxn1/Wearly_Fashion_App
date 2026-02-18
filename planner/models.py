@@ -4,9 +4,19 @@ from django.db import models
 import outfits.models
 
 
-# Create your models here.
-
 class PlanEntry(models.Model):
+    """
+    Represents a scheduled outfit plan for a specific date.
+
+    Each date can only have one plan entry (enforced by unique constraint).
+
+    Attributes:
+        date (Date): The date for this planned outfit (unique).
+        outfit (Outfit): Foreign key reference to the planned outfit.
+        note (str): Optional note about the plan (5-200 characters).
+        created_at (DateTime): Timestamp of when the plan was created.
+    """
+
     date = models.DateField(
         unique=True,
         blank=False,
@@ -39,5 +49,6 @@ class PlanEntry(models.Model):
         verbose_name_plural = 'Plan Entries'
         verbose_name = 'Plan Entry'
 
-    def __str__(self):
-        return str(self.date) + ' - '+  self.outfit.title + ' - '+ str(self.created_at)
+    def __str__(self) -> str:
+        """Return a string representation combining date, outfit title, and creation time."""
+        return str(self.date) + ' - ' + self.outfit.title + ' - ' + str(self.created_at)
