@@ -16,7 +16,7 @@
 <section class="collection-section">
 
   <div class="filters-glass">
-    <form method="get" action="{% url 'wardrobe:garment_list' %}" class="filters-form">
+    <form method="get" action="{% url 'wardrobe:garment_list' %}#items-section" class="filters-form">
       <div class="filters-grid">
 
         <div class="filter-field filter-field--search">
@@ -48,16 +48,21 @@
 
       <div class="filter-actions">
         <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
-        <a href="{% url 'wardrobe:garment_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+        <a href="{% url 'wardrobe:garment_list' %}#items-section" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
       </div>
     </form>
   </div>
 
- {% url 'wardrobe:garment_create' as add_garment_url %}
+
+    <section id="items-section">
+         {% url 'wardrobe:garment_create' as add_garment_url %}
     {% collection_section "All Garments" wardrobe 'wardrobe' '👗' add_garment_url %}
 
-    {% url 'wardrobe:garment_list' as list %}
-    {% include "core/partials/paginator.html" with url_target=list %}
+      </section>
+
+        {% url 'wardrobe:garment_list' as list %}
+        {% include "core/partials/paginator.html" with url_target=list %}
+
 
 </section>
 

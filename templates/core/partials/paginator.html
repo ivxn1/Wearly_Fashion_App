@@ -3,7 +3,7 @@
             <div class="pagination-controls">
                 {% if page_obj.has_previous %}
                     <a class="page-btn"
-                       href="?page={{ page_obj.previous_page_number }}{% if form.is_valid %}{% for field, value in form.cleaned_data.items %}{% if value %}&{{ field }}={{ value|urlencode }}{% endif %}{% endfor %}{% endif %}&per-page={{ paginate_by }}">
+                       href="?page={{ page_obj.previous_page_number }}{% if form.is_valid %}{% for field, value in form.cleaned_data.items %}{% if value %}&{{ field }}={{ value|urlencode }}{% endif %}{% endfor %}{% endif %}&per-page={{ paginate_by }}#items-section">
                         Previous
                     </a>
                 {% else %}
@@ -16,7 +16,7 @@
 
                 {% if page_obj.has_next %}
                     <a class="page-btn"
-                       href="?page={{ page_obj.next_page_number }}{% if form.is_valid %}{% for field, value in form.cleaned_data.items %}{% if value %}&{{ field }}={{ value|urlencode }}{% endif %}{% endfor %}{% endif %}&per-page={{ paginate_by }}">
+                       href="?page={{ page_obj.next_page_number }}{% if form.is_valid %}{% for field, value in form.cleaned_data.items %}{% if value %}&{{ field }}={{ value|urlencode }}{% endif %}{% endfor %}{% endif %}&per-page={{ paginate_by }}#items-section">
                         Next
                     </a>
                 {% else %}
@@ -25,7 +25,7 @@
             </div>
 
             <div class="pagination-form-container">
-                <form method="get" action="{{ url_target }}" class="pagination-form">
+                <form method="get" action="{{ url_target }}#items-section" class="pagination-form">
                     <label for="per-page">Per Page:</label>
                     <select name="per-page" id="per-page" onchange="this.form.submit()">
                         <option value="3" {% if paginate_by == 3 %}selected{% endif %}>3</option>

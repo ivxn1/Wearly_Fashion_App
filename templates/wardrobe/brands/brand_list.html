@@ -35,7 +35,7 @@
         {% endif %}
 
         <div class="filters-glass filters-glass--compact">
-        <form method="get" action="{% url 'wardrobe:brand_list' %}" class="filters-form">
+        <form method="get" action="{% url 'wardrobe:brand_list' %}#items-section" class="filters-form">
             <div class="filters-grid">
 
                 <div class="filter-field filter-field--search">
@@ -52,14 +52,16 @@
 
             <div class="filter-actions">
                 <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
-                <a href="{% url 'wardrobe:brand_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+                <a href="{% url 'wardrobe:brand_list' %}#items-section" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
             </div>
         </form>
     </div>
 
-
+    <section id="items-section">
         {% url 'wardrobe:brand_create' as brand_create_url %}
         {% collection_section "All Brands" brands 'brands' '🏷️' brand_create_url %}
+
+    </section>
 
         {% url 'wardrobe:brand_list' as list %}
         {% include 'core/partials/paginator.html' with url_target=list %}
