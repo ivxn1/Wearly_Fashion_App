@@ -495,15 +495,6 @@ git commit -m 'Add: description of feature'
 # Push to repository
 git push origin feature/your-feature
 ```
-
-### Code Standards
-- Follow PEP 8 style guidelines
-- Write meaningful commit messages
-- Add docstrings to models and views
-- Test changes before committing
-- Maintain DRY (Don't Repeat Yourself) principles
-- Use class-based views where appropriate
-
 ---
 
 ## License
