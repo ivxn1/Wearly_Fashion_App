@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, FormView, DetailView, CreateView, DeleteView, UpdateView
 
+from core.mixin import SetPaginateByMixin
 from outfits.models import Outfit
 from wardrobe.forms import GarmentSearchForm, GarmentCreateForm, BrandCreateForm, GarmentEditForm, BrandSearchForm
 from wardrobe.models import Garment, Brand
@@ -18,7 +19,7 @@ from wardrobe.models import Garment, Brand
 
 # -------- GARMENT VIEWS --------- #
 
-class GarmentListView(ListView, FormView):
+class GarmentListView(SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of garments with search and filter functionality.
 
@@ -29,7 +30,7 @@ class GarmentListView(ListView, FormView):
     model = Garment
     template_name = 'wardrobe/garments/garments_list.html'
     context_object_name = 'wardrobe'
-    paginate_by = 9
+    paginate_by = 6
     form_class = GarmentSearchForm
     success_url = reverse_lazy('wardrobe:garment_list')
 
@@ -64,6 +65,7 @@ class GarmentListView(ListView, FormView):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
         context['page_title'] = 'Wearly Wardrobe'
+        context['paginate_by'] = self.get_paginate_by(self.get_queryset())
         return context
 
 class GarmentDetailsView(DetailView):
@@ -137,7 +139,7 @@ class GarmentEditView(UpdateView):
 
 # --------- BRAND VIEWS --------- #
 
-class BrandListView(ListView, FormView):
+class BrandListView(SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of brands with search functionality and statistics.
 
@@ -148,7 +150,7 @@ class BrandListView(ListView, FormView):
     model = Brand
     template_name = 'wardrobe/brands/brand_list.html'
     context_object_name = 'brands'
-    paginate_by = 9
+    paginate_by = 6
     form_class = BrandSearchForm
 
     def get_form_kwargs(self):
@@ -180,6 +182,7 @@ class BrandListView(ListView, FormView):
         ).filter(avg_price__isnull=False).order_by('-avg_price').first()
         context['most_garments_brand'] = self.get_queryset().order_by('-garment_count').first()
         context['form'] = self.get_form()
+        context['paginate_by'] = self.get_paginate_by(self.get_queryset())
         return context
 
 class BrandDetailsView(DetailView):

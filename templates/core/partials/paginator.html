@@ -1,0 +1,39 @@
+{% if is_paginated %}
+        <nav class="pagination-glass">
+            <div class="pagination-controls">
+                {% if page_obj.has_previous %}
+                    <a class="page-btn"
+                       href="?page={{ page_obj.previous_page_number }}{% if form.is_valid %}{% for field, value in form.cleaned_data.items %}{% if value %}&{{ field }}={{ value|urlencode }}{% endif %}{% endfor %}{% endif %}&per-page={{ paginate_by }}">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="page-btn page-btn--disabled">Previous</span>
+                {% endif %}
+
+                <span class="page-indicator">
+              {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </span>
+
+                {% if page_obj.has_next %}
+                    <a class="page-btn"
+                       href="?page={{ page_obj.next_page_number }}{% if form.is_valid %}{% for field, value in form.cleaned_data.items %}{% if value %}&{{ field }}={{ value|urlencode }}{% endif %}{% endfor %}{% endif %}&per-page={{ paginate_by }}">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="page-btn page-btn--disabled">Next</span>
+                {% endif %}
+            </div>
+
+            <div class="pagination-form-container">
+                <form method="get" action="{{ url_target }}" class="pagination-form">
+                    <label for="per-page">Per Page:</label>
+                    <select name="per-page" id="per-page" onchange="this.form.submit()">
+                        <option value="3" {% if paginate_by == 3 %}selected{% endif %}>3</option>
+                        <option value="6" {% if paginate_by == 6 %}selected{% endif %}>6</option>
+                        <option value="9" {% if paginate_by == 9 %}selected{% endif %}>9</option>
+                        <option value="12" {% if paginate_by == 12 %}selected{% endif %}>12</option>
+                    </select>
+                </form>
+            </div>
+        </nav>
+    {% endif %}
