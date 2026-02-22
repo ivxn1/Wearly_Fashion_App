@@ -246,12 +246,11 @@ class GarmentSearchForm(forms.Form):
         label="Search by title",
     )
 
-    brand = forms.ModelChoiceField(
+    brand = forms.ChoiceField(
         required=False,
         label="Brand",
         widget=forms.Select,
-        empty_label="All Brands",
-        queryset=Brand.objects.none()
+        choices=[('', 'All Brands')] + [(brand.name.lower(), brand.name) for brand in Brand.objects.all()]
     )
 
     category = forms.ChoiceField(
@@ -281,7 +280,6 @@ class GarmentSearchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['brand'].queryset = Brand.objects.all()
         # Ensure the blank "All Seasons" option remains for searching
         self.fields['season'].choices = SeasonChoices.choices
         self.fields['title'].widget.attrs.update({'placeholder': 'Garment title...'})

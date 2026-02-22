@@ -44,8 +44,9 @@ class GarmentListView(SetPaginateByMixin, ListView, FormView):
         form = self.get_form()
         if form.is_valid():
             data = form.cleaned_data
-            if data.get('brand'):
-                qs = qs.filter(brand=data['brand'])
+            brand_name = data.get('brand')
+            if brand_name:
+                qs = qs.filter(brand__name__icontains=brand_name)
             if data.get('category'):
                 qs = qs.filter(category=data['category'])
             if data.get('season'):

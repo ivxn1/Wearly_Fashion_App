@@ -15,7 +15,7 @@
     {% include 'core/partials/hero_section.html' with title="Your Outfits" subtitle="Browse and manage your complete outfit combinations. Create new looks by pairing garments from your wardrobe for every occasion." is_compact=True has_cta=True first_url=add_outfit first_url_text="+ Create New Outfit" %}
 
     <div class="filters-glass filters-glass--compact">
-        <form method="get" action="{% url 'outfits:outfits_list' %}" class="filters-form">
+        <form method="get" action="{% url 'outfits:outfits_list' %}#items-section" class="filters-form">
             <div class="filters-grid">
 
                 <div class="filter-field filter-field--search">
@@ -37,13 +37,15 @@
 
             <div class="filter-actions">
                 <button type="submit" class="btn-cta btn-primary-cta btn-filter">Apply</button>
-                <a href="{% url 'outfits:outfits_list' %}" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
+                <a href="{% url 'outfits:outfits_list' %}#items-section" class="btn-cta btn-secondary-cta btn-filter">Reset</a>
             </div>
         </form>
     </div>
 
-    {% url 'outfits:add_outfit' as add_outfit_url %}
-    {% collection_section "All Outfits" outfits 'outfits' '✨' add_outfit_url %}
+    <section id="items-section">
+        {% url 'outfits:add_outfit' as add_outfit_url %}
+        {% collection_section "All Outfits" outfits 'outfits' '✨' add_outfit_url %}
+    </section>
 
     {% url 'outfits:outfits_list' as list %}
     {% include "core/partials/paginator.html" with url_target=list %}
