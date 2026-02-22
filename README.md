@@ -18,12 +18,12 @@
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
-- [Setup Instructions for Lecturers](#setup-instructions)
+- [Setup Instructions](#setup-instructions)
 - [Usage](#usage)
-- [Project Structure](#-project-structure)
+- [Project Structure](#project-structure)
 - [Database Schema](#database-schema)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Contributing](#contributing)
+- [License](#license)
 - [Contact](#contact)
 
 ---
