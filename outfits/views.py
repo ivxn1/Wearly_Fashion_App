@@ -4,15 +4,16 @@ Views for the outfits application.
 This module contains class-based views for managing outfits,
 including list, detail, create, update, and delete operations.
 """
-
+from django.http import HttpResponseBadRequest
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 
+from core.mixin import SetPaginateByMixin
 from outfits.forms import OutfitCreateForm, OutfitSearchForm
 from outfits.models import Outfit
 
 
-class OutfitsListView(ListView, FormView):
+class OutfitsListView(SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of outfits with search and filter functionality.
 
@@ -22,7 +23,7 @@ class OutfitsListView(ListView, FormView):
     model = Outfit
     template_name = 'outfits/outfits_list.html'
     context_object_name = 'outfits'
-    paginate_by = 9
+    paginate_by = 6
     form_class = OutfitSearchForm
 
     def get_form_kwargs(self):
@@ -47,6 +48,7 @@ class OutfitsListView(ListView, FormView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Wearly Outfits'
         context['form'] = self.get_form()
+        context['paginate_by'] = self.get_paginate_by(self.get_queryset())
         return context
 
 

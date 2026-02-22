@@ -8,11 +8,12 @@ including list, detail, create, update, and delete operations.
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 
+from core.mixin import SetPaginateByMixin
 from planner.forms import PlanCreateForm, PlanSearchForm
 from planner.models import PlanEntry
 
 
-class PlannerListView(ListView, FormView):
+class PlannerListView(SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of plan entries with search functionality.
 
@@ -22,7 +23,7 @@ class PlannerListView(ListView, FormView):
     model = PlanEntry
     template_name = 'planner/planner_list.html'
     context_object_name = 'plans'
-    paginate_by = 9
+    paginate_by = 6
     form_class = PlanSearchForm
 
     def get_form_kwargs(self):
@@ -45,6 +46,7 @@ class PlannerListView(ListView, FormView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Wearly Planner'
         context['form'] = self.get_form()
+        context['paginate_by'] = self.get_paginate_by(self.get_queryset())
         return context
 
 
