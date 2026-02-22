@@ -1,5 +1,4 @@
 [tool.ruff]
-# Target Python version (consistent with your EQF Level 6 CS background)
 target-version = "py312"
 line-length = 88
 
