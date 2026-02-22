@@ -94,7 +94,7 @@
 - Git
 - Virtual Environment (recommended)
 
-### Quick Setup (For Lecturers)
+### Quick Setup
 
 **The simplest way to get started:**
 
