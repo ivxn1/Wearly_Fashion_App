@@ -27,26 +27,26 @@ def category_filter(cat_value: str) -> str:
         {{ garment.category|category_filter }} -> '👕'
     """
     emojis = {
-        'tshirt': '👕',
-        'shirt': '👔',
-        'sweater': '🥼',
-        'hoodie': '🧥',
-        'jeans': '👖',
-        'trousers': '👖',
-        'shorts': '🩳',
-        'skirt': '👗',
-        'jacket': '🧥',
-        'coat': '🧥',
-        'sneakers': '👟',
-        'boots': '🥾',
-        'sandals': '👡',
-        'bag': '👜',
-        'belt': '👖',
-        'scarf': '🧣',
-        'sunglasses': '😎',
+        "tshirt": "👕",
+        "shirt": "👔",
+        "sweater": "🥼",
+        "hoodie": "🧥",
+        "jeans": "👖",
+        "trousers": "👖",
+        "shorts": "🩳",
+        "skirt": "👗",
+        "jacket": "🧥",
+        "coat": "🧥",
+        "sneakers": "👟",
+        "boots": "🥾",
+        "sandals": "👡",
+        "bag": "👜",
+        "belt": "👖",
+        "scarf": "🧣",
+        "sunglasses": "😎",
     }
 
-    return emojis.get(cat_value, '👗')
+    return emojis.get(cat_value, "👗")
 
 
 @register.filter()

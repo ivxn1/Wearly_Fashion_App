@@ -2,8 +2,8 @@ from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 
-from wardrobe.choices import GARMENT_CATEGORY_CHOICES
 from core.choices import SeasonChoices
+from wardrobe.choices import GARMENT_CATEGORY_CHOICES
 from wardrobe.validators import ImageSizeValidator
 
 
@@ -17,21 +17,9 @@ class Brand(models.Model):
         country (str): Optional country of origin for the brand.
     """
 
-    name = models.CharField(
-        max_length=80,
-        unique=True,
-        blank=False,
-        null=False
-    )
-    website = models.URLField(
-        blank=True,
-        null=True
-    )
-    country = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
+    name = models.CharField(max_length=80, unique=True, blank=False, null=False)
+    website = models.URLField(blank=True, null=True)
+    country = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self) -> str:
         """Return the brand name as string representation."""
@@ -63,75 +51,46 @@ class Garment(models.Model):
 
     title = models.CharField(
         max_length=120,
-        validators=[
-            MinLengthValidator(
-                2,
-                'Title must be at least 2 characters long!'
-            )
-        ],
+        validators=[MinLengthValidator(2, "Title must be at least 2 characters long!")],
         blank=False,
-        null=False
+        null=False,
     )
     brand = models.ForeignKey(
         to=Brand,
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        related_name='wardrobe'
+        related_name="wardrobe",
     )
 
-    slug = models.SlugField(
-        max_length=150,
-        unique=True,
-        blank=True,
-        null=True
-    )
+    slug = models.SlugField(max_length=150, unique=True, blank=True, null=True)
 
-    color = models.CharField(
-        max_length=30,
-        blank=False,
-        null=False
-    )
-    size = models.CharField(
-        max_length=10,
-        blank=True,
-        null=True
-    )
-    material = models.CharField(
-        max_length=40,
-        blank=True,
-        null=True
-    )
-    season = models.CharField(
-        choices=SeasonChoices,
-        default=SeasonChoices.ALL
-    )
+    color = models.CharField(max_length=30, blank=False, null=False)
+    size = models.CharField(max_length=10, blank=True, null=True)
+    material = models.CharField(max_length=40, blank=True, null=True)
+    season = models.CharField(choices=SeasonChoices, default=SeasonChoices.ALL)
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
         blank=True,
         null=True,
-        validators = [
-            MinValueValidator(0, 'Price must be at least 0')
-        ]
+        validators=[MinValueValidator(0, "Price must be at least 0")],
     )
     image = models.ImageField(
-        upload_to='wardrobe/',
+        upload_to="wardrobe/",
         blank=True,
         null=True,
         validators=[
             ImageSizeValidator("Image size should not exceed 5MB"),
-        ]
+        ],
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ('-created_at',)
+        ordering = ("-created_at",)
         indexes = [
-            models.Index(fields=('category', 'brand')),
-            models.Index(fields=('season',))
+            models.Index(fields=("category", "brand")),
+            models.Index(fields=("season",)),
         ]
 
     def save(self, *args, **kwargs) -> None:
@@ -141,10 +100,10 @@ class Garment(models.Model):
         The slug is created from the title and brand name using Django's slugify.
         """
         if not self.slug:
-            slug = slugify(self.title + '-' + self.brand.name)
+            slug = slugify(self.title + "-" + self.brand.name)
             self.slug = slug
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         """Return a string representation combining title, brand, and category."""
-        return self.title + ' - ' + self.brand.name + ' - ' + self.category
+        return self.title + " - " + self.brand.name + " - " + self.category

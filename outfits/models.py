@@ -2,8 +2,8 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 
 import wardrobe.models
-from wardrobe.validators import ImageSizeValidator
 from core.choices import SeasonChoices
+from wardrobe.validators import ImageSizeValidator
 
 
 class Outfit(models.Model):
@@ -24,45 +24,31 @@ class Outfit(models.Model):
         max_length=120,
         blank=False,
         null=False,
-        validators=[
-            MinLengthValidator(2, "Title must be at least 2 characters long!")
-        ]
+        validators=[MinLengthValidator(2, "Title must be at least 2 characters long!")],
     )
-    occasion = models.CharField(
-        max_length=50,
-        blank=False,
-        null=False
-    )
+    occasion = models.CharField(max_length=50, blank=False, null=False)
     season = models.CharField(
-        choices=SeasonChoices,
-        default=SeasonChoices.ALL,
-        blank=False,
-        null=False
+        choices=SeasonChoices, default=SeasonChoices.ALL, blank=False, null=False
     )
-    notes = models.TextField(
-        blank=True,
-        null=True
-    )
+    notes = models.TextField(blank=True, null=True)
     image = models.ImageField(
         blank=True,
         null=True,
-        upload_to='outfits/',
-        validators=[ImageSizeValidator("Image size should not exceed 5MB!")]
+        upload_to="outfits/",
+        validators=[ImageSizeValidator("Image size should not exceed 5MB!")],
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     garments = models.ManyToManyField(
-        'wardrobe.Garment',
-        through='OutfitGarment',
-        related_name='outfits',
+        "wardrobe.Garment",
+        through="OutfitGarment",
+        related_name="outfits",
         blank=False,
     )
 
     def __str__(self) -> str:
         """Return a string representation combining title, occasion, and season."""
-        return self.title + ' - ' + self.occasion + ' - ' + self.season
+        return self.title + " - " + self.occasion + " - " + self.season
 
 
 class OutfitGarment(models.Model):
@@ -77,27 +63,20 @@ class OutfitGarment(models.Model):
     """
 
     outfit = models.ForeignKey(
-        to=Outfit,
-        blank=False,
-        null=False,
-        on_delete=models.CASCADE
+        to=Outfit, blank=False, null=False, on_delete=models.CASCADE
     )
     garment = models.ForeignKey(
-        to=wardrobe.models.Garment,
-        blank=False,
-        null=False,
-        on_delete=models.PROTECT
+        to=wardrobe.models.Garment, blank=False, null=False, on_delete=models.PROTECT
     )
 
     class Meta:
-        ordering = ('id',)
+        ordering = ("id",)
         constraints = [
             models.UniqueConstraint(
-                fields=['outfit', 'garment'],
-                name='uniq_outfit_garment'
+                fields=["outfit", "garment"], name="uniq_outfit_garment"
             )
         ]
 
     def __str__(self) -> str:
         """Return a string representation combining outfit and garment titles."""
-        return self.outfit.title + ' - ' + self.garment.title
+        return self.outfit.title + " - " + self.garment.title

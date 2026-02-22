@@ -5,20 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0001_initial'),
-        ('wardrobe', '0001_initial'),
+        ("outfits", "0001_initial"),
+        ("wardrobe", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='outfitgarment',
-            name='garment',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='wardrobe.garment'),
+            model_name="outfitgarment",
+            name="garment",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="wardrobe.garment"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='outfitgarment',
-            constraint=models.UniqueConstraint(fields=('outfit', 'garment'), name='uniq_outfit_garment'),
+            model_name="outfitgarment",
+            constraint=models.UniqueConstraint(
+                fields=("outfit", "garment"), name="uniq_outfit_garment"
+            ),
         ),
     ]

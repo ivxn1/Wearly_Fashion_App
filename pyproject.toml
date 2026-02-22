@@ -1,0 +1,18 @@
+[tool.ruff]
+# Target Python version (consistent with your EQF Level 6 CS background)
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+# Enable specific rules
+# E/F = Flake8 defaults, I = Isort (import sorting)
+select = ["E", "F", "I", "N"]
+ignore = ["D203"] # Example: Ignore specific docstring rules
+
+[tool.ruff.lint.isort]
+# Crucial for Django: ensures 'django' is treated as a first-party/known library
+known-first-party = ["your_project_name"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

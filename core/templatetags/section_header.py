@@ -10,7 +10,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag('core/partials/section_header.html')
+@register.inclusion_tag("core/partials/section_header.html")
 def section_header(title: str) -> dict:
     """
     Render a section header with a title.
@@ -22,5 +22,5 @@ def section_header(title: str) -> dict:
         dict: Context containing the title for the template.
     """
     return {
-        'title': title,
+        "title": title,
     }

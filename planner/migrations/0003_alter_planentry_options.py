@@ -4,14 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('planner', '0002_alter_planentry_outfit'),
+        ("planner", "0002_alter_planentry_outfit"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='planentry',
-            options={'ordering': ('-date',), 'verbose_name': 'Plan Entry', 'verbose_name_plural': 'Plan Entries'},
+            name="planentry",
+            options={
+                "ordering": ("-date",),
+                "verbose_name": "Plan Entry",
+                "verbose_name_plural": "Plan Entries",
+            },
         ),
     ]

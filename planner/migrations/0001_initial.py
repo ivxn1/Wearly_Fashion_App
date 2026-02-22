@@ -6,26 +6,52 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('outfits', '0002_alter_outfitgarment_garment_and_more'),
+        ("outfits", "0002_alter_outfitgarment_garment_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PlanEntry',
+            name="PlanEntry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(unique=True)),
-                ('note', models.TextField(blank=True, max_length=200, null=True, validators=[django.core.validators.MinLengthValidator(5, 'Note must be at least 5 characters long!')])),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('outfit', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='outfits.outfit')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField(unique=True)),
+                (
+                    "note",
+                    models.TextField(
+                        blank=True,
+                        max_length=200,
+                        null=True,
+                        validators=[
+                            django.core.validators.MinLengthValidator(
+                                5, "Note must be at least 5 characters long!"
+                            )
+                        ],
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "outfit",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="outfits.outfit"
+                    ),
+                ),
             ],
             options={
-                'ordering': ('-date',),
-                'indexes': [models.Index(fields=['date'], name='planner_pla_date_9ec209_idx')],
+                "ordering": ("-date",),
+                "indexes": [
+                    models.Index(fields=["date"], name="planner_pla_date_9ec209_idx")
+                ],
             },
         ),
     ]

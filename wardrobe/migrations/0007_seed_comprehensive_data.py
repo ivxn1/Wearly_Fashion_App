@@ -2,12 +2,13 @@
 # This migration populates the database with sample data for lecturer review
 # Run: python manage.py migrate
 
-from django.db import migrations
-from django.conf import settings
-from datetime import date, timedelta
-from decimal import Decimal
 import os
 import shutil
+from datetime import date, timedelta
+from decimal import Decimal
+
+from django.conf import settings
+from django.db import migrations
 from PIL import Image
 
 
@@ -22,16 +23,16 @@ def copy_and_convert_image(source_path, dest_path):
 
             # Check if conversion is needed
             source_ext = os.path.splitext(source_path)[1].lower()
-            if source_ext in ['.jpg', '.jpeg']:
+            if source_ext in [".jpg", ".jpeg"]:
                 # Just copy
                 shutil.copy2(source_path, dest_path)
             else:
                 # Convert to JPEG using Pillow
                 with Image.open(source_path) as img:
                     # Convert to RGB if necessary (for PNG with transparency, etc.)
-                    if img.mode in ('RGBA', 'P'):
-                        img = img.convert('RGB')
-                    img.save(dest_path, 'JPEG', quality=90)
+                    if img.mode in ("RGBA", "P"):
+                        img = img.convert("RGB")
+                    img.save(dest_path, "JPEG", quality=90)
             return True
     except Exception as e:
         print(f"Failed to copy/convert image from {source_path}: {e}")
@@ -46,7 +47,7 @@ def find_image_file(directory, base_name):
     if not os.path.exists(directory):
         return None
 
-    extensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif']
+    extensions = [".jpg", ".jpeg", ".png", ".webp", ".avif"]
     for ext in extensions:
         path = os.path.join(directory, base_name + ext)
         if os.path.exists(path):
@@ -58,7 +59,7 @@ def find_image_file(directory, base_name):
             name_lower = filename.lower()
             if name_lower.startswith(base_name.lower()):
                 return os.path.join(directory, filename)
-    except:
+    except Exception:
         pass
 
     return None
@@ -76,109 +77,109 @@ def seed_all_data(apps, schema_editor):
     """
 
     # Get model references
-    Brand = apps.get_model('wardrobe', 'Brand')
-    Garment = apps.get_model('wardrobe', 'Garment')
-    Outfit = apps.get_model('outfits', 'Outfit')
-    OutfitGarment = apps.get_model('outfits', 'OutfitGarment')
-    PlanEntry = apps.get_model('planner', 'PlanEntry')
+    Brand = apps.get_model("wardrobe", "Brand")
+    Garment = apps.get_model("wardrobe", "Garment")
+    Outfit = apps.get_model("outfits", "Outfit")
+    OutfitGarment = apps.get_model("outfits", "OutfitGarment")
+    PlanEntry = apps.get_model("planner", "PlanEntry")
 
     # Setup media directories
     media_root = settings.MEDIA_ROOT
-    wardrobe_dir = os.path.join(media_root, 'wardrobe')
-    outfits_dir = os.path.join(media_root, 'outfits')
+    wardrobe_dir = os.path.join(media_root, "wardrobe")
+    outfits_dir = os.path.join(media_root, "outfits")
     os.makedirs(wardrobe_dir, exist_ok=True)
     os.makedirs(outfits_dir, exist_ok=True)
 
     # Source directory for pre-downloaded sample images
     base_dir = settings.BASE_DIR
-    sample_clothes_dir = os.path.join(base_dir, 'static', 'sample_images', 'clothes')
-    sample_outfits_dir = os.path.join(base_dir, 'static', 'sample_images', 'outfits')
+    sample_clothes_dir = os.path.join(base_dir, "static", "sample_images", "clothes")
+    sample_outfits_dir = os.path.join(base_dir, "static", "sample_images", "outfits")
 
     # Map category to subfolder name (handling plural/singular variations)
     CATEGORY_FOLDER_MAP = {
-        'tshirt': 'tshirts',
-        'shirt': 'shirt',
-        'sweater': 'sweater',
-        'hoodie': 'hoodie',
-        'jeans': 'jeans',
-        'trousers': 'trousers',
-        'shorts': 'shorts',
-        'skirt': 'skirts',
-        'jacket': 'jacket',
-        'coat': 'coat',
-        'sneakers': 'sneakers',
-        'boots': 'boots',
-        'sandals': 'sandals',
-        'bag': 'bags',
-        'belt': 'belts',
-        'scarf': 'scarf',
-        'sunglasses': 'sunglasses',
+        "tshirt": "tshirts",
+        "shirt": "shirt",
+        "sweater": "sweater",
+        "hoodie": "hoodie",
+        "jeans": "jeans",
+        "trousers": "trousers",
+        "shorts": "shorts",
+        "skirt": "skirts",
+        "jacket": "jacket",
+        "coat": "coat",
+        "sneakers": "sneakers",
+        "boots": "boots",
+        "sandals": "sandals",
+        "bag": "bags",
+        "belt": "belts",
+        "scarf": "scarf",
+        "sunglasses": "sunglasses",
     }
 
     # Map garment slug to source image filename (without extension)
     GARMENT_IMAGE_MAP = {
         # T-shirts
-        'classic-white-t-shirt-uniqlo': 'tshirt1',
-        'black-graphic-tee-nike': 'tshirt2',
+        "classic-white-t-shirt-uniqlo": "tshirt1",
+        "black-graphic-tee-nike": "tshirt2",
         # Shirts
-        'navy-blue-polo-shirt-ralph-lauren': 'shirt',
-        'oxford-button-down-shirt-zara': 'shirt2',
+        "navy-blue-polo-shirt-ralph-lauren": "shirt",
+        "oxford-button-down-shirt-zara": "shirt2",
         # Sweaters
-        'merino-wool-sweater-uniqlo': 'sweater1',
-        'cable-knit-sweater-hm': 'sweater2',
+        "merino-wool-sweater-uniqlo": "sweater1",
+        "cable-knit-sweater-hm": "sweater2",
         # Hoodies
-        'classic-grey-hoodie-nike': 'hoodie1',
-        'zip-up-tech-hoodie-adidas': 'hoodie2',
+        "classic-grey-hoodie-nike": "hoodie1",
+        "zip-up-tech-hoodie-adidas": "hoodie2",
         # Jeans
-        '501-original-fit-jeans-levis': 'jeans1',
-        'slim-fit-dark-wash-jeans-zara': 'jeans2',
+        "501-original-fit-jeans-levis": "jeans1",
+        "slim-fit-dark-wash-jeans-zara": "jeans2",
         # Trousers
-        'tailored-chino-trousers-hm': 'trousers1',
-        'wool-blend-dress-trousers-zara': 'trousers2',
+        "tailored-chino-trousers-hm": "trousers1",
+        "wool-blend-dress-trousers-zara": "trousers2",
         # Shorts
-        'athletic-training-shorts-nike': 'shorts1',
-        'chino-shorts-uniqlo': 'shorts2',
+        "athletic-training-shorts-nike": "shorts1",
+        "chino-shorts-uniqlo": "shorts2",
         # Skirt
-        'pleated-midi-skirt-zara': 'skirts',
+        "pleated-midi-skirt-zara": "skirts",
         # Jackets
-        'classic-denim-jacket-levis': 'jacket1',
-        'lightweight-bomber-jacket-zara': 'jacket2',
-        'waterproof-rain-jacket-north-face': 'jacket3',
+        "classic-denim-jacket-levis": "jacket1",
+        "lightweight-bomber-jacket-zara": "jacket2",
+        "waterproof-rain-jacket-north-face": "jacket3",
         # Coats
-        'down-puffer-coat-north-face': 'coat1',
-        'wool-overcoat-zara': 'coat2',
+        "down-puffer-coat-north-face": "coat1",
+        "wool-overcoat-zara": "coat2",
         # Sneakers
-        'air-max-90-sneakers-nike': 'sneakers1',
-        'ultraboost-running-shoes-adidas': 'sneakers2',
-        'stan-smith-classics-adidas': 'sneakers3',
+        "air-max-90-sneakers-nike": "sneakers1",
+        "ultraboost-running-shoes-adidas": "sneakers2",
+        "stan-smith-classics-adidas": "sneakers3",
         # Boots
-        'chelsea-leather-boots-zara': 'boots1',
-        'waterproof-hiking-boots-north-face': 'boots2',
+        "chelsea-leather-boots-zara": "boots1",
+        "waterproof-hiking-boots-north-face": "boots2",
         # Sandals
-        'leather-slide-sandals-hm': 'sandals',
+        "leather-slide-sandals-hm": "sandals",
         # Bags
-        'canvas-tote-bag-uniqlo': 'bags1',
-        'leather-messenger-bag-zara': 'bags2',
+        "canvas-tote-bag-uniqlo": "bags1",
+        "leather-messenger-bag-zara": "bags2",
         # Belts
-        'classic-leather-belt-tommy-hilfiger': 'belt1',
-        'reversible-belt-calvin-klein': 'belt2',
+        "classic-leather-belt-tommy-hilfiger": "belt1",
+        "reversible-belt-calvin-klein": "belt2",
         # Scarf
-        'cashmere-wool-scarf-uniqlo': 'scarf',
+        "cashmere-wool-scarf-uniqlo": "scarf",
         # Sunglasses
-        'aviator-sunglasses-ralph-lauren': 'sunglasses1',
-        'wayfarer-sunglasses-tommy-hilfiger': 'sunglasses2',
+        "aviator-sunglasses-ralph-lauren": "sunglasses1",
+        "wayfarer-sunglasses-tommy-hilfiger": "sunglasses2",
     }
 
     # Map outfit slug to source image filename (without extension)
     OUTFIT_IMAGE_MAP = {
-        'casual_weekend_brunch': 'casual',
-        'business_casual_friday': 'business',
-        'summer_beach_day': 'summer',
-        'evening_date_night': 'evening_date',
-        'winter_city_walk': 'winter',
-        'gym_workout_session': 'workout',
-        'sunday_coffee_run': 'sunday',
-        'formal_business_meeting': 'formal',
+        "casual_weekend_brunch": "casual",
+        "business_casual_friday": "business",
+        "summer_beach_day": "summer",
+        "evening_date_night": "evening_date",
+        "winter_city_walk": "winter",
+        "gym_workout_session": "workout",
+        "sunday_coffee_run": "sunday",
+        "formal_business_meeting": "formal",
     }
 
     def get_garment_image(index, slug, category):
@@ -205,7 +206,7 @@ def seed_all_data(apps, schema_editor):
 
     def get_outfit_image(index, title):
         """Copy pre-downloaded outfit image to media folder"""
-        slug = title.lower().replace(' ', '_').replace("'", "")
+        slug = title.lower().replace(" ", "_").replace("'", "")
         dest_filename = f"{slug}.jpg"
         dest_path = os.path.join(outfits_dir, dest_filename)
 
@@ -229,489 +230,487 @@ def seed_all_data(apps, schema_editor):
     # =========================================================================
     brands_data = [
         {
-            'name': 'Nike',
-            'website': 'https://www.nike.com',
-            'country': 'United States',
+            "name": "Nike",
+            "website": "https://www.nike.com",
+            "country": "United States",
         },
         {
-            'name': 'Adidas',
-            'website': 'https://www.adidas.com',
-            'country': 'Germany',
+            "name": "Adidas",
+            "website": "https://www.adidas.com",
+            "country": "Germany",
         },
         {
-            'name': 'Zara',
-            'website': 'https://www.zara.com',
-            'country': 'Spain',
+            "name": "Zara",
+            "website": "https://www.zara.com",
+            "country": "Spain",
         },
         {
-            'name': 'H&M',
-            'website': 'https://www.hm.com',
-            'country': 'Sweden',
+            "name": "H&M",
+            "website": "https://www.hm.com",
+            "country": "Sweden",
         },
         {
-            'name': 'Levi\'s',
-            'website': 'https://www.levi.com',
-            'country': 'United States',
+            "name": "Levi's",
+            "website": "https://www.levi.com",
+            "country": "United States",
         },
         {
-            'name': 'Uniqlo',
-            'website': 'https://www.uniqlo.com',
-            'country': 'Japan',
+            "name": "Uniqlo",
+            "website": "https://www.uniqlo.com",
+            "country": "Japan",
         },
         {
-            'name': 'The North Face',
-            'website': 'https://www.thenorthface.com',
-            'country': 'United States',
+            "name": "The North Face",
+            "website": "https://www.thenorthface.com",
+            "country": "United States",
         },
         {
-            'name': 'Ralph Lauren',
-            'website': 'https://www.ralphlauren.com',
-            'country': 'United States',
+            "name": "Ralph Lauren",
+            "website": "https://www.ralphlauren.com",
+            "country": "United States",
         },
         {
-            'name': 'Tommy Hilfiger',
-            'website': 'https://www.tommyhilfiger.com',
-            'country': 'United States',
+            "name": "Tommy Hilfiger",
+            "website": "https://www.tommyhilfiger.com",
+            "country": "United States",
         },
         {
-            'name': 'Calvin Klein',
-            'website': 'https://www.calvinklein.com',
-            'country': 'United States',
+            "name": "Calvin Klein",
+            "website": "https://www.calvinklein.com",
+            "country": "United States",
         },
     ]
 
     brands = {}
     for brand_data in brands_data:
         brand, created = Brand.objects.get_or_create(
-            name=brand_data['name'],
-            defaults=brand_data
+            name=brand_data["name"], defaults=brand_data
         )
-        brands[brand_data['name']] = brand
+        brands[brand_data["name"]] = brand
 
     # =========================================================================
     # 2. GARMENTS - Complete with ALL fields
     # Fields: title, category, brand, slug, color, size, material, season, price, image
-    # Note: slug is auto-generated by model save(), image paths reference media/wardrobe/
+
+    # Note: slug is auto-generated by model save(),
+    # image paths reference media/wardrobe/
     # =========================================================================
     garments_data = [
         # ----- TOPS -----
         {
-            'title': 'Classic White T-Shirt',
-            'category': 'tshirt',
-            'brand': brands['Uniqlo'],
-            'slug': 'classic-white-t-shirt-uniqlo',
-            'color': 'White',
-            'size': 'M',
-            'material': 'Cotton',
-            'season': 'summer',
-            'price': Decimal('14.99'),
-            'image': '',  # Leave empty or set path like 'wardrobe/white_tshirt.jpg'
+            "title": "Classic White T-Shirt",
+            "category": "tshirt",
+            "brand": brands["Uniqlo"],
+            "slug": "classic-white-t-shirt-uniqlo",
+            "color": "White",
+            "size": "M",
+            "material": "Cotton",
+            "season": "summer",
+            "price": Decimal("14.99"),
+            "image": "",  # Leave empty or set path like 'wardrobe/white_tshirt.jpg'
         },
         {
-            'title': 'Black Graphic Tee',
-            'category': 'tshirt',
-            'brand': brands['Nike'],
-            'slug': 'black-graphic-tee-nike',
-            'color': 'Black',
-            'size': 'L',
-            'material': 'Cotton Blend',
-            'season': 'summer',
-            'price': Decimal('29.99'),
-            'image': '',
+            "title": "Black Graphic Tee",
+            "category": "tshirt",
+            "brand": brands["Nike"],
+            "slug": "black-graphic-tee-nike",
+            "color": "Black",
+            "size": "L",
+            "material": "Cotton Blend",
+            "season": "summer",
+            "price": Decimal("29.99"),
+            "image": "",
         },
         {
-            'title': 'Navy Blue Polo Shirt',
-            'category': 'shirt',
-            'brand': brands['Ralph Lauren'],
-            'slug': 'navy-blue-polo-shirt-ralph-lauren',
-            'color': 'Navy Blue',
-            'size': 'M',
-            'material': 'Pique Cotton',
-            'season': 'spring',
-            'price': Decimal('89.99'),
-            'image': '',
+            "title": "Navy Blue Polo Shirt",
+            "category": "shirt",
+            "brand": brands["Ralph Lauren"],
+            "slug": "navy-blue-polo-shirt-ralph-lauren",
+            "color": "Navy Blue",
+            "size": "M",
+            "material": "Pique Cotton",
+            "season": "spring",
+            "price": Decimal("89.99"),
+            "image": "",
         },
         {
-            'title': 'Oxford Button-Down Shirt',
-            'category': 'shirt',
-            'brand': brands['Zara'],
-            'slug': 'oxford-button-down-shirt-zara',
-            'color': 'Light Blue',
-            'size': 'L',
-            'material': 'Oxford Cotton',
-            'season': 'spring',
-            'price': Decimal('45.99'),
-            'image': '',
+            "title": "Oxford Button-Down Shirt",
+            "category": "shirt",
+            "brand": brands["Zara"],
+            "slug": "oxford-button-down-shirt-zara",
+            "color": "Light Blue",
+            "size": "L",
+            "material": "Oxford Cotton",
+            "season": "spring",
+            "price": Decimal("45.99"),
+            "image": "",
         },
         {
-            'title': 'Merino Wool Sweater',
-            'category': 'sweater',
-            'brand': brands['Uniqlo'],
-            'slug': 'merino-wool-sweater-uniqlo',
-            'color': 'Burgundy',
-            'size': 'M',
-            'material': 'Merino Wool',
-            'season': 'winter',
-            'price': Decimal('49.99'),
-            'image': '',
+            "title": "Merino Wool Sweater",
+            "category": "sweater",
+            "brand": brands["Uniqlo"],
+            "slug": "merino-wool-sweater-uniqlo",
+            "color": "Burgundy",
+            "size": "M",
+            "material": "Merino Wool",
+            "season": "winter",
+            "price": Decimal("49.99"),
+            "image": "",
         },
         {
-            'title': 'Cable Knit Sweater',
-            'category': 'sweater',
-            'brand': brands['H&M'],
-            'slug': 'cable-knit-sweater-hm',
-            'color': 'Cream',
-            'size': 'L',
-            'material': 'Acrylic Blend',
-            'season': 'winter',
-            'price': Decimal('34.99'),
-            'image': '',
+            "title": "Cable Knit Sweater",
+            "category": "sweater",
+            "brand": brands["H&M"],
+            "slug": "cable-knit-sweater-hm",
+            "color": "Cream",
+            "size": "L",
+            "material": "Acrylic Blend",
+            "season": "winter",
+            "price": Decimal("34.99"),
+            "image": "",
         },
         {
-            'title': 'Classic Grey Hoodie',
-            'category': 'hoodie',
-            'brand': brands['Nike'],
-            'slug': 'classic-grey-hoodie-nike',
-            'color': 'Heather Grey',
-            'size': 'L',
-            'material': 'French Terry',
-            'season': 'autumn',
-            'price': Decimal('65.00'),
-            'image': '',
+            "title": "Classic Grey Hoodie",
+            "category": "hoodie",
+            "brand": brands["Nike"],
+            "slug": "classic-grey-hoodie-nike",
+            "color": "Heather Grey",
+            "size": "L",
+            "material": "French Terry",
+            "season": "autumn",
+            "price": Decimal("65.00"),
+            "image": "",
         },
         {
-            'title': 'Zip-Up Tech Hoodie',
-            'category': 'hoodie',
-            'brand': brands['Adidas'],
-            'slug': 'zip-up-tech-hoodie-adidas',
-            'color': 'Black',
-            'size': 'M',
-            'material': 'Recycled Polyester',
-            'season': 'autumn',
-            'price': Decimal('79.99'),
-            'image': '',
+            "title": "Zip-Up Tech Hoodie",
+            "category": "hoodie",
+            "brand": brands["Adidas"],
+            "slug": "zip-up-tech-hoodie-adidas",
+            "color": "Black",
+            "size": "M",
+            "material": "Recycled Polyester",
+            "season": "autumn",
+            "price": Decimal("79.99"),
+            "image": "",
         },
-
         # ----- BOTTOMS -----
         {
-            'title': '501 Original Fit Jeans',
-            'category': 'jeans',
-            'brand': brands['Levi\'s'],
-            'slug': '501-original-fit-jeans-levis',
-            'color': 'Indigo',
-            'size': '32x32',
-            'material': 'Denim',
-            'season': 'autumn',
-            'price': Decimal('89.99'),
-            'image': '',
+            "title": "501 Original Fit Jeans",
+            "category": "jeans",
+            "brand": brands["Levi's"],
+            "slug": "501-original-fit-jeans-levis",
+            "color": "Indigo",
+            "size": "32x32",
+            "material": "Denim",
+            "season": "autumn",
+            "price": Decimal("89.99"),
+            "image": "",
         },
         {
-            'title': 'Slim Fit Dark Wash Jeans',
-            'category': 'jeans',
-            'brand': brands['Zara'],
-            'slug': 'slim-fit-dark-wash-jeans-zara',
-            'color': 'Dark Blue',
-            'size': '31x32',
-            'material': 'Stretch Denim',
-            'season': 'autumn',
-            'price': Decimal('49.99'),
-            'image': '',
+            "title": "Slim Fit Dark Wash Jeans",
+            "category": "jeans",
+            "brand": brands["Zara"],
+            "slug": "slim-fit-dark-wash-jeans-zara",
+            "color": "Dark Blue",
+            "size": "31x32",
+            "material": "Stretch Denim",
+            "season": "autumn",
+            "price": Decimal("49.99"),
+            "image": "",
         },
         {
-            'title': 'Tailored Chino Trousers',
-            'category': 'trousers',
-            'brand': brands['H&M'],
-            'slug': 'tailored-chino-trousers-hm',
-            'color': 'Khaki',
-            'size': '32',
-            'material': 'Cotton Twill',
-            'season': 'spring',
-            'price': Decimal('34.99'),
-            'image': '',
+            "title": "Tailored Chino Trousers",
+            "category": "trousers",
+            "brand": brands["H&M"],
+            "slug": "tailored-chino-trousers-hm",
+            "color": "Khaki",
+            "size": "32",
+            "material": "Cotton Twill",
+            "season": "spring",
+            "price": Decimal("34.99"),
+            "image": "",
         },
         {
-            'title': 'Wool Blend Dress Trousers',
-            'category': 'trousers',
-            'brand': brands['Zara'],
-            'slug': 'wool-blend-dress-trousers-zara',
-            'color': 'Charcoal',
-            'size': '32',
-            'material': 'Wool Blend',
-            'season': 'winter',
-            'price': Decimal('69.99'),
-            'image': '',
+            "title": "Wool Blend Dress Trousers",
+            "category": "trousers",
+            "brand": brands["Zara"],
+            "slug": "wool-blend-dress-trousers-zara",
+            "color": "Charcoal",
+            "size": "32",
+            "material": "Wool Blend",
+            "season": "winter",
+            "price": Decimal("69.99"),
+            "image": "",
         },
         {
-            'title': 'Athletic Training Shorts',
-            'category': 'shorts',
-            'brand': brands['Nike'],
-            'slug': 'athletic-training-shorts-nike',
-            'color': 'Black',
-            'size': 'M',
-            'material': 'Dri-FIT Polyester',
-            'season': 'summer',
-            'price': Decimal('35.00'),
-            'image': '',
+            "title": "Athletic Training Shorts",
+            "category": "shorts",
+            "brand": brands["Nike"],
+            "slug": "athletic-training-shorts-nike",
+            "color": "Black",
+            "size": "M",
+            "material": "Dri-FIT Polyester",
+            "season": "summer",
+            "price": Decimal("35.00"),
+            "image": "",
         },
         {
-            'title': 'Chino Shorts',
-            'category': 'shorts',
-            'brand': brands['Uniqlo'],
-            'slug': 'chino-shorts-uniqlo',
-            'color': 'Navy',
-            'size': 'M',
-            'material': 'Cotton',
-            'season': 'summer',
-            'price': Decimal('29.99'),
-            'image': '',
+            "title": "Chino Shorts",
+            "category": "shorts",
+            "brand": brands["Uniqlo"],
+            "slug": "chino-shorts-uniqlo",
+            "color": "Navy",
+            "size": "M",
+            "material": "Cotton",
+            "season": "summer",
+            "price": Decimal("29.99"),
+            "image": "",
         },
         {
-            'title': 'Pleated Midi Skirt',
-            'category': 'skirt',
-            'brand': brands['Zara'],
-            'slug': 'pleated-midi-skirt-zara',
-            'color': 'Black',
-            'size': 'S',
-            'material': 'Polyester',
-            'season': 'spring',
-            'price': Decimal('55.99'),
-            'image': '',
+            "title": "Pleated Midi Skirt",
+            "category": "skirt",
+            "brand": brands["Zara"],
+            "slug": "pleated-midi-skirt-zara",
+            "color": "Black",
+            "size": "S",
+            "material": "Polyester",
+            "season": "spring",
+            "price": Decimal("55.99"),
+            "image": "",
         },
-
         # ----- OUTERWEAR -----
         {
-            'title': 'Classic Denim Jacket',
-            'category': 'jacket',
-            'brand': brands['Levi\'s'],
-            'slug': 'classic-denim-jacket-levis',
-            'color': 'Medium Wash',
-            'size': 'L',
-            'material': 'Denim',
-            'season': 'spring',
-            'price': Decimal('98.00'),
-            'image': '',
+            "title": "Classic Denim Jacket",
+            "category": "jacket",
+            "brand": brands["Levi's"],
+            "slug": "classic-denim-jacket-levis",
+            "color": "Medium Wash",
+            "size": "L",
+            "material": "Denim",
+            "season": "spring",
+            "price": Decimal("98.00"),
+            "image": "",
         },
         {
-            'title': 'Lightweight Bomber Jacket',
-            'category': 'jacket',
-            'brand': brands['Zara'],
-            'slug': 'lightweight-bomber-jacket-zara',
-            'color': 'Olive Green',
-            'size': 'M',
-            'material': 'Nylon',
-            'season': 'autumn',
-            'price': Decimal('79.99'),
-            'image': '',
+            "title": "Lightweight Bomber Jacket",
+            "category": "jacket",
+            "brand": brands["Zara"],
+            "slug": "lightweight-bomber-jacket-zara",
+            "color": "Olive Green",
+            "size": "M",
+            "material": "Nylon",
+            "season": "autumn",
+            "price": Decimal("79.99"),
+            "image": "",
         },
         {
-            'title': 'Waterproof Rain Jacket',
-            'category': 'jacket',
-            'brand': brands['The North Face'],
-            'slug': 'waterproof-rain-jacket-north-face',
-            'color': 'Black',
-            'size': 'L',
-            'material': 'Gore-Tex',
-            'season': 'autumn',
-            'price': Decimal('199.00'),
-            'image': '',
+            "title": "Waterproof Rain Jacket",
+            "category": "jacket",
+            "brand": brands["The North Face"],
+            "slug": "waterproof-rain-jacket-north-face",
+            "color": "Black",
+            "size": "L",
+            "material": "Gore-Tex",
+            "season": "autumn",
+            "price": Decimal("199.00"),
+            "image": "",
         },
         {
-            'title': 'Down Puffer Coat',
-            'category': 'coat',
-            'brand': brands['The North Face'],
-            'slug': 'down-puffer-coat-north-face',
-            'color': 'Black',
-            'size': 'L',
-            'material': 'Down Fill',
-            'season': 'winter',
-            'price': Decimal('279.00'),
-            'image': '',
+            "title": "Down Puffer Coat",
+            "category": "coat",
+            "brand": brands["The North Face"],
+            "slug": "down-puffer-coat-north-face",
+            "color": "Black",
+            "size": "L",
+            "material": "Down Fill",
+            "season": "winter",
+            "price": Decimal("279.00"),
+            "image": "",
         },
         {
-            'title': 'Wool Overcoat',
-            'category': 'coat',
-            'brand': brands['Zara'],
-            'slug': 'wool-overcoat-zara',
-            'color': 'Camel',
-            'size': 'M',
-            'material': 'Wool Blend',
-            'season': 'winter',
-            'price': Decimal('169.00'),
-            'image': '',
+            "title": "Wool Overcoat",
+            "category": "coat",
+            "brand": brands["Zara"],
+            "slug": "wool-overcoat-zara",
+            "color": "Camel",
+            "size": "M",
+            "material": "Wool Blend",
+            "season": "winter",
+            "price": Decimal("169.00"),
+            "image": "",
         },
-
         # ----- FOOTWEAR -----
         {
-            'title': 'Air Max 90 Sneakers',
-            'category': 'sneakers',
-            'brand': brands['Nike'],
-            'slug': 'air-max-90-sneakers-nike',
-            'color': 'White',
-            'size': 'US 10',
-            'material': 'Leather and Mesh',
-            'season': 'spring',
-            'price': Decimal('129.99'),
-            'image': '',
+            "title": "Air Max 90 Sneakers",
+            "category": "sneakers",
+            "brand": brands["Nike"],
+            "slug": "air-max-90-sneakers-nike",
+            "color": "White",
+            "size": "US 10",
+            "material": "Leather and Mesh",
+            "season": "spring",
+            "price": Decimal("129.99"),
+            "image": "",
         },
         {
-            'title': 'Ultraboost Running Shoes',
-            'category': 'sneakers',
-            'brand': brands['Adidas'],
-            'slug': 'ultraboost-running-shoes-adidas',
-            'color': 'Core Black',
-            'size': 'US 10',
-            'material': 'Primeknit',
-            'season': 'summer',
-            'price': Decimal('179.99'),
-            'image': '',
+            "title": "Ultraboost Running Shoes",
+            "category": "sneakers",
+            "brand": brands["Adidas"],
+            "slug": "ultraboost-running-shoes-adidas",
+            "color": "Core Black",
+            "size": "US 10",
+            "material": "Primeknit",
+            "season": "summer",
+            "price": Decimal("179.99"),
+            "image": "",
         },
         {
-            'title': 'Stan Smith Classics',
-            'category': 'sneakers',
-            'brand': brands['Adidas'],
-            'slug': 'stan-smith-classics-adidas',
-            'color': 'White Green',
-            'size': 'US 9',
-            'material': 'Leather',
-            'season': 'spring',
-            'price': Decimal('95.00'),
-            'image': '',
+            "title": "Stan Smith Classics",
+            "category": "sneakers",
+            "brand": brands["Adidas"],
+            "slug": "stan-smith-classics-adidas",
+            "color": "White Green",
+            "size": "US 9",
+            "material": "Leather",
+            "season": "spring",
+            "price": Decimal("95.00"),
+            "image": "",
         },
         {
-            'title': 'Chelsea Leather Boots',
-            'category': 'boots',
-            'brand': brands['Zara'],
-            'slug': 'chelsea-leather-boots-zara',
-            'color': 'Brown',
-            'size': 'EU 43',
-            'material': 'Genuine Leather',
-            'season': 'autumn',
-            'price': Decimal('119.00'),
-            'image': '',
+            "title": "Chelsea Leather Boots",
+            "category": "boots",
+            "brand": brands["Zara"],
+            "slug": "chelsea-leather-boots-zara",
+            "color": "Brown",
+            "size": "EU 43",
+            "material": "Genuine Leather",
+            "season": "autumn",
+            "price": Decimal("119.00"),
+            "image": "",
         },
         {
-            'title': 'Waterproof Hiking Boots',
-            'category': 'boots',
-            'brand': brands['The North Face'],
-            'slug': 'waterproof-hiking-boots-north-face',
-            'color': 'Brown Black',
-            'size': 'US 10',
-            'material': 'Leather and Gore-Tex',
-            'season': 'winter',
-            'price': Decimal('189.00'),
-            'image': '',
+            "title": "Waterproof Hiking Boots",
+            "category": "boots",
+            "brand": brands["The North Face"],
+            "slug": "waterproof-hiking-boots-north-face",
+            "color": "Brown Black",
+            "size": "US 10",
+            "material": "Leather and Gore-Tex",
+            "season": "winter",
+            "price": Decimal("189.00"),
+            "image": "",
         },
         {
-            'title': 'Leather Slide Sandals',
-            'category': 'sandals',
-            'brand': brands['H&M'],
-            'slug': 'leather-slide-sandals-hm',
-            'color': 'Tan',
-            'size': 'US 10',
-            'material': 'Leather',
-            'season': 'summer',
-            'price': Decimal('29.99'),
-            'image': '',
+            "title": "Leather Slide Sandals",
+            "category": "sandals",
+            "brand": brands["H&M"],
+            "slug": "leather-slide-sandals-hm",
+            "color": "Tan",
+            "size": "US 10",
+            "material": "Leather",
+            "season": "summer",
+            "price": Decimal("29.99"),
+            "image": "",
         },
-
         # ----- ACCESSORIES -----
         {
-            'title': 'Canvas Tote Bag',
-            'category': 'bag',
-            'brand': brands['Uniqlo'],
-            'slug': 'canvas-tote-bag-uniqlo',
-            'color': 'Natural',
-            'size': 'One Size',
-            'material': 'Canvas',
-            'season': 'summer',
-            'price': Decimal('19.99'),
-            'image': '',
+            "title": "Canvas Tote Bag",
+            "category": "bag",
+            "brand": brands["Uniqlo"],
+            "slug": "canvas-tote-bag-uniqlo",
+            "color": "Natural",
+            "size": "One Size",
+            "material": "Canvas",
+            "season": "summer",
+            "price": Decimal("19.99"),
+            "image": "",
         },
         {
-            'title': 'Leather Messenger Bag',
-            'category': 'bag',
-            'brand': brands['Zara'],
-            'slug': 'leather-messenger-bag-zara',
-            'color': 'Black',
-            'size': 'Medium',
-            'material': 'Faux Leather',
-            'season': 'autumn',
-            'price': Decimal('69.99'),
-            'image': '',
+            "title": "Leather Messenger Bag",
+            "category": "bag",
+            "brand": brands["Zara"],
+            "slug": "leather-messenger-bag-zara",
+            "color": "Black",
+            "size": "Medium",
+            "material": "Faux Leather",
+            "season": "autumn",
+            "price": Decimal("69.99"),
+            "image": "",
         },
         {
-            'title': 'Classic Leather Belt',
-            'category': 'belt',
-            'brand': brands['Tommy Hilfiger'],
-            'slug': 'classic-leather-belt-tommy-hilfiger',
-            'color': 'Brown',
-            'size': '34',
-            'material': 'Genuine Leather',
-            'season': 'autumn',
-            'price': Decimal('49.99'),
-            'image': '',
+            "title": "Classic Leather Belt",
+            "category": "belt",
+            "brand": brands["Tommy Hilfiger"],
+            "slug": "classic-leather-belt-tommy-hilfiger",
+            "color": "Brown",
+            "size": "34",
+            "material": "Genuine Leather",
+            "season": "autumn",
+            "price": Decimal("49.99"),
+            "image": "",
         },
         {
-            'title': 'Reversible Belt',
-            'category': 'belt',
-            'brand': brands['Calvin Klein'],
-            'slug': 'reversible-belt-calvin-klein',
-            'color': 'Black Brown',
-            'size': '32',
-            'material': 'Leather',
-            'season': 'winter',
-            'price': Decimal('59.99'),
-            'image': '',
+            "title": "Reversible Belt",
+            "category": "belt",
+            "brand": brands["Calvin Klein"],
+            "slug": "reversible-belt-calvin-klein",
+            "color": "Black Brown",
+            "size": "32",
+            "material": "Leather",
+            "season": "winter",
+            "price": Decimal("59.99"),
+            "image": "",
         },
         {
-            'title': 'Cashmere Wool Scarf',
-            'category': 'scarf',
-            'brand': brands['Uniqlo'],
-            'slug': 'cashmere-wool-scarf-uniqlo',
-            'color': 'Grey',
-            'size': 'One Size',
-            'material': 'Cashmere Wool',
-            'season': 'winter',
-            'price': Decimal('39.99'),
-            'image': '',
+            "title": "Cashmere Wool Scarf",
+            "category": "scarf",
+            "brand": brands["Uniqlo"],
+            "slug": "cashmere-wool-scarf-uniqlo",
+            "color": "Grey",
+            "size": "One Size",
+            "material": "Cashmere Wool",
+            "season": "winter",
+            "price": Decimal("39.99"),
+            "image": "",
         },
         {
-            'title': 'Aviator Sunglasses',
-            'category': 'sunglasses',
-            'brand': brands['Ralph Lauren'],
-            'slug': 'aviator-sunglasses-ralph-lauren',
-            'color': 'Gold Brown',
-            'size': 'One Size',
-            'material': 'Metal Frame',
-            'season': 'summer',
-            'price': Decimal('145.00'),
-            'image': '',
+            "title": "Aviator Sunglasses",
+            "category": "sunglasses",
+            "brand": brands["Ralph Lauren"],
+            "slug": "aviator-sunglasses-ralph-lauren",
+            "color": "Gold Brown",
+            "size": "One Size",
+            "material": "Metal Frame",
+            "season": "summer",
+            "price": Decimal("145.00"),
+            "image": "",
         },
         {
-            'title': 'Wayfarer Sunglasses',
-            'category': 'sunglasses',
-            'brand': brands['Tommy Hilfiger'],
-            'slug': 'wayfarer-sunglasses-tommy-hilfiger',
-            'color': 'Black',
-            'size': 'One Size',
-            'material': 'Acetate',
-            'season': 'summer',
-            'price': Decimal('89.99'),
-            'image': '',
+            "title": "Wayfarer Sunglasses",
+            "category": "sunglasses",
+            "brand": brands["Tommy Hilfiger"],
+            "slug": "wayfarer-sunglasses-tommy-hilfiger",
+            "color": "Black",
+            "size": "One Size",
+            "material": "Acetate",
+            "season": "summer",
+            "price": Decimal("89.99"),
+            "image": "",
         },
     ]
 
     garments = {}
     for index, garment_data in enumerate(garments_data):
         # Download image for this garment (pass category for relevant image)
-        image_path = get_garment_image(index, garment_data['slug'], garment_data['category'])
-        garment_data['image'] = image_path
+        image_path = get_garment_image(
+            index, garment_data["slug"], garment_data["category"]
+        )
+        garment_data["image"] = image_path
 
         garment, created = Garment.objects.get_or_create(
-            slug=garment_data['slug'],
-            defaults=garment_data
+            slug=garment_data["slug"], defaults=garment_data
         )
-        garments[garment_data['slug']] = garment
+        garments[garment_data["slug"]] = garment
 
     # =========================================================================
     # 3. OUTFITS - Complete with ALL fields
@@ -719,74 +718,86 @@ def seed_all_data(apps, schema_editor):
     # =========================================================================
     outfits_data = [
         {
-            'title': 'Casual Weekend Brunch',
-            'occasion': 'Brunch',
-            'season': 'spring',
-            'notes': 'Perfect relaxed look for a weekend brunch with friends. Comfortable yet put-together.',
-            'image': '',
+            "title": "Casual Weekend Brunch",
+            "occasion": "Brunch",
+            "season": "spring",
+            "notes": (
+                "Perfect relaxed look for a weekend"
+                " brunch with friends. Comfortable yet put-together."
+            ),
+            "image": "",
         },
         {
-            'title': 'Business Casual Friday',
-            'occasion': 'Office',
-            'season': 'autumn',
-            'notes': 'Smart casual office look suitable for client meetings and casual Fridays.',
-            'image': '',
+            "title": "Business Casual Friday",
+            "occasion": "Office",
+            "season": "autumn",
+            "notes": (
+                "Smart casual office look suitable for "
+                "client meetings and casual Fridays."
+            ),
+            "image": "",
         },
         {
-            'title': 'Summer Beach Day',
-            'occasion': 'Beach',
-            'season': 'summer',
-            'notes': 'Light and breezy outfit perfect for a day at the beach or poolside relaxation.',
-            'image': '',
+            "title": "Summer Beach Day",
+            "occasion": "Beach",
+            "season": "summer",
+            "notes": (
+                "Light and breezy outfit perfect for a"
+                " day at the beach or poolside relaxation."
+            ),
+            "image": "",
         },
         {
-            'title': 'Evening Date Night',
-            'occasion': 'Date Night',
-            'season': 'autumn',
-            'notes': 'Elegant and sophisticated look for a romantic dinner date.',
-            'image': '',
+            "title": "Evening Date Night",
+            "occasion": "Date Night",
+            "season": "autumn",
+            "notes": "Elegant and sophisticated look for a romantic dinner date.",
+            "image": "",
         },
         {
-            'title': 'Winter City Walk',
-            'occasion': 'Outdoor',
-            'season': 'winter',
-            'notes': 'Warm layered outfit for exploring the city during cold winter days.',
-            'image': '',
+            "title": "Winter City Walk",
+            "occasion": "Outdoor",
+            "season": "winter",
+            "notes": (
+                "Warm layered outfit for exploring the city during cold winter days."
+            ),
+            "image": "",
         },
         {
-            'title': 'Gym Workout Session',
-            'occasion': 'Gym',
-            'season': 'all',
-            'notes': 'High-performance athletic wear for an intense workout session.',
-            'image': '',
+            "title": "Gym Workout Session",
+            "occasion": "Gym",
+            "season": "all",
+            "notes": "High-performance athletic wear for an intense workout session.",
+            "image": "",
         },
         {
-            'title': 'Sunday Coffee Run',
-            'occasion': 'Casual',
-            'season': 'spring',
-            'notes': 'Quick and easy outfit for grabbing coffee or running errands.',
-            'image': '',
+            "title": "Sunday Coffee Run",
+            "occasion": "Casual",
+            "season": "spring",
+            "notes": "Quick and easy outfit for grabbing coffee or running errands.",
+            "image": "",
         },
         {
-            'title': 'Formal Business Meeting',
-            'occasion': 'Business',
-            'season': 'winter',
-            'notes': 'Professional attire for important business meetings and presentations.',
-            'image': '',
+            "title": "Formal Business Meeting",
+            "occasion": "Business",
+            "season": "winter",
+            "notes": (
+                "Professional attire for important business meetings and presentations."
+            ),
+            "image": "",
         },
     ]
 
     outfits = {}
     for index, outfit_data in enumerate(outfits_data):
         # Download image for this outfit
-        image_path = get_outfit_image(index, outfit_data['title'])
-        outfit_data['image'] = image_path
+        image_path = get_outfit_image(index, outfit_data["title"])
+        outfit_data["image"] = image_path
 
         outfit, created = Outfit.objects.get_or_create(
-            title=outfit_data['title'],
-            defaults=outfit_data
+            title=outfit_data["title"], defaults=outfit_data
         )
-        outfits[outfit_data['title']] = outfit
+        outfits[outfit_data["title"]] = outfit
 
     # =========================================================================
     # 4. OUTFIT-GARMENT RELATIONSHIPS (Through Model)
@@ -794,60 +805,52 @@ def seed_all_data(apps, schema_editor):
     # =========================================================================
     outfit_garment_mappings = [
         # Casual Weekend Brunch
-        ('Casual Weekend Brunch', 'classic-white-t-shirt-uniqlo'),
-        ('Casual Weekend Brunch', '501-original-fit-jeans-levis'),
-        ('Casual Weekend Brunch', 'stan-smith-classics-adidas'),
-        ('Casual Weekend Brunch', 'wayfarer-sunglasses-tommy-hilfiger'),
-
+        ("Casual Weekend Brunch", "classic-white-t-shirt-uniqlo"),
+        ("Casual Weekend Brunch", "501-original-fit-jeans-levis"),
+        ("Casual Weekend Brunch", "stan-smith-classics-adidas"),
+        ("Casual Weekend Brunch", "wayfarer-sunglasses-tommy-hilfiger"),
         # Business Casual Friday
-        ('Business Casual Friday', 'oxford-button-down-shirt-zara'),
-        ('Business Casual Friday', 'tailored-chino-trousers-hm'),
-        ('Business Casual Friday', 'chelsea-leather-boots-zara'),
-        ('Business Casual Friday', 'classic-leather-belt-tommy-hilfiger'),
-
+        ("Business Casual Friday", "oxford-button-down-shirt-zara"),
+        ("Business Casual Friday", "tailored-chino-trousers-hm"),
+        ("Business Casual Friday", "chelsea-leather-boots-zara"),
+        ("Business Casual Friday", "classic-leather-belt-tommy-hilfiger"),
         # Summer Beach Day
-        ('Summer Beach Day', 'black-graphic-tee-nike'),
-        ('Summer Beach Day', 'chino-shorts-uniqlo'),
-        ('Summer Beach Day', 'leather-slide-sandals-hm'),
-        ('Summer Beach Day', 'aviator-sunglasses-ralph-lauren'),
-
+        ("Summer Beach Day", "black-graphic-tee-nike"),
+        ("Summer Beach Day", "chino-shorts-uniqlo"),
+        ("Summer Beach Day", "leather-slide-sandals-hm"),
+        ("Summer Beach Day", "aviator-sunglasses-ralph-lauren"),
         # Evening Date Night
-        ('Evening Date Night', 'navy-blue-polo-shirt-ralph-lauren'),
-        ('Evening Date Night', 'slim-fit-dark-wash-jeans-zara'),
-        ('Evening Date Night', 'chelsea-leather-boots-zara'),
-        ('Evening Date Night', 'reversible-belt-calvin-klein'),
-
+        ("Evening Date Night", "navy-blue-polo-shirt-ralph-lauren"),
+        ("Evening Date Night", "slim-fit-dark-wash-jeans-zara"),
+        ("Evening Date Night", "chelsea-leather-boots-zara"),
+        ("Evening Date Night", "reversible-belt-calvin-klein"),
         # Winter City Walk
-        ('Winter City Walk', 'merino-wool-sweater-uniqlo'),
-        ('Winter City Walk', 'wool-blend-dress-trousers-zara'),
-        ('Winter City Walk', 'down-puffer-coat-north-face'),
-        ('Winter City Walk', 'waterproof-hiking-boots-north-face'),
-        ('Winter City Walk', 'cashmere-wool-scarf-uniqlo'),
-
+        ("Winter City Walk", "merino-wool-sweater-uniqlo"),
+        ("Winter City Walk", "wool-blend-dress-trousers-zara"),
+        ("Winter City Walk", "down-puffer-coat-north-face"),
+        ("Winter City Walk", "waterproof-hiking-boots-north-face"),
+        ("Winter City Walk", "cashmere-wool-scarf-uniqlo"),
         # Gym Workout Session
-        ('Gym Workout Session', 'black-graphic-tee-nike'),
-        ('Gym Workout Session', 'athletic-training-shorts-nike'),
-        ('Gym Workout Session', 'ultraboost-running-shoes-adidas'),
-
+        ("Gym Workout Session", "black-graphic-tee-nike"),
+        ("Gym Workout Session", "athletic-training-shorts-nike"),
+        ("Gym Workout Session", "ultraboost-running-shoes-adidas"),
         # Sunday Coffee Run
-        ('Sunday Coffee Run', 'classic-grey-hoodie-nike'),
-        ('Sunday Coffee Run', '501-original-fit-jeans-levis'),
-        ('Sunday Coffee Run', 'air-max-90-sneakers-nike'),
-        ('Sunday Coffee Run', 'canvas-tote-bag-uniqlo'),
-
+        ("Sunday Coffee Run", "classic-grey-hoodie-nike"),
+        ("Sunday Coffee Run", "501-original-fit-jeans-levis"),
+        ("Sunday Coffee Run", "air-max-90-sneakers-nike"),
+        ("Sunday Coffee Run", "canvas-tote-bag-uniqlo"),
         # Formal Business Meeting
-        ('Formal Business Meeting', 'cable-knit-sweater-hm'),
-        ('Formal Business Meeting', 'wool-blend-dress-trousers-zara'),
-        ('Formal Business Meeting', 'wool-overcoat-zara'),
-        ('Formal Business Meeting', 'chelsea-leather-boots-zara'),
-        ('Formal Business Meeting', 'leather-messenger-bag-zara'),
+        ("Formal Business Meeting", "cable-knit-sweater-hm"),
+        ("Formal Business Meeting", "wool-blend-dress-trousers-zara"),
+        ("Formal Business Meeting", "wool-overcoat-zara"),
+        ("Formal Business Meeting", "chelsea-leather-boots-zara"),
+        ("Formal Business Meeting", "leather-messenger-bag-zara"),
     ]
 
     for outfit_title, garment_slug in outfit_garment_mappings:
         if outfit_title in outfits and garment_slug in garments:
             OutfitGarment.objects.get_or_create(
-                outfit=outfits[outfit_title],
-                garment=garments[garment_slug]
+                outfit=outfits[outfit_title], garment=garments[garment_slug]
             )
 
     # =========================================================================
@@ -859,82 +862,90 @@ def seed_all_data(apps, schema_editor):
 
     plan_entries_data = [
         {
-            'date': today,
-            'outfit': outfits['Sunday Coffee Run'],
-            'note': 'Starting the day with a quick coffee run. Keep it casual and comfortable.',
+            "date": today,
+            "outfit": outfits["Sunday Coffee Run"],
+            "note": (
+                "Starting the day with a quick coffee run."
+                " Keep it casual and comfortable."
+            ),
         },
         {
-            'date': today + timedelta(days=1),
-            'outfit': outfits['Business Casual Friday'],
-            'note': 'Important client meeting today. Need to look professional but approachable.',
+            "date": today + timedelta(days=1),
+            "outfit": outfits["Business Casual Friday"],
+            "note": (
+                "Important client meeting today. "
+                "Need to look professional but approachable."
+            ),
         },
         {
-            'date': today + timedelta(days=2),
-            'outfit': outfits['Gym Workout Session'],
-            'note': 'Morning gym session before work. Pack change of clothes for the office.',
+            "date": today + timedelta(days=2),
+            "outfit": outfits["Gym Workout Session"],
+            "note": (
+                "Morning gym session before work."
+                " Pack change of clothes for the office."
+            ),
         },
         {
-            'date': today + timedelta(days=3),
-            'outfit': outfits['Casual Weekend Brunch'],
-            'note': 'Brunch plans with college friends at the new cafe downtown.',
+            "date": today + timedelta(days=3),
+            "outfit": outfits["Casual Weekend Brunch"],
+            "note": "Brunch plans with college friends at the new cafe downtown.",
         },
         {
-            'date': today + timedelta(days=4),
-            'outfit': outfits['Evening Date Night'],
-            'note': 'Anniversary dinner reservation at 7 PM. Make sure to iron the shirt!',
+            "date": today + timedelta(days=4),
+            "outfit": outfits["Evening Date Night"],
+            "note": "Anniversary dinner at 7 PM. Make sure to iron the shirt!",
         },
         {
-            'date': today + timedelta(days=5),
-            'outfit': outfits['Winter City Walk'],
-            'note': 'Weekend trip to the city center. Weather forecast shows cold temperatures.',
+            "date": today + timedelta(days=5),
+            "outfit": outfits["Winter City Walk"],
+            "note": "Weekend trip to the city. Forecast shows cold temperatures.",
         },
         {
-            'date': today + timedelta(days=6),
-            'outfit': outfits['Summer Beach Day'],
-            'note': 'Beach day with family! Remember to pack sunscreen and towels.',
+            "date": today + timedelta(days=6),
+            "outfit": outfits["Summer Beach Day"],
+            "note": "Beach day with family! Remember to pack sunscreen and towels.",
         },
         {
-            'date': today + timedelta(days=7),
-            'outfit': outfits['Formal Business Meeting'],
-            'note': 'Quarterly review presentation. Need to make a strong impression.',
+            "date": today + timedelta(days=7),
+            "outfit": outfits["Formal Business Meeting"],
+            "note": "Quarterly review presentation. Need to make a strong impression.",
         },
         {
-            'date': today + timedelta(days=8),
-            'outfit': outfits['Sunday Coffee Run'],
-            'note': 'Lazy Sunday morning. Just grabbing groceries and relaxing at home.',
+            "date": today + timedelta(days=8),
+            "outfit": outfits["Sunday Coffee Run"],
+            "note": (
+                "Lazy Sunday morning. Just grabbing groceries and relaxing at home."
+            ),
         },
         {
-            'date': today + timedelta(days=9),
-            'outfit': outfits['Business Casual Friday'],
-            'note': 'Team lunch today. Casual but still office-appropriate.',
+            "date": today + timedelta(days=9),
+            "outfit": outfits["Business Casual Friday"],
+            "note": "Team lunch today. Casual but still office-appropriate.",
         },
         {
-            'date': today + timedelta(days=10),
-            'outfit': outfits['Casual Weekend Brunch'],
-            'note': 'Working from home today but have a video call in the afternoon.',
+            "date": today + timedelta(days=10),
+            "outfit": outfits["Casual Weekend Brunch"],
+            "note": "Working from home today but have a video call in the afternoon.",
         },
         {
-            'date': today + timedelta(days=11),
-            'outfit': outfits['Gym Workout Session'],
-            'note': 'Evening workout class at 6 PM. Remember to bring water bottle.',
+            "date": today + timedelta(days=11),
+            "outfit": outfits["Gym Workout Session"],
+            "note": "Evening workout class at 6 PM. Remember to bring water bottle.",
         },
         {
-            'date': today + timedelta(days=12),
-            'outfit': outfits['Evening Date Night'],
-            'note': 'Concert night! Standing tickets so wear comfortable but stylish outfit.',
+            "date": today + timedelta(days=12),
+            "outfit": outfits["Evening Date Night"],
+            "note": "Concert night! Wear comfortable but stylish outfit.",
         },
         {
-            'date': today + timedelta(days=13),
-            'outfit': outfits['Winter City Walk'],
-            'note': 'Museum visit planned. Expected to walk a lot, dress warmly.',
+            "date": today + timedelta(days=13),
+            "outfit": outfits["Winter City Walk"],
+            "note": "Museum visit planned. Expected to walk a lot, dress warmly.",
         },
     ]
 
     for entry_data in plan_entries_data:
-        PlanEntry.objects.get_or_create(
-            date=entry_data['date'],
-            defaults=entry_data
-        )
+        PlanEntry.objects.get_or_create(date=entry_data["date"], defaults=entry_data)
 
 
 def reverse_seed(apps, schema_editor):
@@ -942,11 +953,11 @@ def reverse_seed(apps, schema_editor):
     Reverse migration - removes all seeded data.
     Deletes in reverse order to respect foreign key constraints.
     """
-    PlanEntry = apps.get_model('planner', 'PlanEntry')
-    OutfitGarment = apps.get_model('outfits', 'OutfitGarment')
-    Outfit = apps.get_model('outfits', 'Outfit')
-    Garment = apps.get_model('wardrobe', 'Garment')
-    Brand = apps.get_model('wardrobe', 'Brand')
+    PlanEntry = apps.get_model("planner", "PlanEntry")
+    OutfitGarment = apps.get_model("outfits", "OutfitGarment")
+    Outfit = apps.get_model("outfits", "Outfit")
+    Garment = apps.get_model("wardrobe", "Garment")
+    Brand = apps.get_model("wardrobe", "Brand")
 
     # Delete in reverse order of creation
     PlanEntry.objects.all().delete()
@@ -975,9 +986,9 @@ class Migration(migrations.Migration):
     """
 
     dependencies = [
-        ('wardrobe', '0006_alter_garment_category_alter_garment_image_and_more'),
-        ('outfits', '0007_alter_outfitgarment_options_and_more'),
-        ('planner', '0004_alter_planentry_options'),
+        ("wardrobe", "0006_alter_garment_category_alter_garment_image_and_more"),
+        ("outfits", "0007_alter_outfitgarment_options_and_more"),
+        ("planner", "0004_alter_planentry_options"),
     ]
 
     operations = [

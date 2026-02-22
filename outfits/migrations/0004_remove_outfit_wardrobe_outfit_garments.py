@@ -4,20 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0003_outfit_garments'),
-        ('wardrobe', '0002_alter_category_options_remove_category_slug'),
+        ("outfits", "0003_outfit_garments"),
+        ("wardrobe", "0002_alter_category_options_remove_category_slug"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='outfit',
-            name='wardrobe',
+            model_name="outfit",
+            name="wardrobe",
         ),
         migrations.AddField(
-            model_name='outfit',
-            name='garments',
-            field=models.ManyToManyField(related_name='outfits', through='outfits.OutfitGarment', to='wardrobe.garment'),
+            model_name="outfit",
+            name="garments",
+            field=models.ManyToManyField(
+                related_name="outfits",
+                through="outfits.OutfitGarment",
+                to="wardrobe.garment",
+            ),
         ),
     ]

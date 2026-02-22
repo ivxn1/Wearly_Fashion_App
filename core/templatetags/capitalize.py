@@ -23,6 +23,6 @@ def capitalize(value: str) -> str:
     Example:
         {{ "hello world"|capitalize }} -> "Hello World"
     """
-    words = value.split(' ')
-    capitalized_result = ' '.join(word.capitalize() for word in words)
+    words = value.split(" ")
+    capitalized_result = " ".join(word.capitalize() for word in words)
     return capitalized_result

@@ -4,23 +4,62 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wardrobe', '0003_alter_category_name'),
+        ("wardrobe", "0003_alter_category_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='garment',
-            name='category',
-            field=models.CharField(choices=[('Tops', [('tshirt', 'T-Shirt'), ('shirt', 'Shirt'), ('sweater', 'Sweater'), ('hoodie', 'Hoodie')]), ('Bottoms', [('jeans', 'Jeans'), ('trousers', 'Trousers'), ('shorts', 'Shorts'), ('skirt', 'Skirt')]), ('Outerwear', [('jacket', 'Jacket'), ('coat', 'Coat')]), ('Footwear', [('sneakers', 'Sneakers'), ('boots', 'Boots'), ('sandals', 'Sandals')]), ('Accessories', [('bag', 'Bag'), ('belt', 'Belt'), ('scarf', 'Scarf'), ('sunglasses', 'Sunglasses')])], max_length=30),
+            model_name="garment",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    (
+                        "Tops",
+                        [
+                            ("tshirt", "T-Shirt"),
+                            ("shirt", "Shirt"),
+                            ("sweater", "Sweater"),
+                            ("hoodie", "Hoodie"),
+                        ],
+                    ),
+                    (
+                        "Bottoms",
+                        [
+                            ("jeans", "Jeans"),
+                            ("trousers", "Trousers"),
+                            ("shorts", "Shorts"),
+                            ("skirt", "Skirt"),
+                        ],
+                    ),
+                    ("Outerwear", [("jacket", "Jacket"), ("coat", "Coat")]),
+                    (
+                        "Footwear",
+                        [
+                            ("sneakers", "Sneakers"),
+                            ("boots", "Boots"),
+                            ("sandals", "Sandals"),
+                        ],
+                    ),
+                    (
+                        "Accessories",
+                        [
+                            ("bag", "Bag"),
+                            ("belt", "Belt"),
+                            ("scarf", "Scarf"),
+                            ("sunglasses", "Sunglasses"),
+                        ],
+                    ),
+                ],
+                max_length=30,
+            ),
         ),
         migrations.RenameIndex(
-            model_name='garment',
-            new_name='wardrobe_ga_categor_acb318_idx',
-            old_name='wardrobe_ga_categor_ff3121_idx',
+            model_name="garment",
+            new_name="wardrobe_ga_categor_acb318_idx",
+            old_name="wardrobe_ga_categor_ff3121_idx",
         ),
         migrations.DeleteModel(
-            name='Category',
+            name="Category",
         ),
     ]

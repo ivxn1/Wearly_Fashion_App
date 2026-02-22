@@ -4,18 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0004_remove_outfit_wardrobe_outfit_garments'),
+        ("outfits", "0004_remove_outfit_wardrobe_outfit_garments"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='outfit',
-            name='occasion',
+            model_name="outfit",
+            name="occasion",
             field=models.CharField(max_length=50),
         ),
         migrations.DeleteModel(
-            name='Occasion',
+            name="Occasion",
         ),
     ]

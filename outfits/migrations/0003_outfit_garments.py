@@ -4,16 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0002_alter_outfitgarment_garment_and_more'),
-        ('wardrobe', '0002_alter_category_options_remove_category_slug'),
+        ("outfits", "0002_alter_outfitgarment_garment_and_more"),
+        ("wardrobe", "0002_alter_category_options_remove_category_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='outfit',
-            name='wardrobe',
-            field=models.ManyToManyField(related_name='outfits', through='outfits.OutfitGarment', to='wardrobe.garment'),
+            model_name="outfit",
+            name="wardrobe",
+            field=models.ManyToManyField(
+                related_name="outfits",
+                through="outfits.OutfitGarment",
+                to="wardrobe.garment",
+            ),
         ),
     ]

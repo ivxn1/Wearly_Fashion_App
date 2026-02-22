@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0007_alter_outfitgarment_options_and_more'),
+        ("outfits", "0007_alter_outfitgarment_options_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='outfit',
-            name='season',
-            field=models.CharField(choices=[('', 'All Seasons'), ('spring', 'Spring'), ('summer', 'Summer'), ('autumn', 'Autumn'), ('winter', 'Winter')], default=''),
+            model_name="outfit",
+            name="season",
+            field=models.CharField(
+                choices=[
+                    ("", "All Seasons"),
+                    ("spring", "Spring"),
+                    ("summer", "Summer"),
+                    ("autumn", "Autumn"),
+                    ("winter", "Winter"),
+                ],
+                default="",
+            ),
         ),
     ]

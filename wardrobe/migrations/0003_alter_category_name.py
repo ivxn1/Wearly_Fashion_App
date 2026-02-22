@@ -4,15 +4,41 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wardrobe', '0002_alter_category_options_remove_category_slug'),
+        ("wardrobe", "0002_alter_category_options_remove_category_slug"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='category',
-            name='name',
-            field=models.CharField(choices=[('tshirt', 'T-Shirt'), ('shirt', 'Shirt'), ('sweater', 'Sweater'), ('hoodie', 'Hoodie'), ('jeans', 'Jeans'), ('trousers', 'Trousers'), ('shorts', 'Shorts'), ('skirt', 'Skirt'), ('casual_dress', 'Casual Dress'), ('jump_suit', 'Jump Suit'), ('formal_dress', 'Formal Dress'), ('jacket', 'Jacket'), ('coat', 'Coat'), ('boots', 'Boots'), ('sandals', 'Sandals'), ('sneakers', 'Sneakers'), ('bag', 'Bag'), ('scarf', 'Scarf'), ('gloves', 'Gloves'), ('hat', 'Hat'), ('sunglasses', 'Sunglasses'), ('belt', 'Belt')], max_length=50, unique=True),
+            model_name="category",
+            name="name",
+            field=models.CharField(
+                choices=[
+                    ("tshirt", "T-Shirt"),
+                    ("shirt", "Shirt"),
+                    ("sweater", "Sweater"),
+                    ("hoodie", "Hoodie"),
+                    ("jeans", "Jeans"),
+                    ("trousers", "Trousers"),
+                    ("shorts", "Shorts"),
+                    ("skirt", "Skirt"),
+                    ("casual_dress", "Casual Dress"),
+                    ("jump_suit", "Jump Suit"),
+                    ("formal_dress", "Formal Dress"),
+                    ("jacket", "Jacket"),
+                    ("coat", "Coat"),
+                    ("boots", "Boots"),
+                    ("sandals", "Sandals"),
+                    ("sneakers", "Sneakers"),
+                    ("bag", "Bag"),
+                    ("scarf", "Scarf"),
+                    ("gloves", "Gloves"),
+                    ("hat", "Hat"),
+                    ("sunglasses", "Sunglasses"),
+                    ("belt", "Belt"),
+                ],
+                max_length=50,
+                unique=True,
+            ),
         ),
     ]

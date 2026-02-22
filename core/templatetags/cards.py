@@ -10,7 +10,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag('core/partials/cards/garment_card.html')
+@register.inclusion_tag("core/partials/cards/garment_card.html")
 def garment_card(item):
     """
     Render a garment card component.
@@ -22,11 +22,11 @@ def garment_card(item):
         dict: Context containing the garment item.
     """
     return {
-        'item': item,
+        "item": item,
     }
 
 
-@register.inclusion_tag('core/partials/cards/outfit_card.html')
+@register.inclusion_tag("core/partials/cards/outfit_card.html")
 def outfit_card(item):
     """
     Render an outfit card component.
@@ -38,11 +38,11 @@ def outfit_card(item):
         dict: Context containing the outfit item.
     """
     return {
-        'item': item,
+        "item": item,
     }
 
 
-@register.inclusion_tag('core/partials/cards/plans_card.html')
+@register.inclusion_tag("core/partials/cards/plans_card.html")
 def plans_card(item):
     """
     Render a plan entry card component.
@@ -54,11 +54,11 @@ def plans_card(item):
         dict: Context containing the plan item.
     """
     return {
-        'item': item,
+        "item": item,
     }
 
 
-@register.inclusion_tag('core/partials/cards/brand_card.html')
+@register.inclusion_tag("core/partials/cards/brand_card.html")
 def brand_card(item):
     """
     Render a brand card component.
@@ -70,6 +70,5 @@ def brand_card(item):
         dict: Context containing the brand item.
     """
     return {
-        'brand': item,
+        "brand": item,
     }
-

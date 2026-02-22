@@ -17,38 +17,28 @@ class PlanEntry(models.Model):
         created_at (DateTime): Timestamp of when the plan was created.
     """
 
-    date = models.DateField(
-        unique=True,
-        blank=False,
-        null=False
-    )
+    date = models.DateField(unique=True, blank=False, null=False)
     outfit = models.ForeignKey(
         to=outfits.models.Outfit,
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        related_name = 'planentry'
+        related_name="planentry",
     )
     note = models.TextField(
         max_length=200,
         blank=True,
         null=True,
-        validators=[
-            MinLengthValidator(5, "Note must be at least 5 characters long!")
-        ]
+        validators=[MinLengthValidator(5, "Note must be at least 5 characters long!")],
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ('date',)
-        indexes = [
-            models.Index(fields=('date',))
-        ]
-        verbose_name_plural = 'Plan Entries'
-        verbose_name = 'Plan Entry'
+        ordering = ("date",)
+        indexes = [models.Index(fields=("date",))]
+        verbose_name_plural = "Plan Entries"
+        verbose_name = "Plan Entry"
 
     def __str__(self) -> str:
         """Return a string representation combining date, outfit title, and creation time."""
-        return str(self.date) + ' - ' + self.outfit.title + ' - ' + str(self.created_at)
+        return str(self.date) + " - " + self.outfit.title + " - " + str(self.created_at)

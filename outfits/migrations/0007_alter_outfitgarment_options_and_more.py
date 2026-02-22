@@ -4,26 +4,25 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0006_alter_outfit_image'),
+        ("outfits", "0006_alter_outfit_image"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='outfitgarment',
-            options={'ordering': ('id',)},
+            name="outfitgarment",
+            options={"ordering": ("id",)},
         ),
         migrations.RemoveField(
-            model_name='outfitgarment',
-            name='is_key_piece',
+            model_name="outfitgarment",
+            name="is_key_piece",
         ),
         migrations.RemoveField(
-            model_name='outfitgarment',
-            name='order',
+            model_name="outfitgarment",
+            name="order",
         ),
         migrations.RemoveField(
-            model_name='outfitgarment',
-            name='role',
+            model_name="outfitgarment",
+            name="role",
         ),
     ]

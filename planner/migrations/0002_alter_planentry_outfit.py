@@ -5,16 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0002_alter_outfitgarment_garment_and_more'),
-        ('planner', '0001_initial'),
+        ("outfits", "0002_alter_outfitgarment_garment_and_more"),
+        ("planner", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='planentry',
-            name='outfit',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='planentry', to='outfits.outfit'),
+            model_name="planentry",
+            name="outfit",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="planentry",
+                to="outfits.outfit",
+            ),
         ),
     ]
