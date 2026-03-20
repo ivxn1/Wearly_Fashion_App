@@ -289,8 +289,7 @@ class GarmentSearchForm(forms.Form):
         required=False,
         label="Brand",
         widget=forms.Select,
-        choices=[("", "All Brands")]
-        + [(brand.name.lower(), brand.name) for brand in Brand.objects.all()],
+        choices=[("", "All Brands")],
     )
 
     category = forms.ChoiceField(
@@ -316,6 +315,10 @@ class GarmentSearchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Populate brand choices dynamically to avoid querying database at import time
+        self.fields["brand"].choices = [("", "All Brands")] + [
+            (brand.name.lower(), brand.name) for brand in Brand.objects.all()
+        ]
         # Ensure the blank "All Seasons" option remains for searching
         self.fields["season"].choices = SeasonChoices.choices
         self.fields["title"].widget.attrs.update({"placeholder": "Garment title..."})
