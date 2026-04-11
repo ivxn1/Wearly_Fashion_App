@@ -4,7 +4,7 @@ Views for the planner application.
 This module contains class-based views for managing outfit plan entries,
 including list, detail, create, update, and delete operations.
 """
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -15,12 +15,12 @@ from django.views.generic import (
     UpdateView,
 )
 
-from core.mixin import SetPaginateByMixin
+from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from planner.forms import PlanCreateForm, PlanSearchForm
 from planner.models import PlanEntry
 
 
-class PlannerListView(SetPaginateByMixin, ListView, FormView):
+class PlannerListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of plan entries with search functionality.
 
@@ -39,7 +39,8 @@ class PlannerListView(SetPaginateByMixin, ListView, FormView):
         return kwargs
 
     def get_queryset(self):
-        qs = PlanEntry.objects.prefetch_related("outfit").order_by("date")
+        qs = super().get_queryset()
+        qs = qs.prefetch_related("outfit").order_by("date")
         form = self.get_form()
         if form.is_valid():
             data = form.cleaned_data
@@ -57,7 +58,7 @@ class PlannerListView(SetPaginateByMixin, ListView, FormView):
         return context
 
 
-class PlanDetailsView(DetailView):
+class PlanDetailsView(IsUserOwnerMixin, LoginRequiredMixin, DetailView):
     """
     Display detailed information about a single plan entry.
 
@@ -69,7 +70,8 @@ class PlanDetailsView(DetailView):
     context_object_name = "plan_entry"
 
     def get_queryset(self):
-        return PlanEntry.objects.prefetch_related("outfit")
+        qs = super().get_queryset()
+        return qs.prefetch_related("outfit")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -85,12 +87,16 @@ class PlanDetailsView(DetailView):
         return context
 
 
-class AddPlanEntryView(CreateView):
+class AddPlanEntryView(LoginRequiredMixin, CreateView):
     """Handle the creation of new plan entries with outfit selection."""
 
     model = PlanEntry
     form_class = PlanCreateForm
     template_name = "planner/plan_entry_add_form.html"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,7 +107,7 @@ class AddPlanEntryView(CreateView):
         return reverse_lazy("planner:plan_details", kwargs={"pk": self.object.pk})
 
 
-class EditPlanEntryView(UpdateView):
+class EditPlanEntryView(IsUserOwnerMixin, LoginRequiredMixin, UpdateView):
     """Handle updating existing plan entry information."""
 
     model = PlanEntry
@@ -110,7 +116,8 @@ class EditPlanEntryView(UpdateView):
     context_object_name = "plan_entry"
 
     def get_queryset(self):
-        return PlanEntry.objects.select_related("outfit")
+        qs = super().get_queryset()
+        return qs.select_related("outfit")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -121,7 +128,7 @@ class EditPlanEntryView(UpdateView):
         return reverse_lazy("planner:plan_details", kwargs={"pk": self.object.pk})
 
 
-class DeletePlanEntryView(DeleteView):
+class DeletePlanEntryView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
     """Handle plan entry deletion with confirmation."""
 
     model = PlanEntry
@@ -130,7 +137,8 @@ class DeletePlanEntryView(DeleteView):
     success_url = reverse_lazy("planner:planner_list")
 
     def get_queryset(self):
-        return PlanEntry.objects.select_related("outfit")
+        qs = super().get_queryset()
+        return qs.select_related("outfit")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
