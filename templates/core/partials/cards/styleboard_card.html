@@ -1,0 +1,48 @@
+<article class="outfit-card">
+  <div class="outfit-container">
+    <div class="outfit-image">
+      {% if item.image %}
+        <img class="outfit-img" src="{{ item.image.url }}" alt="{{ item.title }}">
+      {% else %}
+        <div class="outfit-emoji">🎨</div>
+      {% endif %}
+    </div>
+
+    <div class="outfit-content">
+      <h2 class="outfit-name">{{ item.title }}</h2>
+
+      <div class="outfit-details">
+        <span class="detail-item">{{ item.outfits.count }} outfit{{ item.outfits.count|pluralize }}</span>
+        {% if item.is_public %}
+          <span class="detail-item">•</span>
+          <span class="detail-item">Public</span>
+        {% endif %}
+      </div>
+
+      {% if item.description %}
+        <p class="outfit-notes">{{ item.description|truncatewords:15 }}</p>
+      {% endif %}
+
+        <span class="detail-item">Created by: {{ item.user.profile.get_profile_name }}</span>
+
+      {% if item.outfits.all %}
+        <div class="garments-preview">
+          <span class="garments-label">Outfits:</span>
+          <div class="garments-list">
+            {% for outfit in item.outfits.all|slice:":3" %}
+              <span class="garment-badge">{{ outfit.title }}</span>
+            {% endfor %}
+            {% if item.outfits.count > 3 %}
+              <span class="garment-badge garment-badge--more">+{{ item.outfits.count|add:"-3" }} more</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="outfit-meta">
+        <span class="outfit-date">{{ item.created_at|date:"M d, Y" }}</span>
+        <a class="outfit-link" href="{% url 'outfits:styleboard_detail' pk=item.pk %}">View board</a>
+      </div>
+    </div>
+  </div>
+</article>

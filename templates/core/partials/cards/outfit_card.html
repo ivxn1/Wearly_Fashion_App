@@ -20,6 +20,9 @@
         <span class="detail-item">{{ item.season|title }}</span>
       </div>
 
+        <div class="outfit-details">
+            <span class="detail-item">Created by: {{ item.user.profile.get_profile_name }}</span>
+        </div>
       <!-- Notes (if any) -->
       {% if item.notes %}
         <p class="outfit-notes">{{ item.notes }}</p>

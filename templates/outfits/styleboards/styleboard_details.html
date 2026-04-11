@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+{% load collection_section %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/details_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/outfits/outfits_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="details-section">
+  <div class="back-nav">
+    <a href="{% url 'outfits:styleboard_list' %}" class="back-link">&larr; Back to Style Boards</a>
+  </div>
+
+  <div class="details-grid">
+
+    <div class="details-image-container">
+      {% if board.image %}
+        <img src="{{ board.image.url }}" alt="{{ board.title }}" class="details-image">
+      {% else %}
+        <div class="details-image-placeholder">
+          <span class="placeholder-emoji">🎨</span>
+          <p class="placeholder-text">No cover image</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="details-info">
+
+      <div class="details-header">
+        <h1 class="details-title">{{ board.title }}</h1>
+        {% if board.is_public %}
+          <span class="category-badge-large">Public</span>
+        {% else %}
+          <span class="category-badge-large">Private</span>
+        {% endif %}
+      </div>
+
+      <div class="meta-grid">
+        {% include 'core/partials/meta_item.html' with label="Outfits" value=board_outfits|length %}
+        {% include 'core/partials/meta_item.html' with label="Created" value=board.created_at %}
+        {% if board.description %}
+          {% include 'core/partials/meta_item.html' with label="Description" value=board.description %}
+        {% endif %}
+      </div>
+
+      <div class="action-buttons">
+        <a href="{% url 'outfits:styleboard_edit' pk=board.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Board</a>
+        <a href="{% url 'outfits:styleboard_delete' pk=board.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Board</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  {% if board_outfits %}
+    {% url 'outfits:styleboard_edit' pk=board.pk as edit_board_url %}
+    {% collection_section "Outfits in This Board" board_outfits 'outfits' '✨' edit_board_url %}
+  {% endif %}
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+{% load collection_section %}
+{% load static %}
+{% load section_header %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/outfits/outfits_list.css' %}">
+{% endblock %}
+
+{% block container %}
+
+    {% url 'outfits:styleboard_create' as create_url %}
+    {% include 'core/partials/hero_section.html' with title="Your Style Boards" subtitle="Curate and organize your favorite outfit combinations into themed collections. Create mood boards for every style and occasion." is_compact=True has_cta=True first_url=create_url first_url_text="+ Create Style Board" %}
+
+    <section id="items-section">
+        {% url 'outfits:styleboard_create' as create_board_url %}
+        {% collection_section "All Style Boards" boards 'styleboards' '🎨' create_board_url %}
+    </section>
+
+    {% url 'outfits:styleboard_list' as list %}
+    {% include "core/partials/paginator.html" with url_target=list %}
+{% endblock %}

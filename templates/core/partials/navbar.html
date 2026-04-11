@@ -39,6 +39,26 @@
                     <a class="nav-link" href="{% url 'core:about' %}">About</a>
                 </li>
             </ul>
+            <ul class="navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user-profile' pk=user.profile.pk %}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <form method="post" action="{% url 'user-logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer; padding: 0;">Logout</button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user-login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>

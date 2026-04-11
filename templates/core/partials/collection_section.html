@@ -32,6 +32,12 @@
                     {% brand_card item %}
                 {% endfor %}
             </div>
+        {% elif section_type == 'styleboards' %}
+            <div class="styleboards-grid">
+                {% for item in items %}
+                    {% styleboard_card item %}
+                {% endfor %}
+            </div>
         {% endif %}
         {% else %}
         {% empty_collection icon empty_message action_url action_text %}

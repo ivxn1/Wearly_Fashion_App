@@ -29,6 +29,13 @@
                 {% endif %}
             </div>
 
+            {% if item.user.profile.get_profile_name  %}
+                <div class="garment-details">
+                    <span class="detail-item">Created by: {{ item.user.profile.get_profile_name }}</span>
+                </div>
+            {% endif %}
+
+
             <div class="garment-meta">
                 {% if item.price %}
                     <span class="garment-price">{{ item.price }} €</span>
