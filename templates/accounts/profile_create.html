@@ -1,0 +1,64 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/form_page.css' %}">
+{% endblock %}
+
+{% block container %}
+
+    {% include 'core/partials/hero_section.html' with has_cta=False has_secondary_cta=False is_compact=True title="Edit Profile" subtitle="Update your personal details and style preferences." %}
+
+<section class="form-section">
+  <div class="form-container">
+
+    <div class="form-card">
+      <form method="post" enctype="multipart/form-data" class="garment-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="form-errors">
+            {% for error in form.non_field_errors %}
+              <p class="error-message">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="form-grid">
+          {% include 'core/partials/form_field.html' with field=form.first_name %}
+          {% include 'core/partials/form_field.html' with field=form.last_name %}
+          {% include 'core/partials/form_field.html' with field=form.bio wrapper_class="form-field--full" %}
+          {% include 'core/partials/form_field.html' with field=form.style_preference %}
+          {% include 'core/partials/form_field.html' with field=form.location %}
+
+          <div class="form-field form-field--full">
+            <label for="{{ form.profile_picture.id_for_label }}" class="form-label">
+              {{ form.profile_picture.label }}
+            </label>
+            <div class="file-input-wrapper">
+              {{ form.profile_picture }}
+            </div>
+            {% if form.profile_picture.errors %}
+              <div class="field-errors">
+                {% for error in form.profile_picture.errors %}
+                  <span class="error-text">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-cta btn-primary-cta btn-form">Save Changes</button>
+          <a href="{% url 'user-profile' pk=object.pk %}" class="btn-cta btn-secondary-cta btn-form">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

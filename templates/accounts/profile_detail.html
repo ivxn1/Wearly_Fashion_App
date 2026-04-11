@@ -1,0 +1,68 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/details_page.css' %}">
+{% endblock %}
+
+{% block container %}
+
+<section class="details-section">
+  <div class="back-nav">
+    <a href="{% url 'core:home' %}" class="back-link">&larr; Back to Home</a>
+  </div>
+
+  <div class="details-grid">
+
+    <div class="details-image-container">
+      {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="{{ profile.first_name }}" class="details-image">
+      {% else %}
+        <div class="details-image-placeholder">
+          <span class="placeholder-emoji">👤</span>
+          <p class="placeholder-text">No profile picture</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="details-info">
+
+      <div class="details-header">
+        <h1 class="details-title">{{ profile.first_name }} {{ profile.last_name }}</h1>
+        {% if profile.style_preference %}
+          <span class="category-badge-large">{{ profile.get_style_preference_display }}</span>
+        {% endif %}
+      </div>
+
+      <div class="meta-grid">
+        {% include 'core/partials/meta_item.html' with label="Email" value=profile.user.email %}
+        {% if profile.location %}
+          {% include 'core/partials/meta_item.html' with label="Location" value=profile.location %}
+        {% endif %}
+        {% if profile.bio %}
+          {% include 'core/partials/meta_item.html' with label="Bio" value=profile.bio %}
+        {% endif %}
+        {% if profile.user.is_premium %}
+          {% include 'core/partials/meta_item.html' with label="Membership" value="Premium" %}
+        {% else %}
+          {% include 'core/partials/meta_item.html' with label="Membership" value="Member" %}
+        {% endif %}
+      </div>
+
+      <div class="action-buttons">
+        <a href="{% url 'user-profile-edit' pk=profile.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Profile</a>
+        <a href="{% url 'outfits:styleboard_list' %}" class="btn-cta btn-secondary-cta btn-action">Style Boards</a>
+        <form method="post" action="{% url 'user-logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-cta btn-secondary-cta btn-action" style="background: none; border: none; cursor: pointer;">Logout</button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+{% endblock %}
