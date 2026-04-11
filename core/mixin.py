@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseBadRequest
 
 
@@ -14,3 +15,8 @@ class SetPaginateByMixin:
                 raise HttpResponseBadRequest
 
         return self.request.session.get("paginate_by", self.paginate_by)
+
+class IsUserOwnerMixin():
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(user=self.request.user)

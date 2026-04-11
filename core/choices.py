@@ -20,3 +20,10 @@ class SeasonChoices(models.TextChoices):
     SUMMER = "summer", "Summer"
     AUTUMN = "autumn", "Autumn"
     WINTER = "winter", "Winter"
+
+class StylePreferencesChoices(models.TextChoices):
+    CASUAL = "casual", "Casual"
+    FORMAL = "formal", "Formal"
+    STREETWEAR = "streetwear", "Streetwear"
+    MINIMALIST = "minimalist", "Minimalist"
+    ECLECTIC = "eclectic", "Eclectic"
