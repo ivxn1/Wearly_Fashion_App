@@ -4,7 +4,7 @@ Views for the outfits application.
 This module contains class-based views for managing outfits,
 including list, detail, create, update, and delete operations.
 """
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -15,12 +15,12 @@ from django.views.generic import (
     UpdateView,
 )
 
-from core.mixin import SetPaginateByMixin
-from outfits.forms import OutfitCreateForm, OutfitSearchForm
-from outfits.models import Outfit
+from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
+from outfits.forms import OutfitCreateForm, OutfitSearchForm, StyleBoardCreateForm, StyleBoardEditForm
+from outfits.models import Outfit, StyleBoard
 
 
-class OutfitsListView(SetPaginateByMixin, ListView, FormView):
+class OutfitsListView(LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of outfits with search and filter functionality.
 
@@ -39,7 +39,8 @@ class OutfitsListView(SetPaginateByMixin, ListView, FormView):
         return kwargs
 
     def get_queryset(self):
-        qs = Outfit.objects.prefetch_related("garments")
+        qs = super().get_queryset()
+        qs = qs.prefetch_related("garments")
         form = self.get_form()
         if form.is_valid():
             data = form.cleaned_data
@@ -59,7 +60,7 @@ class OutfitsListView(SetPaginateByMixin, ListView, FormView):
         return context
 
 
-class OutfitDetailsView(DetailView):
+class OutfitDetailsView(LoginRequiredMixin, DetailView):
     """
     Display detailed information about a single outfit.
 
@@ -78,12 +79,16 @@ class OutfitDetailsView(DetailView):
         return context
 
 
-class AddOutfitView(CreateView):
+class AddOutfitView(LoginRequiredMixin, CreateView):
     """Handle the creation of new outfit entries with garment selection."""
 
     model = Outfit
     form_class = OutfitCreateForm
     template_name = "outfits/outfit_add_form.html"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("outfits:outfit_details", kwargs={"id": self.object.id})
@@ -94,7 +99,7 @@ class AddOutfitView(CreateView):
         return context
 
 
-class EditOutfitView(UpdateView):
+class EditOutfitView(IsUserOwnerMixin, LoginRequiredMixin, UpdateView):
     """Handle updating existing outfit information and garment selection."""
 
     model = Outfit
@@ -112,7 +117,7 @@ class EditOutfitView(UpdateView):
         return context
 
 
-class DeleteOutfitView(DeleteView):
+class DeleteOutfitView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
     """Handle outfit deletion with confirmation."""
 
     model = Outfit
@@ -120,6 +125,91 @@ class DeleteOutfitView(DeleteView):
     context_object_name = "outfit"
     pk_url_kwarg = "id"
     success_url = reverse_lazy("outfits:outfits_list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"Delete {self.object.title}"
+        return context
+
+
+# -------- STYLE BOARD VIEWS --------- #
+
+
+class StyleBoardListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView):
+    model = StyleBoard
+    template_name = "outfits/styleboards/styleboard_list.html"
+    context_object_name = "boards"
+    paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Style Boards"
+        context["paginate_by"] = self.get_paginate_by(self.get_queryset())
+        return context
+
+
+class StyleBoardDetailView(IsUserOwnerMixin, LoginRequiredMixin, DetailView):
+    model = StyleBoard
+    template_name = "outfits/styleboards/styleboard_details.html"
+    context_object_name = "board"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = self.object.title
+        context["board_outfits"] = self.object.outfits.prefetch_related("garments").all()
+        return context
+
+
+class StyleBoardCreateView(LoginRequiredMixin, CreateView):
+    model = StyleBoard
+    form_class = StyleBoardCreateForm
+    template_name = "outfits/styleboards/styleboard_form.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("outfits:styleboard_detail", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Create Style Board"
+        context["is_create"] = True
+        return context
+
+
+class StyleBoardEditView(IsUserOwnerMixin, LoginRequiredMixin, UpdateView):
+    model = StyleBoard
+    form_class = StyleBoardEditForm
+    template_name = "outfits/styleboards/styleboard_form.html"
+    context_object_name = "board"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy("outfits:styleboard_detail", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"Edit {self.object.title}"
+        context["is_create"] = False
+        return context
+
+
+class StyleBoardDeleteView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
+    model = StyleBoard
+    template_name = "outfits/styleboards/styleboard_confirm_delete.html"
+    context_object_name = "board"
+    success_url = reverse_lazy("outfits:styleboard_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

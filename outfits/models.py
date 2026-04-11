@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
 
@@ -5,6 +6,7 @@ import wardrobe.models
 from core.choices import SeasonChoices
 from wardrobe.validators import ImageSizeValidator
 
+UserModel = get_user_model()
 
 class Outfit(models.Model):
     """
@@ -45,11 +47,45 @@ class Outfit(models.Model):
         related_name="outfits",
         blank=False,
     )
+    user = models.ForeignKey(
+        to=UserModel,
+        on_delete=models.CASCADE,
+        related_name='outfits'
+    )
 
     def __str__(self) -> str:
         """Return a string representation combining title, occasion, and season."""
         return self.title + " - " + self.occasion + " - " + self.season
 
+class StyleBoard(models.Model):
+    title = models.CharField(
+        max_length=30,
+        blank=False,
+        null=False
+    )
+    description = models.TextField(
+        blank=True,
+        null=True
+    )
+    image = models.ImageField(
+        upload_to="styleboards/",
+        blank=True,
+        null=True
+    )
+    outfits = models.ManyToManyField(
+        to=Outfit,
+        related_name='boards'
+    )
+    user = models.ForeignKey(
+        to=UserModel,
+        on_delete=models.CASCADE,
+        related_name='boards'
+    )
+    is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} style board"
 
 class OutfitGarment(models.Model):
     """

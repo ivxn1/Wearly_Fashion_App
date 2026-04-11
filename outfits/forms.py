@@ -8,7 +8,7 @@ including create, edit, and search functionality.
 from django import forms
 
 from core.choices import SeasonChoices
-from outfits.models import Outfit
+from outfits.models import Outfit, StyleBoard
 from wardrobe.models import Garment
 
 
@@ -156,3 +156,47 @@ class OutfitSearchForm(forms.Form):
         self.fields["occasion"].widget.attrs.update(
             {"placeholder": "Outfit occasion..."}
         )
+
+
+class StyleBoardBaseForm(forms.ModelForm):
+    outfits = forms.ModelMultipleChoiceField(
+        queryset=Outfit.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Select Outfits",
+    )
+
+    class Meta:
+        model = StyleBoard
+        fields = ["title", "description", "image", "outfits", "is_public"]
+        labels = {
+            "title": "Board Title",
+            "description": "Description",
+            "image": "Cover Image",
+            "is_public": "Make Public",
+        }
+        widgets = {
+            "title": forms.TextInput(attrs={"placeholder": "e.g., Weekend Vibes"}),
+            "description": forms.Textarea(
+                attrs={"placeholder": "Describe your style board...", "rows": 4}
+            ),
+            "image": forms.ClearableFileInput,
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields["outfits"].queryset = Outfit.objects.filter(
+                user=user
+            ).prefetch_related("garments")
+        self.fields["description"].required = False
+        self.fields["image"].required = False
+
+
+class StyleBoardCreateForm(StyleBoardBaseForm):
+    pass
+
+
+class StyleBoardEditForm(StyleBoardBaseForm):
+    pass
