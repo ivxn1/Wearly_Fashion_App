@@ -6,6 +6,7 @@ including list, detail, create, update, and delete operations.
 """
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg, Count
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -18,7 +19,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from core.mixin import SetPaginateByMixin
+from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from outfits.models import Outfit
 from wardrobe.forms import (
     BrandCreateForm,
@@ -32,7 +33,7 @@ from wardrobe.models import Brand, Garment
 # -------- GARMENT VIEWS --------- #
 
 
-class GarmentListView(SetPaginateByMixin, ListView, FormView):
+class GarmentListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of garments with search and filter functionality.
 
@@ -53,7 +54,8 @@ class GarmentListView(SetPaginateByMixin, ListView, FormView):
         return kwargs
 
     def get_queryset(self):
-        qs = Garment.objects.select_related("brand").all()
+        qs = super().get_queryset()
+        qs = qs.select_related("brand").all()
         form = self.get_form()
         if form.is_valid():
             data = form.cleaned_data
@@ -83,7 +85,7 @@ class GarmentListView(SetPaginateByMixin, ListView, FormView):
         return context
 
 
-class GarmentDetailsView(DetailView):
+class GarmentDetailsView(LoginRequiredMixin, DetailView):
     """
     Display detailed information about a single garment.
 
@@ -103,12 +105,16 @@ class GarmentDetailsView(DetailView):
         return context
 
 
-class GarmentCreateView(CreateView):
+class GarmentCreateView(LoginRequiredMixin, CreateView):
     """Handle the creation of new garment entries."""
 
     template_name = "wardrobe/garments/garment_add_form.html"
     form_class = GarmentCreateForm
     success_url = reverse_lazy("wardrobe:garment_list")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -116,7 +122,7 @@ class GarmentCreateView(CreateView):
         return context
 
 
-class GarmentDeleteView(DeleteView):
+class GarmentDeleteView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
     """
     Handle garment deletion with protection for garments in outfits.
 
@@ -145,7 +151,7 @@ class GarmentDeleteView(DeleteView):
     }
 
 
-class GarmentEditView(UpdateView):
+class GarmentEditView(IsUserOwnerMixin, LoginRequiredMixin, UpdateView):
     """Handle updating existing garment information."""
 
     model = Garment
@@ -161,7 +167,7 @@ class GarmentEditView(UpdateView):
 # --------- BRAND VIEWS --------- #
 
 
-class BrandListView(SetPaginateByMixin, ListView, FormView):
+class BrandListView(LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
     """
     Display a paginated list of brands with search functionality and statistics.
 
@@ -219,7 +225,7 @@ class BrandListView(SetPaginateByMixin, ListView, FormView):
         return context
 
 
-class BrandDetailsView(DetailView):
+class BrandDetailsView(LoginRequiredMixin, DetailView):
     """Display detailed information about a single brand including garment count."""
 
     template_name = "wardrobe/brands/brand_details.html"
@@ -233,7 +239,7 @@ class BrandDetailsView(DetailView):
     }
 
 
-class BrandCreateView(CreateView):
+class BrandCreateView(LoginRequiredMixin, CreateView):
     """Handle the creation of new brand entries."""
 
     model = Brand
@@ -247,7 +253,7 @@ class BrandCreateView(CreateView):
         return context
 
 
-class BrandEditView(UpdateView):
+class BrandEditView(LoginRequiredMixin, UpdateView):
     """Handle updating existing brand information."""
 
     model = Brand
@@ -264,7 +270,7 @@ class BrandEditView(UpdateView):
         return context
 
 
-class BrandDeleteView(DeleteView):
+class BrandDeleteView(LoginRequiredMixin, DeleteView):
     """
     Handle brand deletion with protection for brands with garments.
 

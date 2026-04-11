@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
@@ -6,6 +7,7 @@ from core.choices import SeasonChoices
 from wardrobe.choices import GARMENT_CATEGORY_CHOICES
 from wardrobe.validators import ImageSizeValidator
 
+UserModel = get_user_model()
 
 class Brand(models.Model):
     """
@@ -85,6 +87,11 @@ class Garment(models.Model):
         ],
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        to=UserModel,
+        on_delete=models.CASCADE,
+        related_name="garments"
+    )
 
     class Meta:
         ordering = ("-created_at",)
