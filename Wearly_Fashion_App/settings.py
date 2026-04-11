@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
 ]
 
 # Application definition
-PROJECT_APSS = ["wardrobe", "outfits", "planner", "core"]
+PROJECT_APSS = ["wardrobe", "outfits", "planner", "core", "accounts"]
 
 INSTALLED_APPS = (
     [
@@ -121,6 +121,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "accounts.CustomerUser"
+
+LOGIN_URL = "user-login"
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "user-login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

@@ -26,6 +26,7 @@ urlpatterns = [
     path("", include("wardrobe.urls")),
     path("", include("outfits.urls")),
     path("", include("planner.urls")),
+    path("", include("accounts.urls")),
 ]
 
 # Serve media files in development
