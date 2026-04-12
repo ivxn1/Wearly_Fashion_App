@@ -9,6 +9,7 @@
       {% endif %}
       <form method="post" action="{% url 'outfits:outfit_favourite' item.id %}" class="favourite-form">
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ current_path }}">
         <button type="submit" class="favourite-btn {% if is_favourite %}favourited{% endif %}" title="{% if is_favourite %}Remove from favourites{% else %}Add to favourites{% endif %}">
           {% if is_favourite %}
             <svg class="favourite-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

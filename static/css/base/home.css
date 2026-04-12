@@ -370,7 +370,6 @@
 }
 
 .wishlist-btn {
-  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.45);
@@ -417,7 +416,6 @@
 .wishlist-btn.wishlisted {
   color: #e74c3c;
   border-color: rgba(231, 76, 60, 0.15);
-  background: rgba(231, 76, 60, 0.06);
   box-shadow:
     0 4px 16px rgba(231, 76, 60, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
@@ -454,7 +452,6 @@
 }
 
 .favourite-btn {
-  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -500,7 +497,6 @@
 .favourite-btn.favourited {
   color: #f39c12;
   border-color: rgba(243, 156, 18, 0.2);
-  background: rgba(243, 156, 18, 0.08);
   box-shadow:
     0 4px 16px rgba(243, 156, 18, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),

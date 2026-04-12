@@ -5,7 +5,7 @@ from django.urls.base import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from accounts.forms import UserRegistrationForm, UserProfileForm
-from accounts.models import CustomerProfileModel
+from accounts.models import CustomerProfileModel, Wishlist, FavouriteOutfits
 from core.mixin import IsUserOwnerMixin
 
 # Create your views here.
@@ -44,3 +44,20 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = "accounts/profile_detail.html"
     context_object_name = "profile"
     model = CustomerProfileModel
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.object.user
+        context["page_title"] = f"Profile - {self.object.get_profile_name()}"
+
+        wishlist, _ = Wishlist.objects.get_or_create(user=user)
+        wishlist_garments = wishlist.garments.select_related("brand").all()
+        context["wishlist_garments"] = wishlist_garments
+        context["wishlist_ids"] = set(wishlist_garments.values_list("id", flat=True))
+
+        favourites, _ = FavouriteOutfits.objects.get_or_create(user=user)
+        favourite_outfits = favourites.outfits.prefetch_related("garments").all()
+        context["favourite_outfits"] = favourite_outfits
+        context["favourites_ids"] = set(favourite_outfits.values_list("id", flat=True))
+
+        return context

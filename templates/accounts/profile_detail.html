@@ -1,66 +1,113 @@
 {% extends "core/base.html" %}
 {% load static %}
+{% load cards %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/base/home.css' %}">
-  <link rel="stylesheet" href="{% static 'css/base/details_page.css' %}">
+  <link rel="stylesheet" href="{% static 'css/accounts/profile.css' %}">
 {% endblock %}
 
 {% block container %}
 
-<section class="details-section">
-  <div class="back-nav">
-    <a href="{% url 'core:home' %}" class="back-link">&larr; Back to Home</a>
-  </div>
+<section class="content-wrapper" style="padding: 60px 24px;">
 
-  <div class="details-grid">
+  <!-- Profile Header: Info left, Avatar right -->
+  <div class="profile-header">
+    <div class="profile-info-side">
+      <h1 class="profile-name">{{ profile.first_name }} {{ profile.last_name }}</h1>
 
-    <div class="details-image-container">
-      {% if profile.profile_picture %}
-        <img src="{{ profile.profile_picture.url }}" alt="{{ profile.first_name }}" class="details-image">
-      {% else %}
-        <div class="details-image-placeholder">
-          <span class="placeholder-emoji">👤</span>
-          <p class="placeholder-text">No profile picture</p>
-        </div>
+      {% if profile.style_preference %}
+        <span class="profile-badge">{{ profile.get_style_preference_display }}</span>
       {% endif %}
-    </div>
 
-    <div class="details-info">
-
-      <div class="details-header">
-        <h1 class="details-title">{{ profile.first_name }} {{ profile.last_name }}</h1>
-        {% if profile.style_preference %}
-          <span class="category-badge-large">{{ profile.get_style_preference_display }}</span>
-        {% endif %}
-      </div>
-
-      <div class="meta-grid">
-        {% include 'core/partials/meta_item.html' with label="Email" value=profile.user.email %}
+      <div class="profile-meta-grid">
+        <div class="profile-meta-item">
+          <span class="profile-meta-label">Email</span>
+          <span class="profile-meta-value">{{ profile.user.email }}</span>
+        </div>
+        <div class="profile-meta-item">
+          <span class="profile-meta-label">Membership</span>
+          <span class="profile-meta-value">{% if profile.user.is_premium %}Premium{% else %}Member{% endif %}</span>
+        </div>
         {% if profile.location %}
-          {% include 'core/partials/meta_item.html' with label="Location" value=profile.location %}
+        <div class="profile-meta-item">
+          <span class="profile-meta-label">Location</span>
+          <span class="profile-meta-value">{{ profile.location }}</span>
+        </div>
         {% endif %}
         {% if profile.bio %}
-          {% include 'core/partials/meta_item.html' with label="Bio" value=profile.bio %}
-        {% endif %}
-        {% if profile.user.is_premium %}
-          {% include 'core/partials/meta_item.html' with label="Membership" value="Premium" %}
-        {% else %}
-          {% include 'core/partials/meta_item.html' with label="Membership" value="Member" %}
+        <div class="profile-meta-item {% if not profile.location %}profile-meta-item--full{% endif %}">
+          <span class="profile-meta-label">Bio</span>
+          <span class="profile-meta-value">{{ profile.bio }}</span>
+        </div>
         {% endif %}
       </div>
 
-      <div class="action-buttons">
-        <a href="{% url 'user-profile-edit' pk=profile.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Profile</a>
-        <a href="{% url 'outfits:styleboard_list' %}" class="btn-cta btn-secondary-cta btn-action">Style Boards</a>
-        <form method="post" action="{% url 'user-logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn-cta btn-secondary-cta btn-action btn-logout">Logout</button>
-        </form>
-      </div>
-
+      <a href="{% url 'outfits:styleboard_list' %}" class="btn-cta btn-secondary-cta profile-styleboard-btn">Style Boards</a>
     </div>
 
+    <div class="profile-avatar-side">
+      <div class="profile-avatar">
+        {% if profile.profile_picture %}
+          <img src="{{ profile.profile_picture.url }}" alt="{{ profile.first_name }}" class="profile-avatar-img">
+        {% else %}
+          <div class="profile-avatar-placeholder">
+            <span class="placeholder-emoji">👤</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Wishlist Garments Section -->
+  <div class="profile-collection-section">
+    <div class="profile-section-header">
+      <h2 class="profile-section-title">Wishlist</h2>
+      <span class="profile-section-count">{{ wishlist_garments|length }} item{{ wishlist_garments|length|pluralize }}</span>
+    </div>
+
+    {% if wishlist_garments %}
+      <div class="garments-grid">
+        {% for item in wishlist_garments %}
+          {% garment_card item %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="profile-empty-state">
+        <span class="profile-empty-icon">&#9825;</span>
+        <p class="profile-empty-text">No garments in your wishlist yet</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Favourite Outfits Section -->
+  <div class="profile-collection-section">
+    <div class="profile-section-header">
+      <h2 class="profile-section-title">Favourite Outfits</h2>
+      <span class="profile-section-count">{{ favourite_outfits|length }} item{{ favourite_outfits|length|pluralize }}</span>
+    </div>
+
+    {% if favourite_outfits %}
+      <div class="outfits-grid">
+        {% for item in favourite_outfits %}
+          {% outfit_card item %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="profile-empty-state">
+        <span class="profile-empty-icon">&#9734;</span>
+        <p class="profile-empty-text">No favourite outfits yet</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="profile-actions">
+    <a href="{% url 'user-profile-edit' pk=profile.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Profile</a>
+    <form method="post" action="{% url 'user-logout' %}" style="display: inline;">
+      {% csrf_token %}
+      <button type="submit" class="btn-cta btn-secondary-cta btn-action btn-logout">Logout</button>
+    </form>
   </div>
 
 </section>

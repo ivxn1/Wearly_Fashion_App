@@ -10,28 +10,16 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag("core/partials/collection_section.html")
+@register.inclusion_tag("core/partials/collection_section.html", takes_context=True)
 def collection_section(
-    title: str, items, section_type: str, icon: str, action_url: str = None
+    context, title: str, items, section_type: str, icon: str, action_url: str = None
 ) -> dict:
-    """
-    Render a collection section with a title, items, type, and icon.
-
-    Args:
-        title: Section title displayed as header.
-        items: Collection items to display (QuerySet or list).
-        section_type: Type of collection ('wardrobe', 'outfits', 'plans', 'brands').
-        icon: Emoji icon for empty state display.
-        action_url: Optional custom URL for the empty state action button.
-
-    Returns:
-        dict: Context for rendering the collection section template.
-    """
     empty_messages = {
         "wardrobe": "No wardrobe yet. Start building your wardrobe!",
         "outfits": "No outfits created yet. Mix and match your wardrobe!",
         "plans": "No upcoming plans yet. Schedule your outfits!",
         "brands": "No brands yet. Add your favorite fashion labels!",
+        "styleboards": "No style boards yet. Curate your looks!",
     }
 
     action_texts = {
@@ -39,6 +27,7 @@ def collection_section(
         "outfits": "+ Create Outfit",
         "plans": "+ Add Plan",
         "brands": "+ Add Brand",
+        "styleboards": "+ Create Style Board",
     }
 
     return {
@@ -49,4 +38,7 @@ def collection_section(
         "empty_message": empty_messages.get(section_type, "No items yet."),
         "action_url": action_url,
         "action_text": action_texts.get(section_type, "+ Add Item"),
+        "wishlist_ids": context.get("wishlist_ids") or set(),
+        "favourites_ids": context.get("favourites_ids") or set(),
+        "request": context.get("request"),
     }

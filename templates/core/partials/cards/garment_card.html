@@ -43,6 +43,7 @@
                 <a class="garment-link" href="{% url 'wardrobe:garment_details' item.slug %}">View details</a>
                 <form method="post" action="{% url 'wardrobe:wishlist_garment' item.slug %}" class="wishlist-form">
                     {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ current_path }}">
                     <button type="submit" class="wishlist-btn {% if is_wishlisted %}wishlisted{% endif %}" title="{% if is_wishlisted %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
                         {% if is_wishlisted %}
                             <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 107.41" fill="currentColor">

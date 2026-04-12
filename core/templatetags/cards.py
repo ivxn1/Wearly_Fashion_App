@@ -13,18 +13,22 @@ register = template.Library()
 @register.inclusion_tag("core/partials/cards/garment_card.html", takes_context=True)
 def garment_card(context, item):
     wishlist_ids = context.get("wishlist_ids") or set()
+    request = context.get("request")
     return {
         "item": item,
         "is_wishlisted": item.id in wishlist_ids,
+        "current_path": request.path if request else "",
     }
 
 
 @register.inclusion_tag("core/partials/cards/outfit_card.html", takes_context=True)
 def outfit_card(context, item):
     favourites_ids = context.get("favourites_ids") or set()
+    request = context.get("request")
     return {
         "item": item,
         "is_favourite": item.id in favourites_ids,
+        "current_path": request.path if request else "",
     }
 
 
@@ -39,6 +43,13 @@ def plans_card(item):
     Returns:
         dict: Context containing the plan item.
     """
+    return {
+        "item": item,
+    }
+
+
+@register.inclusion_tag("core/partials/cards/styleboard_card.html")
+def styleboard_card(item):
     return {
         "item": item,
     }

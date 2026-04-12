@@ -147,6 +147,9 @@ class FavouriteOutfitView(LoginRequiredMixin, View):
         else:
             favourites.outfits.add(outfit)
 
+        next_url = request.POST.get("next")
+        if next_url:
+            return redirect(next_url)
         return redirect("outfits:outfits_list")
 
 
