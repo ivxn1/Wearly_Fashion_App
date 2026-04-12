@@ -55,7 +55,7 @@
         <a href="{% url 'outfits:styleboard_list' %}" class="btn-cta btn-secondary-cta btn-action">Style Boards</a>
         <form method="post" action="{% url 'user-logout' %}" style="display: inline;">
             {% csrf_token %}
-            <button type="submit" class="btn-cta btn-secondary-cta btn-action" style="background: none; border: none; cursor: pointer;">Logout</button>
+            <button type="submit" class="btn-cta btn-secondary-cta btn-action btn-logout">Logout</button>
         </form>
       </div>
 

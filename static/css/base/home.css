@@ -328,6 +328,200 @@
     font-weight: 400;
 }
 
+/* ===== Garment Card Footer ===== */
+.garment-meta {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.garment-price {
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.2px;
+}
+
+.garment-link {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.35);
+  padding-bottom: 2px;
+  transition: all 0.25s ease;
+}
+
+.garment-link:hover {
+  border-bottom-color: rgba(26, 26, 26, 0.75);
+  opacity: 0.9;
+}
+
+/* ===== Wishlist Button (Card) ===== */
+.wishlist-form {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.wishlist-btn {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  cursor: pointer;
+  color: #bbb;
+  transition: all 0.3s ease;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.wishlist-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.wishlist-btn:hover .wishlist-icon {
+  transform: scale(1.1);
+}
+
+.wishlist-btn:hover {
+  color: #e74c3c;
+  border-color: rgba(231, 76, 60, 0.25);
+  background: rgba(255, 255, 255, 0.65);
+  transform: scale(1.1);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.wishlist-btn.wishlisted {
+  color: #e74c3c;
+  border-color: rgba(231, 76, 60, 0.15);
+  background: rgba(231, 76, 60, 0.06);
+  box-shadow:
+    0 4px 16px rgba(231, 76, 60, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* ===== Wishlist Button (Detail Page) ===== */
+.wishlist-btn-detail {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(26, 26, 26, 0.15) !important;
+  cursor: pointer;
+  color: #aaa;
+  transition: all 0.25s ease;
+}
+
+.wishlist-btn-detail:hover {
+  color: #e74c3c;
+  border-color: rgba(231, 76, 60, 0.3) !important;
+}
+
+.wishlist-btn-detail.wishlisted {
+  color: #e74c3c;
+  border-color: rgba(231, 76, 60, 0.2) !important;
+}
+
+/* ===== Favourite Button (Outfit Card — overlays image) ===== */
+.favourite-form {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+}
+
+.favourite-btn {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  cursor: pointer;
+  color: #bbb;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.favourite-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.favourite-btn:hover .favourite-icon {
+  transform: scale(1.1);
+}
+
+.favourite-btn:hover {
+  color: #f39c12;
+  border-color: rgba(243, 156, 18, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.1);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.favourite-btn.favourited {
+  color: #f39c12;
+  border-color: rgba(243, 156, 18, 0.2);
+  background: rgba(243, 156, 18, 0.08);
+  box-shadow:
+    0 4px 16px rgba(243, 156, 18, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* ===== Logout Button ===== */
+.btn-logout {
+  overflow: visible;
+}
+
+.btn-logout::before {
+  display: none;
+}
+
+.btn-logout:hover {
+  background-color: #1a1a1a;
+  color: white;
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.12);
+}
+
 /* ===== Outfits Grid ===== */
 .outfits-grid {
     display: grid;

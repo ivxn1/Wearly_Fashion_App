@@ -6,6 +6,7 @@ including list, detail, create, update, and delete operations.
 """
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -14,7 +15,9 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from django.views.generic.base import View
 
+from accounts.models import FavouriteOutfits
 from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from outfits.forms import OutfitCreateForm, OutfitSearchForm, StyleBoardCreateForm, StyleBoardEditForm
 from outfits.models import Outfit, StyleBoard
@@ -57,6 +60,8 @@ class OutfitsListView(LoginRequiredMixin, SetPaginateByMixin, ListView, FormView
         context["page_title"] = "Wearly Outfits"
         context["form"] = self.get_form()
         context["paginate_by"] = self.get_paginate_by(self.get_queryset())
+        favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
+        context["favourites_ids"] = set(favourites.outfits.values_list("id", flat=True))
         return context
 
 
@@ -130,6 +135,19 @@ class DeleteOutfitView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = f"Delete {self.object.title}"
         return context
+
+
+class FavouriteOutfitView(LoginRequiredMixin, View):
+    def post(self, request, id):
+        outfit = get_object_or_404(Outfit, id=id)
+        favourites, _ = FavouriteOutfits.objects.get_or_create(user=request.user)
+
+        if outfit in favourites.outfits.all():
+            favourites.outfits.remove(outfit)
+        else:
+            favourites.outfits.add(outfit)
+
+        return redirect("outfits:outfits_list")
 
 
 # -------- STYLE BOARD VIEWS --------- #

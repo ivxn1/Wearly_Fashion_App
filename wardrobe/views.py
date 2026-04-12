@@ -8,7 +8,7 @@ including list, detail, create, update, and delete operations.
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg, Count
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -18,7 +18,9 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from django.views.generic.base import View
 
+from accounts.models import Wishlist
 from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from outfits.models import Outfit
 from wardrobe.forms import (
@@ -82,6 +84,8 @@ class GarmentListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, 
         context["form"] = self.get_form()
         context["page_title"] = "Wearly Wardrobe"
         context["paginate_by"] = self.get_paginate_by(self.get_queryset())
+        wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
+        context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
         return context
 
 
@@ -102,6 +106,8 @@ class GarmentDetailsView(LoginRequiredMixin, DetailView):
         in_outfits = Outfit.objects.filter(outfitgarment__garment=garment).distinct()
         context["in_outfits"] = in_outfits
         context["page_title"] = f"Garment Details - {garment.title}"
+        wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
+        context["is_wishlisted"] = wishlist.garments.filter(pk=garment.pk).exists()
         return context
 
 
@@ -120,6 +126,22 @@ class GarmentCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Add Garment"
         return context
+
+
+class WishlistGarmentView(LoginRequiredMixin, View):
+    def post(self, request, slug):
+        garment = get_object_or_404(Garment, slug=slug)
+        wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+
+        if garment in wishlist.garments.all():
+            wishlist.garments.remove(garment)
+        else:
+            wishlist.garments.add(garment)
+
+        next_url = request.POST.get("next")
+        if next_url:
+            return redirect(next_url)
+        return redirect("wardrobe:garment_list")
 
 
 class GarmentDeleteView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):

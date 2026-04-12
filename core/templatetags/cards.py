@@ -10,35 +10,21 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag("core/partials/cards/garment_card.html")
-def garment_card(item):
-    """
-    Render a garment card component.
-
-    Args:
-        item: A Garment model instance to display.
-
-    Returns:
-        dict: Context containing the garment item.
-    """
+@register.inclusion_tag("core/partials/cards/garment_card.html", takes_context=True)
+def garment_card(context, item):
+    wishlist_ids = context.get("wishlist_ids") or set()
     return {
         "item": item,
+        "is_wishlisted": item.id in wishlist_ids,
     }
 
 
-@register.inclusion_tag("core/partials/cards/outfit_card.html")
-def outfit_card(item):
-    """
-    Render an outfit card component.
-
-    Args:
-        item: An Outfit model instance to display.
-
-    Returns:
-        dict: Context containing the outfit item.
-    """
+@register.inclusion_tag("core/partials/cards/outfit_card.html", takes_context=True)
+def outfit_card(context, item):
+    favourites_ids = context.get("favourites_ids") or set()
     return {
         "item": item,
+        "is_favourite": item.id in favourites_ids,
     }
 
 

@@ -65,3 +65,32 @@ class CustomerProfileModel(models.Model):
     def get_profile_name(self):
         return f"{self.first_name} {self.last_name}"
 
+
+class Wishlist(models.Model):
+    user = models.OneToOneField(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="wishlist",
+    )
+    garments = models.ManyToManyField(
+        to="wardrobe.Garment",
+        blank=True,
+        related_name="wishlisted_by",
+    )
+
+
+class FavouriteOutfits(models.Model):
+    user = models.OneToOneField(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="favourites",
+    )
+    outfits = models.ManyToManyField(
+        to="outfits.Outfit",
+        blank=True,
+        related_name="favourited_by",
+    )
+
+    class Meta:
+        verbose_name_plural = "Favourite Outfits"
+

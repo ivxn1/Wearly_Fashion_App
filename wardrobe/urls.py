@@ -35,6 +35,11 @@ urlpatterns = [
                                 wardrobe.views.GarmentDeleteView.as_view(),
                                 name="garment_delete",
                             ),
+                            path(
+                                "wishlist/",
+                                wardrobe.views.WishlistGarmentView.as_view(),
+                                name="wishlist_garment",
+                            ),
                         ]
                     ),
                 ),

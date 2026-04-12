@@ -7,39 +7,6 @@
   gap: 28px; /* slightly tighter than home, still airy */
 }
 
-/* Card footer row inside content */
-.garment-meta {
-  margin-top: 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-}
-
-.garment-price {
-  font-weight: 600;
-  color: #1a1a1a;
-  letter-spacing: 0.2px;
-}
-
-.garment-link {
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  font-weight: 600;
-  color: #1a1a1a;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.35);
-  padding-bottom: 2px;
-  transition: all 0.25s ease;
-}
-
-.garment-link:hover {
-  border-bottom-color: rgba(26, 26, 26, 0.75);
-  opacity: 0.9;
-}
-
-
 /* Responsive - Filter adjustments only */
 @media (max-width: 1200px) {
   .filters-grid {

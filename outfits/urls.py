@@ -4,6 +4,7 @@ from outfits.views import (
     AddOutfitView,
     DeleteOutfitView,
     EditOutfitView,
+    FavouriteOutfitView,
     OutfitDetailsView,
     OutfitsListView,
     StyleBoardCreateView,
@@ -34,6 +35,11 @@ urlpatterns = [
                                 "delete/",
                                 DeleteOutfitView.as_view(),
                                 name="confirm_delete_outfit",
+                            ),
+                            path(
+                                "favourite/",
+                                FavouriteOutfitView.as_view(),
+                                name="outfit_favourite",
                             ),
                         ]
                     ),
