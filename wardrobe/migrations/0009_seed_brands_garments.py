@@ -104,8 +104,8 @@ def seed_brands_and_garments(apps, schema_editor):
             if source_path:
                 image_bytes = read_and_convert_to_jpeg(source_path)
                 if image_bytes:
-                    default_storage.save(dest_path, ContentFile(image_bytes))
-                    return dest_path
+                    saved_path = default_storage.save(dest_path, ContentFile(image_bytes))
+                    return saved_path
         return ""
 
     # --- Brands ---

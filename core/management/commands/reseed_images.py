@@ -122,8 +122,8 @@ class Command(BaseCommand):
             dest_path = f"wardrobe/{garment.slug}.jpg"
             if default_storage.exists(dest_path):
                 default_storage.delete(dest_path)
-            default_storage.save(dest_path, ContentFile(image_bytes))
-            garment.image = dest_path
+            saved_path = default_storage.save(dest_path, ContentFile(image_bytes))
+            garment.image = saved_path
             garment.save(update_fields=["image"])
             updated += 1
             self.stdout.write(f"  Uploaded {garment.slug}")
@@ -146,8 +146,8 @@ class Command(BaseCommand):
             dest_path = f"outfits/{slug}.jpg"
             if default_storage.exists(dest_path):
                 default_storage.delete(dest_path)
-            default_storage.save(dest_path, ContentFile(image_bytes))
-            outfit.image = dest_path
+            saved_path = default_storage.save(dest_path, ContentFile(image_bytes))
+            outfit.image = saved_path
             outfit.save(update_fields=["image"])
             updated += 1
             self.stdout.write(f"  Uploaded {outfit.title}")
