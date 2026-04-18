@@ -4,8 +4,12 @@ Views for the planner application.
 This module contains class-based views for managing outfit plan entries,
 including list, detail, create, update, and delete operations.
 """
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.utils import IntegrityError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -15,9 +19,11 @@ from django.views.generic import (
     UpdateView,
 )
 
+from accounts.models import Wishlist
 from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from planner.forms import PlanCreateForm, PlanSearchForm
 from planner.models import PlanEntry
+from planner.tasks import send_weekly_digest
 
 
 class PlannerListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
@@ -81,6 +87,8 @@ class PlanDetailsView(IsUserOwnerMixin, LoginRequiredMixin, DetailView):
             .order_by("-date")
             .first()
         )
+        wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
+        context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
         context["next_plan"] = (
             PlanEntry.objects.filter(date__gt=self.object.date).order_by("date").first()
         )
@@ -95,8 +103,14 @@ class AddPlanEntryView(LoginRequiredMixin, CreateView):
     template_name = "planner/plan_entry_add_form.html"
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+        try:
+            form.instance.user = self.request.user
+            return super().form_valid(form)
+        except IntegrityError as exc:
+            messages.error(
+                self.request, "You have already planned an outfit for the selected date!"
+            )
+            return redirect("planner:add_plan_entry")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -134,7 +148,7 @@ class DeletePlanEntryView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
     model = PlanEntry
     template_name = "planner/plan_entry_delete_form.html"
     context_object_name = "plan_entry"
-    success_url = reverse_lazy("planner:planner_list")
+    success_url = reverse_lazy("planner:list")
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -144,3 +158,15 @@ class DeletePlanEntryView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = f"Delete Plan Entry - {self.object.date}"
         return context
+
+
+class TriggerDigestView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_premium:
+            messages.error(request, "Weekly digest is available for Premium members only.")
+            return redirect("user-profile", pk=request.user.profile.pk)
+
+        send_weekly_digest.delay(request.user.pk)
+        messages.success(request, "Your weekly digest is on its way! Check your inbox shortly.")
+        return redirect("user-profile", pk=request.user.profile.pk)
