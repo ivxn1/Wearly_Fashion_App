@@ -30,7 +30,7 @@ class Outfit(models.Model):
     )
     occasion = models.CharField(max_length=50, blank=False, null=False)
     season = models.CharField(
-        choices=SeasonChoices, default=SeasonChoices.ALL, blank=False, null=False
+        max_length=20, choices=SeasonChoices, default=SeasonChoices.ALL, blank=False, null=False
     )
     notes = models.TextField(blank=True, null=True)
     image = models.ImageField(
