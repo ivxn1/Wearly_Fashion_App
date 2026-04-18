@@ -21,6 +21,12 @@
   overflow: hidden;
 }
 
+.first-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .profile-header::before {
   content: "";
   position: absolute;
@@ -227,7 +233,7 @@
 }
 
 .profile-actions .btn-action {
-  min-width: 200px;
+  min-width: 250px;
   text-align: center;
   padding: 14px 32px;
   flex: 0;

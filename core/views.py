@@ -5,6 +5,7 @@ This module contains class-based views for the main pages of the application,
 including the home page and about page.
 """
 
+from django.shortcuts import render
 from django.utils.timezone import localdate
 from django.views.generic import TemplateView
 
@@ -26,17 +27,18 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Wearly Home"
-        context["wardrobe"] = Garment.objects.select_related("brand").order_by(
-            "-created_at"
-        )[:3]
-        context["outfits"] = Outfit.objects.order_by("-created_at")[:3]
-        context["plans"] = (
-            PlanEntry.objects.select_related("outfit")
-            .filter(date__gte=localdate())
-            .order_by("date")[:3]
-        )
 
         if self.request.user.is_authenticated:
+            context["wardrobe"] = Garment.objects.select_related("brand").order_by(
+                "-created_at"
+            )[:3]
+            context["outfits"] = Outfit.objects.order_by("-created_at")[:3]
+            context["plans"] = (
+                PlanEntry.objects.select_related("outfit")
+                .filter(date__gte=localdate(), user=self.request.user)
+                .order_by("date")[:3]
+            )
+
             wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
             context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
             favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
@@ -68,3 +70,7 @@ class AboutView(TemplateView):
         )
         context["email"] = "contact@wearly.app"
         return context
+
+
+def custom_500(request):
+    return render(request, "500.html", status=500)

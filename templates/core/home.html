@@ -19,6 +19,7 @@
     {% url 'outfits:add_outfit' as outfit_create %}
     {% include 'core/partials/hero_section.html' with has_secondary_cta=True is_compact=False title="Wearly" subtitle="Introducing your personal fashion planning assistant. Organize your wardrobe into unique outfits and plan them for any occasion!" has_cta=True first_url=wardrobe_list first_url_text="Explore Wardrobe" secondary_url=outfit_create secondary_url_text="Create Outfit" %}
 
+    {% if user.is_authenticated %}
     <div class="content-wrapper">
         {% url 'wardrobe:garment_create' as garment_create_url %}
         {% collection_section 'Latest Garments' wardrobe 'wardrobe' '👗' garment_create_url %}
@@ -29,5 +30,70 @@
         {% url 'planner:add_plan_entry' as plan_create_url %}
         {% collection_section "What's planned" plans 'plans' '📅' plan_create_url %}
     </div>
+
+    {% if not user.is_premium %}
+    <section class="premium-hero">
+      <div class="premium-hero-content">
+        <span class="premium-hero-badge">Premium</span>
+        <h2 class="premium-hero-title">Elevate Your Style</h2>
+        <div class="premium-hero-divider"></div>
+        <p class="premium-hero-subtitle">
+          Unlock weekly outfit digests, priority recommendations, and unlimited collections.
+          Take your wardrobe to the next level with Wearly Premium.
+        </p>
+        <form method="post" action="{% url 'become-premium' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-cta btn-premium-cta">Become Premium</button>
+        </form>
+      </div>
+    </section>
+    {% endif %}
+
+    {% else %}
+
+    <div class="content-wrapper">
+
+      <section class="feature-section">
+        <div class="feature-content">
+          <span class="feature-icon">👗</span>
+          <h2 class="feature-title">Your Digital Wardrobe</h2>
+          <div class="feature-divider"></div>
+          <p class="feature-text">
+            Catalog every piece you own — from everyday basics to statement pieces.
+            Track brands, categories, seasons, and prices all in one place.
+          </p>
+          <a href="{% url 'register' %}" class="btn-cta btn-primary-cta">Start Organizing</a>
+        </div>
+      </section>
+
+      <section class="feature-section feature-section--alt">
+        <div class="feature-content">
+          <span class="feature-icon">✨</span>
+          <h2 class="feature-title">Curate Perfect Outfits</h2>
+          <div class="feature-divider"></div>
+          <p class="feature-text">
+            Combine garments from your wardrobe into complete outfits for any occasion.
+            Never wonder what to wear again.
+          </p>
+          <a href="{% url 'register' %}" class="btn-cta btn-primary-cta">Create Your First Outfit</a>
+        </div>
+      </section>
+
+      <section class="feature-section">
+        <div class="feature-content">
+          <span class="feature-icon">📅</span>
+          <h2 class="feature-title">Plan Your Week</h2>
+          <div class="feature-divider"></div>
+          <p class="feature-text">
+            Schedule outfits for upcoming days so you're always prepared.
+            Stay ahead of events, meetings, and everyday life.
+          </p>
+          <a href="{% url 'register' %}" class="btn-cta btn-primary-cta">Start Planning</a>
+        </div>
+      </section>
+
+    </div>
+
+    {% endif %}
 
 {% endblock %}
