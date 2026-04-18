@@ -16,3 +16,8 @@ staticfiles/
 .DS_Store
 .idea/
 .vscode/
+
+celerybeat-schedule
+celerybeat-schedule.*
+.celery_beat.db
+
