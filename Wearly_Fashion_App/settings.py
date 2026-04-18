@@ -53,7 +53,9 @@ INSTALLED_APPS = (
         "django.contrib.contenttypes",
         "django.contrib.sessions",
         "django.contrib.messages",
+        'cloudinary_storage',
         "django.contrib.staticfiles",
+        "cloudinary",
         "django_celery_beat",
         "rest_framework",
     ]
@@ -160,6 +162,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER", "noreply@wearly.app")
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
+    'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+    'API_SECRET': os.getenv("cloudinary_api_secret")
+}
+
+# This tells Django: "All FileFields/ImageFields go to Cloudinary"
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
