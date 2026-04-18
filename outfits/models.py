@@ -53,6 +53,9 @@ class Outfit(models.Model):
         related_name='outfits'
     )
 
+    class Meta:
+        ordering = ('created_at',)
+
     def __str__(self) -> str:
         """Return a string representation combining title, occasion, and season."""
         return self.title + " - " + self.occasion + " - " + self.season
