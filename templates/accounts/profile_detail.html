@@ -14,7 +14,15 @@
   <!-- Profile Header: Info left, Avatar right -->
   <div class="profile-header">
     <div class="profile-info-side">
-      <h1 class="profile-name">{{ profile.first_name }} {{ profile.last_name }}</h1>
+    <div class="first-details">
+        <h1 class="profile-name">{{ profile.first_name }} {{ profile.last_name }}</h1>
+        {% if profile.user.is_premium %}
+            <form method="post" action="{% url 'planner:trigger_digest' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-cta btn-premium-action btn-action btn-logout">Send Weekly Digest</button>
+            </form>
+        {% endif %}
+    </div>
 
       {% if profile.style_preference %}
         <span class="profile-badge">{{ profile.get_style_preference_display }}</span>
@@ -43,7 +51,9 @@
         {% endif %}
       </div>
 
+    {% if profile.user.pk == request.profile.user.pk %}
       <a href="{% url 'outfits:styleboard_list' %}" class="btn-cta btn-secondary-cta profile-styleboard-btn">Style Boards</a>
+    {% endif %}
     </div>
 
     <div class="profile-avatar-side">
@@ -102,13 +112,12 @@
   </div>
 
   <!-- Action Buttons -->
+{% if profile.user.pk == request.user.pk %}
   <div class="profile-actions">
     <a href="{% url 'user-profile-edit' pk=profile.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Profile</a>
-    <form method="post" action="{% url 'user-logout' %}" style="display: inline;">
-      {% csrf_token %}
-      <button type="submit" class="btn-cta btn-secondary-cta btn-action btn-logout">Logout</button>
-    </form>
+    <a href="{% url 'password_change' %}" class="btn-cta btn-secondary-cta btn-action">Change Password</a>
   </div>
+{% endif %}
 
 </section>
 
