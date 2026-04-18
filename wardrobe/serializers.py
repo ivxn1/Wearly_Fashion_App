@@ -16,3 +16,4 @@ class GarmentSerializer(ModelSerializer):
     class Meta:
         model = Garment
         fields = ['title', 'category', 'brand', 'price', 'slug', 'color', 'size', 'season', 'material', 'created_at', 'user']
+
