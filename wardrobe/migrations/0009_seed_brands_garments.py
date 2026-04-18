@@ -167,7 +167,7 @@ def seed_brands_and_garments(apps, schema_editor):
     for data in garments_data:
         data["image"] = get_garment_image(data["slug"], data["category"])
         data["user_id"] = 1
-        Garment.objects.get_or_create(slug=data["slug"], defaults=data)
+        Garment.objects.update_or_create(slug=data["slug"], defaults=data)
 
 
 def reverse_seed(apps, schema_editor):

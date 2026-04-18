@@ -124,7 +124,7 @@ def seed_outfits(apps, schema_editor):
     for data in outfits_data:
         data["image"] = get_outfit_image(data["title"])
         data["user_id"] = 1
-        outfit, _ = Outfit.objects.get_or_create(title=data["title"], defaults=data)
+        outfit, _ = Outfit.objects.update_or_create(title=data["title"], defaults=data)
         outfits[data["title"]] = outfit
 
     # --- Outfit-Garment links ---
