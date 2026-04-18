@@ -1,0 +1,11 @@
+{
+  "build": {
+    "builder": "dockerfile"
+  },
+  "deploy": {
+    "numReplicas": 1,
+    "sleepApplication": false,
+    "restartPolicyMaxRetries": 10,
+    "restartPolicyWindowMs": 60000
+  }
+}

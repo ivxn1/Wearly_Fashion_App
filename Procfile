@@ -1,0 +1,1 @@
+web: python manage.py migrate && gunicorn Wearly_Fashion_App.wsgi
