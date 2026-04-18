@@ -165,18 +165,19 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER", "noreply@wearly.app")
 
 
 # 1. Add the modern Django 5.0+ way
-# If you are using the Django 5.0+ STORAGES dictionary:
+# 1. Disable the strict checking (The most important line)
+WHITENOISE_MANIFEST_STRICT = False
+
+# 2. Configure the Storages
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # Use the "Non-Manifest" version to be even safer
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
-
-# Add this line right below STORAGES to stop the "MissingFileError"
-WHITENOISE_MANIFEST_STRICT = False
 
 # 2. Add the OLD way (Django 4.2 and below) to stop the library from crashing
 # Even though Django doesn't use these anymore, the Cloudinary library still checks for them.
