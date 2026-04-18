@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn Wearly_Fashion_App.wsgi
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn Wearly_Fashion_App.wsgi
