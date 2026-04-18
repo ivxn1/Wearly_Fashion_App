@@ -31,7 +31,7 @@
 
             {% if item.user.profile.get_profile_name  %}
                 <div class="garment-details">
-                    <span class="detail-item">Created by: {{ item.user.profile.get_profile_name }}</span>
+                    <span class="detail-item">Created by: <a href="{% url 'user-profile' pk=item.user.profile.pk %}" class="created-by-link">{{ item.user.profile.get_profile_name }}</a></span>
                 </div>
             {% endif %}
 

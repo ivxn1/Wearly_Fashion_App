@@ -17,7 +17,7 @@ from django.views.generic import (
 )
 from django.views.generic.base import View
 
-from accounts.models import FavouriteOutfits
+from accounts.models import FavouriteOutfits, Wishlist
 from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from outfits.forms import OutfitCreateForm, OutfitSearchForm, StyleBoardCreateForm, StyleBoardEditForm
 from outfits.models import Outfit, StyleBoard
@@ -81,6 +81,8 @@ class OutfitDetailsView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = self.object.title
         context["outfit_garments"] = self.object.garments.all()
+        wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
+        context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
         return context
 
 

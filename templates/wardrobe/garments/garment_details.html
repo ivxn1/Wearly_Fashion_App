@@ -32,7 +32,17 @@
 
       <div class="details-header">
         <h1 class="details-title">{{ garment.title }}</h1>
-        <span class="category-badge-large">{{ garment.category }}</span>
+      <div class="details-etc">
+          <span class="category-badge-large"><p>{{ garment.category }}</p></span>
+          <form method="post" action="{% url 'wardrobe:wishlist_garment' garment.slug %}" style="display: inline;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="btn-cta btn-action wishlist-btn-detail {% if is_wishlisted %}wishlisted{% endif %}">
+            {% if is_wishlisted %}&#9829; In Wishlist{% else %}&#9825; Add to Wishlist{% endif %}
+          </button>
+        </form>
+      </div>
+
       </div>
 
       <div class="meta-grid">
@@ -44,6 +54,13 @@
         {% include 'core/partials/meta_item.html' with label="Season" value=garment.season|capfirst %}
         {% include 'core/partials/meta_item.html' with label="Price" value=garment.price|stringformat:"s" value_class="meta-price" price=True %}
         {% include 'core/partials/meta_item.html' with label="Added" value=garment.created_at %}
+
+        {% if garment.user.profile %}
+        <div class="meta-item">
+          <span class="meta-label">Created by</span>
+          <a href="{% url 'user-profile' pk=garment.user.profile.pk %}" class="created-by-link">{{ garment.user.profile.get_profile_name }}</a>
+        </div>
+        {% endif %}
 
       </div>
 
@@ -72,13 +89,6 @@
       <div class="action-buttons">
         <a href="{% url 'wardrobe:garment_edit' garment.slug %}" class="btn-cta btn-primary-cta btn-action">Edit Garment</a>
         <a href="{% url 'wardrobe:garment_delete' garment.slug %}" class="btn-cta btn-secondary-cta btn-action">Delete Garment</a>
-        <form method="post" action="{% url 'wardrobe:wishlist_garment' garment.slug %}" style="display: inline;">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.path }}">
-          <button type="submit" class="btn-cta btn-action wishlist-btn-detail {% if is_wishlisted %}wishlisted{% endif %}">
-            {% if is_wishlisted %}&#9829; In Wishlist{% else %}&#9825; Add to Wishlist{% endif %}
-          </button>
-        </form>
       </div>
 
     </div>
