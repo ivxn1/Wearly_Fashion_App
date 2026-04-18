@@ -5,8 +5,8 @@ def create_groups(apps, schema_editor):
     Group = apps.get_model("auth", "Group")
     Permission = apps.get_model("auth", "Permission")
 
-    member_group = Group.objects.get_or_create(name="Member")
-    premium_group = Group.objects.get_or_create(name="Premium Member")
+    member_group, _ = Group.objects.get_or_create(name="Member")
+    premium_group, _ = Group.objects.get_or_create(name="Premium Member")
 
     member_perms = Permission.objects.filter(
         content_type__app_label__in=["wardrobe", "outfits", "planner"],

@@ -5,6 +5,24 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+def ensure_default_user(apps, schema_editor):
+    """Create a default user with pk=1 if one doesn't exist (needed for seeded garments)."""
+    User = apps.get_model(settings.AUTH_USER_MODEL)
+    if not User.objects.filter(pk=1).exists():
+        User.objects.create(
+            pk=1,
+            email="seed@wearly.app",
+            is_active=True,
+        )
+    # Reset the sequence so auto-increment starts after pk=1
+    db_table = User._meta.db_table
+    with schema_editor.connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT setval(pg_get_serial_sequence('{db_table}', 'id'), "
+            f"COALESCE((SELECT MAX(id) FROM {db_table}), 1));"
+        )
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,6 +31,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(ensure_default_user, migrations.RunPython.noop),
         migrations.AddField(
             model_name='garment',
             name='user',
