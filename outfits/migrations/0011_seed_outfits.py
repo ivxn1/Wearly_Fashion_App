@@ -1,27 +1,11 @@
+import io
 import os
-import shutil
 
 from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.db import migrations
 from PIL import Image
-
-
-def copy_and_convert_image(source_path, dest_path):
-    try:
-        if os.path.exists(source_path):
-            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-            source_ext = os.path.splitext(source_path)[1].lower()
-            if source_ext in [".jpg", ".jpeg"]:
-                shutil.copy2(source_path, dest_path)
-            else:
-                with Image.open(source_path) as img:
-                    if img.mode in ("RGBA", "P"):
-                        img = img.convert("RGB")
-                    img.save(dest_path, "JPEG", quality=90)
-            return True
-    except Exception as e:
-        print(f"Failed to copy/convert image from {source_path}: {e}")
-    return False
 
 
 def find_image_file(directory, base_name):
@@ -38,6 +22,19 @@ def find_image_file(directory, base_name):
                 return os.path.join(directory, filename)
     except Exception:
         pass
+    return None
+
+
+def read_and_convert_to_jpeg(source_path):
+    try:
+        with Image.open(source_path) as img:
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+            buffer = io.BytesIO()
+            img.save(buffer, "JPEG", quality=90)
+            return buffer.getvalue()
+    except Exception as e:
+        print(f"Failed to read/convert image {source_path}: {e}")
     return None
 
 
@@ -94,22 +91,21 @@ def seed_outfits(apps, schema_editor):
     OutfitGarment = apps.get_model("outfits", "OutfitGarment")
     Garment = apps.get_model("wardrobe", "Garment")
 
-    media_root = settings.MEDIA_ROOT
-    outfits_dir = os.path.join(media_root, "outfits")
-    os.makedirs(outfits_dir, exist_ok=True)
     sample_outfits_dir = os.path.join(settings.BASE_DIR, "static", "sample_images", "outfits")
 
     def get_outfit_image(title):
         slug = title.lower().replace(" ", "_").replace("'", "")
-        dest_filename = f"{slug}.jpg"
-        dest_path = os.path.join(outfits_dir, dest_filename)
-        if os.path.exists(dest_path):
-            return f"outfits/{dest_filename}"
+        dest_path = f"outfits/{slug}.jpg"
+        if default_storage.exists(dest_path):
+            return dest_path
         source_base = OUTFIT_IMAGE_MAP.get(slug)
         if source_base:
             source_path = find_image_file(sample_outfits_dir, source_base)
-            if source_path and copy_and_convert_image(source_path, dest_path):
-                return f"outfits/{dest_filename}"
+            if source_path:
+                image_bytes = read_and_convert_to_jpeg(source_path)
+                if image_bytes:
+                    default_storage.save(dest_path, ContentFile(image_bytes))
+                    return dest_path
         return ""
 
     # --- Outfits ---
