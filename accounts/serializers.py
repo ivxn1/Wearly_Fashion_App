@@ -12,4 +12,4 @@ class UserSerializer(ModelSerializer):
         representation = super().to_representation(instance)
         representation["first_name"] = instance.profile.first_name
         representation["last_name"] = instance.profile.last_name
-
+        return representation

@@ -27,7 +27,15 @@ urlpatterns = [
     path("", include("outfits.urls")),
     path("", include("planner.urls")),
     path("", include("accounts.urls")),
+    path("api/", include([
+        path("wardrobe/", include("wardrobe.api_urls")),
+        path("outfits/", include("outfits.api_urls"))
+    ])
+    ),
 ]
+
+handler500 = "core.views.custom_500"
+
 
 # Serve media files in development
 if settings.DEBUG:
