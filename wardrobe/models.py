@@ -107,7 +107,13 @@ class Garment(models.Model):
         The slug is created from the title and brand name using Django's slugify.
         """
         if not self.slug:
-            slug = slugify(self.title + "-" + self.brand.name)
+            base_slug = slugify(self.title + "-" + self.brand.name)
+            slug = base_slug
+            counter = 1
+            qs = Garment.objects.exclude(pk=self.pk)
+            while qs.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
 

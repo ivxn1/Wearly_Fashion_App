@@ -8,6 +8,7 @@ including list, detail, create, update, and delete operations.
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg, Count
+from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -20,7 +21,7 @@ from django.views.generic import (
 )
 from django.views.generic.base import View
 
-from accounts.models import Wishlist
+from accounts.models import Wishlist, FavouriteOutfits
 from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
 from outfits.models import Outfit
 from wardrobe.forms import (
@@ -108,6 +109,8 @@ class GarmentDetailsView(LoginRequiredMixin, DetailView):
         context["page_title"] = f"Garment Details - {garment.title}"
         wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
         context["is_wishlisted"] = wishlist.garments.filter(pk=garment.pk).exists()
+        favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
+        context["favourites_ids"] = set(favourites.outfits.values_list("id", flat=True))
         return context
 
 
@@ -118,9 +121,15 @@ class GarmentCreateView(LoginRequiredMixin, CreateView):
     form_class = GarmentCreateForm
     success_url = reverse_lazy("wardrobe:garment_list")
 
+    def dispatch(self, request, *args, **kwargs):
+        if len(self.request.user.garments.all()) >= 10:
+            messages.warning(request, "Oops, you have maximum number of garments in your wardrobe! Try deleting some before adding new garments.")
+            return redirect("wardrobe:garment_list")
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+            form.instance.user = self.request.user
+            return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
