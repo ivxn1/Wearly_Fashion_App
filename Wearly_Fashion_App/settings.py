@@ -166,18 +166,19 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER", "noreply@wearly.app")
 
 # 1. Add the modern Django 5.0+ way
 # 1. Disable the strict checking (The most important line)
-WHITENOISE_MANIFEST_STRICT = False
-
-# 2. Configure the Storages
+# 1. Simplify the Storages (Remove Manifest and Compression)
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        # Use the "Non-Manifest" version to be even safer
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
+
+# 2. Add these to be safe
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_USE_FINDERS = True
 
 # 2. Add the OLD way (Django 4.2 and below) to stop the library from crashing
 # Even though Django doesn't use these anymore, the Cloudinary library still checks for them.
