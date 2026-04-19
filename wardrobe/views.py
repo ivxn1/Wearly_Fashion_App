@@ -84,7 +84,7 @@ class GarmentListView(
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
-        context["page_title"] = "Wearly Wardrobe"
+        context["page_title"] = "Wardrobe"
         context["paginate_by"] = self.get_paginate_by(self.get_queryset())
         wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
         context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
@@ -107,7 +107,7 @@ class GarmentDetailsView(LoginRequiredMixin, DetailView):
         garment = self.get_object()
         in_outfits = Outfit.objects.filter(outfitgarment__garment=garment).distinct()
         context["in_outfits"] = in_outfits
-        context["page_title"] = f"Garment Details - {garment.title}"
+        context["page_title"] = f"Garment - {garment.title}"
         wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
         context["is_wishlisted"] = wishlist.garments.filter(pk=garment.pk).exists()
         favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
@@ -182,7 +182,7 @@ class GarmentDeleteView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
         return super().post(request, *args, **kwargs)
 
     extra_context = {
-        "page_title": "Wearly - Delete Garment",
+        "page_title": "Delete Garment",
     }
 
 
@@ -195,7 +195,7 @@ class GarmentEditView(IsUserOwnerMixin, LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("wardrobe:garment_list")
 
     extra_context = {
-        "page_title": "Wearly - Edit Garment",
+        "page_title": "Edit Garment",
     }
 
 

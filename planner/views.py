@@ -61,7 +61,7 @@ class PlannerListView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Wearly Planner"
+        context["page_title"] = "Planner"
         context["form"] = self.get_form()
         context["paginate_by"] = self.get_paginate_by(self.get_queryset())
         return context

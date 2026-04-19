@@ -64,7 +64,7 @@ class OutfitsListView(LoginRequiredMixin, SetPaginateByMixin, ListView, FormView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Wearly Outfits"
+        context["page_title"] = "Outfits"
         context["form"] = self.get_form()
         context["paginate_by"] = self.get_paginate_by(self.get_queryset())
         favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
@@ -86,7 +86,7 @@ class OutfitDetailsView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = self.object.title
+        context["page_title"] = f"Outfit - {self.object.title}"
         context["outfit_garments"] = self.object.garments.all()
         wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
         context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
@@ -187,7 +187,7 @@ class StyleBoardDetailView(IsUserOwnerMixin, LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = self.object.title
+        context["page_title"] = f"Style Board - {self.object.title}"
         context["board_outfits"] = self.object.outfits.prefetch_related(
             "garments"
         ).all()

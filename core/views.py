@@ -26,7 +26,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Wearly Home"
+        context["page_title"] = "Official Site"
 
         if self.request.user.is_authenticated:
             context["wardrobe"] = Garment.objects.select_related("brand").order_by(
@@ -62,7 +62,7 @@ class AboutView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "About Wearly"
+        context["page_title"] = "About"
         context["main"] = (
             "Wearly is a lightweight outfit planning web application that helps "
             "you stay organized when it comes to clothing and daily outfit choices."
