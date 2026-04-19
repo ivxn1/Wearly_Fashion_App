@@ -8,7 +8,6 @@ including list, detail, create, update, and delete operations.
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg, Count
-from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -21,8 +20,8 @@ from django.views.generic import (
 )
 from django.views.generic.base import View
 
-from accounts.models import Wishlist, FavouriteOutfits
-from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
+from accounts.models import FavouriteOutfits, Wishlist
+from core.mixin import IsUserOwnerMixin, SetPaginateByMixin
 from outfits.models import Outfit
 from wardrobe.forms import (
     BrandCreateForm,
@@ -36,7 +35,9 @@ from wardrobe.models import Brand, Garment
 # -------- GARMENT VIEWS --------- #
 
 
-class GarmentListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
+class GarmentListView(
+    IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView
+):
     """
     Display a paginated list of garments with search and filter functionality.
 
@@ -123,13 +124,16 @@ class GarmentCreateView(LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if len(self.request.user.garments.all()) >= 10:
-            messages.warning(request, "Oops, you have maximum number of garments in your wardrobe! Try deleting some before adding new garments.")
+            messages.warning(
+                request,
+                "Oops, you have maximum number of garments in your wardrobe! Try deleting some before adding new garments.",
+            )
             return redirect("wardrobe:garment_list")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-            form.instance.user = self.request.user
-            return super().form_valid(form)
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -8,6 +8,7 @@ from wardrobe.validators import ImageSizeValidator
 
 UserModel = get_user_model()
 
+
 class Outfit(models.Model):
     """
     Represents a curated combination of garments for a specific occasion.
@@ -30,7 +31,11 @@ class Outfit(models.Model):
     )
     occasion = models.CharField(max_length=50, blank=False, null=False)
     season = models.CharField(
-        max_length=20, choices=SeasonChoices, default=SeasonChoices.ALL, blank=False, null=False
+        max_length=20,
+        choices=SeasonChoices,
+        default=SeasonChoices.ALL,
+        blank=False,
+        null=False,
     )
     notes = models.TextField(blank=True, null=True)
     image = models.ImageField(
@@ -48,47 +53,33 @@ class Outfit(models.Model):
         blank=False,
     )
     user = models.ForeignKey(
-        to=UserModel,
-        on_delete=models.CASCADE,
-        related_name='outfits'
+        to=UserModel, on_delete=models.CASCADE, related_name="outfits"
     )
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ("created_at",)
+        permissions = [
+            ("can_create_styleboard", "Can create style boards"),
+        ]
 
     def __str__(self) -> str:
         """Return a string representation combining title, occasion, and season."""
         return self.title + " - " + self.occasion + " - " + self.season
 
+
 class StyleBoard(models.Model):
-    title = models.CharField(
-        max_length=30,
-        blank=False,
-        null=False
-    )
-    description = models.TextField(
-        blank=True,
-        null=True
-    )
-    image = models.ImageField(
-        upload_to="styleboards/",
-        blank=True,
-        null=True
-    )
-    outfits = models.ManyToManyField(
-        to=Outfit,
-        related_name='boards'
-    )
+    title = models.CharField(max_length=30, blank=False, null=False)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to="styleboards/", blank=True, null=True)
+    outfits = models.ManyToManyField(to=Outfit, related_name="boards")
     user = models.ForeignKey(
-        to=UserModel,
-        on_delete=models.CASCADE,
-        related_name='boards'
+        to=UserModel, on_delete=models.CASCADE, related_name="boards"
     )
-    is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} style board"
+
 
 class OutfitGarment(models.Model):
     """

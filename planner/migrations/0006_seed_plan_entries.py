@@ -107,7 +107,9 @@ def seed_plan_entries(apps, schema_editor):
                 },
             )
         except Outfit.DoesNotExist:
-            print(f"Outfit '{entry_data['outfit_title']}' not found. Skipping entry for {entry_data['date']}.")
+            print(
+                f"Outfit '{entry_data['outfit_title']}' not found. Skipping entry for {entry_data['date']}."
+            )
 
 
 def reverse_seed(apps, schema_editor):
@@ -119,7 +121,6 @@ def reverse_seed(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("planner", "0005_planentry_user_alter_planentry_date_and_more"),
         ("outfits", "0011_seed_outfits"),

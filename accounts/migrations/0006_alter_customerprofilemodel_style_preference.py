@@ -4,15 +4,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0005_seed_user'),
+        ("accounts", "0005_seed_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='customerprofilemodel',
-            name='style_preference',
-            field=models.CharField(blank=True, choices=[('casual', 'Casual'), ('formal', 'Formal'), ('streetwear', 'Streetwear'), ('minimalist', 'Minimalist'), ('eclectic', 'Eclectic')], max_length=50, null=True),
+            model_name="customerprofilemodel",
+            name="style_preference",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("casual", "Casual"),
+                    ("formal", "Formal"),
+                    ("streetwear", "Streetwear"),
+                    ("minimalist", "Minimalist"),
+                    ("eclectic", "Eclectic"),
+                ],
+                max_length=50,
+                null=True,
+            ),
         ),
     ]

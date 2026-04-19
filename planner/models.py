@@ -6,6 +6,7 @@ import outfits.models
 
 UserModel = get_user_model()
 
+
 class PlanEntry(models.Model):
     """
     Represents a scheduled outfit plan for a specific date.
@@ -35,9 +36,7 @@ class PlanEntry(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        to=UserModel,
-        on_delete=models.CASCADE,
-        related_name="plans"
+        to=UserModel, on_delete=models.CASCADE, related_name="plans"
     )
 
     class Meta:
@@ -50,6 +49,9 @@ class PlanEntry(models.Model):
         indexes = [models.Index(fields=("date",))]
         verbose_name_plural = "Plan Entries"
         verbose_name = "Plan Entry"
+        permissions = [
+            ("can_trigger_digest", "Can trigger weekly digest email"),
+        ]
 
     def __str__(self) -> str:
         """Return a string representation combining date, outfit title, and creation time."""

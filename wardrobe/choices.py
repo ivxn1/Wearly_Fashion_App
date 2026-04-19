@@ -97,17 +97,3 @@ GARMENT_CATEGORY_CHOICES = [
         ],
     ),
 ]
-
-
-class SeasonChoices(models.TextChoices):
-    """
-    Enumeration of season options for garments and outfits.
-
-    Includes an 'All Seasons' option for items suitable year-round.
-    """
-
-    ALL = "", "All Seasons"
-    SPRING = "spring", "Spring"
-    SUMMER = "summer", "Summer"
-    AUTUMN = "autumn", "Autumn"
-    WINTER = "winter", "Winter"

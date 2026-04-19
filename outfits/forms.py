@@ -168,12 +168,11 @@ class StyleBoardBaseForm(forms.ModelForm):
 
     class Meta:
         model = StyleBoard
-        fields = ["title", "description", "image", "outfits", "is_public"]
+        fields = ["title", "description", "image", "outfits"]
         labels = {
             "title": "Board Title",
             "description": "Description",
             "image": "Cover Image",
-            "is_public": "Make Public",
         }
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": "e.g., Weekend Vibes"}),

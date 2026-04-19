@@ -1,12 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 UserModel = get_user_model()
 
 
 class HomeViewTest(TestCase):
-
     def test_home_page_returns_200_for_anonymous(self):
         response = self.client.get(reverse("core:home"))
         self.assertEqual(response.status_code, 200)
@@ -16,6 +15,7 @@ class HomeViewTest(TestCase):
         user.set_password("pass123")
         user.save()
         from accounts.models import CustomerProfileModel
+
         CustomerProfileModel.objects.get_or_create(
             user=user,
             defaults={"first_name": "Home", "last_name": "User"},
@@ -26,9 +26,9 @@ class HomeViewTest(TestCase):
 
 
 class Custom500Test(TestCase):
-
     def test_500_handler_returns_500(self):
         from core.views import custom_500
+
         factory = RequestFactory()
         request = factory.get("/")
         response = custom_500(request)

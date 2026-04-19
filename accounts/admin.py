@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-
-from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.admin import ModelAdmin
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 
 UserModel = get_user_model()
+
 
 @admin.register(UserModel)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
@@ -46,5 +46,3 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     search_fields = ("email",)
     ordering = ("email",)
     filter_horizontal = ("groups", "user_permissions")
-
-

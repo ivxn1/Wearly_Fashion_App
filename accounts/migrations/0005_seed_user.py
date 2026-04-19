@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db import migrations
 
+
 def seed_user(apps, schema_editor):
     User = apps.get_model(settings.AUTH_USER_MODEL)
     Profile = apps.get_model("accounts", "CustomerProfileModel")
@@ -36,7 +37,6 @@ def reverse_seed(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("accounts", "0004_favouriteoutfits_wishlist"),
     ]

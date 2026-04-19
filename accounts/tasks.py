@@ -3,7 +3,6 @@ import logging
 from celery import shared_task
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core import signing
 from django.core.mail import send_mail
 
 UserModel = get_user_model()
@@ -177,6 +176,7 @@ def send_premium_registration_email(user_id: int, activation_url: str):
         fail_silently=False,
     )
     logger.info("Premium activation email sent to %s", user.email)
+
 
 @shared_task
 def send_password_reset_email(

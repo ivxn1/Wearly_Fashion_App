@@ -15,22 +15,20 @@ def _build_digest_html(profile, entries):
 
     rows = ""
     for entry in entries:
-        garment_names = ", ".join(
-            g.title for g in entry.outfit.garments.all()
-        )
+        garment_names = ", ".join(g.title for g in entry.outfit.garments.all())
         rows += f"""
         <tr>
           <td style="padding: 14px 18px; border-bottom: 1px solid #f0f0f0; font-size: 14px; color: #1a1a1a; font-weight: 600;">
-            {entry.date.strftime('%A, %b %d')}
+            {entry.date.strftime("%A, %b %d")}
           </td>
           <td style="padding: 14px 18px; border-bottom: 1px solid #f0f0f0;">
             <span style="font-size: 14px; color: #1a1a1a; font-weight: 500;">{entry.outfit.title}</span>
             <br>
-            <span style="font-size: 12px; color: #8a8a8a;">{entry.outfit.occasion} &middot; {entry.outfit.season.title() if entry.outfit.season else ''}</span>
-            {f'<br><span style="font-size: 12px; color: #6a6a6a; font-style: italic;">{garment_names}</span>' if garment_names else ''}
+            <span style="font-size: 12px; color: #8a8a8a;">{entry.outfit.occasion} &middot; {entry.outfit.season.title() if entry.outfit.season else ""}</span>
+            {f'<br><span style="font-size: 12px; color: #6a6a6a; font-style: italic;">{garment_names}</span>' if garment_names else ""}
           </td>
           <td style="padding: 14px 18px; border-bottom: 1px solid #f0f0f0; font-size: 12px; color: #8a8a8a; text-align: right;">
-            {f'<em>{entry.note}</em>' if entry.note else '&mdash;'}
+            {f"<em>{entry.note}</em>" if entry.note else "&mdash;"}
           </td>
         </tr>"""
 
@@ -79,7 +77,7 @@ def _build_digest_html(profile, entries):
                     Hi {profile.first_name},
                   </h2>
                   <p style="margin: 10px 0 0; font-size: 14px; color: #6a6a6a; line-height: 1.6;">
-                    Here's your outfit plan for <strong>{today.strftime('%b %d')}</strong> &ndash; <strong>{end.strftime('%b %d, %Y')}</strong>.
+                    Here's your outfit plan for <strong>{today.strftime("%b %d")}</strong> &ndash; <strong>{end.strftime("%b %d, %Y")}</strong>.
                   </p>
                 </td>
               </tr>
@@ -116,7 +114,7 @@ def _build_digest_html(profile, entries):
                 <td style="padding: 0 40px 24px;">
                   <div style="background-color: #fafafa; border-radius: 8px; padding: 16px 20px; text-align: center;">
                     <span style="font-size: 13px; color: #6a6a6a;">
-                      <strong style="color: #1a1a1a;">{len(entries)}</strong> outfit{'s' if len(entries) != 1 else ''} planned this week
+                      <strong style="color: #1a1a1a;">{len(entries)}</strong> outfit{"s" if len(entries) != 1 else ""} planned this week
                     </span>
                   </div>
                 </td>
@@ -156,8 +154,7 @@ def send_weekly_digest(user_id):
     profile = user.profile
     today = localdate()
     entries = list(
-        user.plans
-        .select_related("outfit")
+        user.plans.select_related("outfit")
         .prefetch_related("outfit__garments")
         .filter(date__gte=today, date__lt=today + timedelta(days=7))
         .order_by("date")

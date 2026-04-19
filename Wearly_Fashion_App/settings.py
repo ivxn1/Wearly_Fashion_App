@@ -14,8 +14,8 @@ import os
 from pathlib import Path
 
 import dj_database_url
-from dotenv import load_dotenv
 from celery.schedules import crontab
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +27,9 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-dev-key-change-in-production")
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY", "django-insecure-dev-key-change-in-production"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
@@ -35,32 +37,29 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 # Application definition
-PROJECT_APSS = ["wardrobe", "outfits", "planner", "core", "accounts"]
+PROJECT_APPS = ["wardrobe", "outfits", "planner", "core", "accounts"]
 
-INSTALLED_APPS = (
-    [
-        "unfold",  # before django.contrib.admin
-        "unfold.contrib.filters",  # optional, if special filters are needed
-        "unfold.contrib.forms",  # optional, if special form elements are needed
-        "unfold.contrib.inlines",  # optional, if special inlines are needed
-        "unfold.contrib.import_export",  # optional, if django-import-export package is used
-        "unfold.contrib.guardian",  # optional, if django-guardian package is used
-        "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
-        "unfold.contrib.location_field",  # optional, if django-location-field package is used
-        "unfold.contrib.constance",  # optional, if django-constance package is used
-        "django.contrib.admin",
-        "django.contrib.auth",
-        "django.contrib.contenttypes",
-        "django.contrib.sessions",
-        "django.contrib.messages",
-        'cloudinary_storage',
-        "django.contrib.staticfiles",
-        "cloudinary",
-        "django_celery_beat",
-        "rest_framework",
-    ]
-    + PROJECT_APSS
-)
+INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
+    "unfold.contrib.inlines",
+    "unfold.contrib.import_export",
+    "unfold.contrib.guardian",
+    "unfold.contrib.simple_history",
+    "unfold.contrib.location_field",
+    "unfold.contrib.constance",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "cloudinary_storage",
+    "django.contrib.staticfiles",
+    "cloudinary",
+    "django_celery_beat",
+    "rest_framework",
+] + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -108,9 +107,8 @@ DATABASES = {
     }
 }
 
-# Add this at the bottom:
-if 'DATABASE_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.config()
+if "DATABASE_URL" in os.environ:
+    DATABASES["default"] = dj_database_url.config()
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -153,23 +151,31 @@ CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
-CELERY_TASK_ALWAYS_EAGER = os.getenv("CELERY_TASK_ALWAYS_EAGER", "False").lower() == "true"
+CELERY_TASK_ALWAYS_EAGER = (
+    os.getenv("CELERY_TASK_ALWAYS_EAGER", "False").lower() == "true"
+)
 
 CELERY_BEAT_SCHEDULE = {
     "weekly-outfit-digest": {
         "task": "planner.tasks.send_weekly_digest_to_all_premiums",
-        "schedule": crontab(minute="0", hour="10", day_of_week="1"),  # Every Monday at 10 AM
+        "schedule": crontab(
+            minute="0", hour="10", day_of_week="1"
+        ),  # Every Monday at 10 AM
     },
 }
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "465"))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() == "true"
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "True").lower() == "true"
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", os.getenv("EMAIL_HOST_USER", "noreply@wearly.app"))
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", os.getenv("EMAIL_HOST_USER", "noreply@wearly.app")
+)
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 
 
@@ -222,7 +228,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 # Tell Django it's behind a proxy and to trust the X-Forwarded-Proto header
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Only redirect if we are not on a local machine
 if not DEBUG:

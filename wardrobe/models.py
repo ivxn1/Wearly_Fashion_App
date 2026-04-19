@@ -9,6 +9,7 @@ from wardrobe.validators import ImageSizeValidator
 
 UserModel = get_user_model()
 
+
 class Brand(models.Model):
     """
     Represents a fashion brand in the wardrobe system.
@@ -70,7 +71,9 @@ class Garment(models.Model):
     color = models.CharField(max_length=30, blank=False, null=False)
     size = models.CharField(max_length=10, blank=True, null=True)
     material = models.CharField(max_length=40, blank=True, null=True)
-    season = models.CharField(max_length=20, choices=SeasonChoices, default=SeasonChoices.ALL)
+    season = models.CharField(
+        max_length=20, choices=SeasonChoices, default=SeasonChoices.ALL
+    )
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -88,9 +91,7 @@ class Garment(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        to=UserModel,
-        on_delete=models.CASCADE,
-        related_name="garments"
+        to=UserModel, on_delete=models.CASCADE, related_name="garments"
     )
 
     class Meta:

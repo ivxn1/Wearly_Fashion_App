@@ -6,27 +6,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('outfits', '0009_outfit_user'),
-        ('planner', '0004_alter_planentry_options'),
+        ("outfits", "0009_outfit_user"),
+        ("planner", "0004_alter_planentry_options"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='planentry',
-            name='user',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='plans', to=settings.AUTH_USER_MODEL),
+            model_name="planentry",
+            name="user",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="plans",
+                to=settings.AUTH_USER_MODEL,
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='planentry',
-            name='date',
+            model_name="planentry",
+            name="date",
             field=models.DateField(),
         ),
         migrations.AddConstraint(
-            model_name='planentry',
-            constraint=models.UniqueConstraint(fields=('date', 'user'), name='uniq_plan_user_date_constraint'),
+            model_name="planentry",
+            constraint=models.UniqueConstraint(
+                fields=("date", "user"), name="uniq_plan_user_date_constraint"
+            ),
         ),
     ]

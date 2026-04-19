@@ -6,31 +6,70 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0003_create_user_groups'),
-        ('outfits', '0010_styleboard'),
-        ('wardrobe', '0008_garment_user'),
+        ("accounts", "0003_create_user_groups"),
+        ("outfits", "0010_styleboard"),
+        ("wardrobe", "0008_garment_user"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FavouriteOutfits',
+            name="FavouriteOutfits",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('outfits', models.ManyToManyField(blank=True, related_name='favourited_by', to='outfits.outfit')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='favourites', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "outfits",
+                    models.ManyToManyField(
+                        blank=True, related_name="favourited_by", to="outfits.outfit"
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="favourites",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Favourite Outfits',
+                "verbose_name_plural": "Favourite Outfits",
             },
         ),
         migrations.CreateModel(
-            name='Wishlist',
+            name="Wishlist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('garments', models.ManyToManyField(blank=True, related_name='wishlisted_by', to='wardrobe.garment')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='wishlist', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "garments",
+                    models.ManyToManyField(
+                        blank=True, related_name="wishlisted_by", to="wardrobe.garment"
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="wishlist",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

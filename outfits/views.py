@@ -4,9 +4,11 @@ Views for the outfits application.
 This module contains class-based views for managing outfits,
 including list, detail, create, update, and delete operations.
 """
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -18,8 +20,13 @@ from django.views.generic import (
 from django.views.generic.base import View
 
 from accounts.models import FavouriteOutfits, Wishlist
-from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
-from outfits.forms import OutfitCreateForm, OutfitSearchForm, StyleBoardCreateForm, StyleBoardEditForm
+from core.mixin import IsUserOwnerMixin, SetPaginateByMixin
+from outfits.forms import (
+    OutfitCreateForm,
+    OutfitSearchForm,
+    StyleBoardCreateForm,
+    StyleBoardEditForm,
+)
 from outfits.models import Outfit, StyleBoard
 
 
@@ -158,7 +165,9 @@ class FavouriteOutfitView(LoginRequiredMixin, View):
 # -------- STYLE BOARD VIEWS --------- #
 
 
-class StyleBoardListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView):
+class StyleBoardListView(
+    IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView
+):
     model = StyleBoard
     template_name = "outfits/styleboards/styleboard_list.html"
     context_object_name = "boards"
@@ -179,14 +188,23 @@ class StyleBoardDetailView(IsUserOwnerMixin, LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = self.object.title
-        context["board_outfits"] = self.object.outfits.prefetch_related("garments").all()
+        context["board_outfits"] = self.object.outfits.prefetch_related(
+            "garments"
+        ).all()
         return context
 
 
-class StyleBoardCreateView(LoginRequiredMixin, CreateView):
+class StyleBoardCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = "outfits.can_create_styleboard"
     model = StyleBoard
     form_class = StyleBoardCreateForm
     template_name = "outfits/styleboards/styleboard_form.html"
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request, "Style boards are available for Premium members only."
+        )
+        return redirect("outfits:styleboard_list")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

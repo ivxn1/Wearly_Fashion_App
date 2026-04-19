@@ -72,9 +72,15 @@ class UserProfileForm(ModelForm):
             },
         }
 
-        def __init__(self):
-            self.fields['email'] = CharField(disabled=True, initial=self.instance.user.email if self.instance.pk else '')
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"] = CharField(
+            disabled=True,
+            widget=TextInput(attrs={"class": "form-control"}),
+            label="Email",
+        )
+        if self.instance and self.instance.pk:
+            self.fields["email"].initial = self.instance.user.email
 
 
 class CustomResetPasswordForm(PasswordResetForm):

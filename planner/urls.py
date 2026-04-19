@@ -36,7 +36,11 @@ urlpatterns = [
                     ),
                 ),
                 path("add/", AddPlanEntryView.as_view(), name="add_plan_entry"),
-                path("trigger-digest/", TriggerDigestView.as_view(), name="trigger_digest"),
+                path(
+                    "trigger-digest/",
+                    TriggerDigestView.as_view(),
+                    name="trigger_digest",
+                ),
             ]
         ),
     ),

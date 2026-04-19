@@ -24,18 +24,22 @@ def ensure_default_user(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wardrobe', '0007_seed_comprehensive_data'),
+        ("wardrobe", "0007_seed_comprehensive_data"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RunPython(ensure_default_user, migrations.RunPython.noop),
         migrations.AddField(
-            model_name='garment',
-            name='user',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='garments', to=settings.AUTH_USER_MODEL),
+            model_name="garment",
+            name="user",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="garments",
+                to=settings.AUTH_USER_MODEL,
+            ),
             preserve_default=False,
         ),
     ]

@@ -2,8 +2,6 @@ from django.contrib import admin
 
 from outfits.models import Outfit, OutfitGarment
 
-# Register your models here.
-
 
 class OutfitGarmentAdmin(admin.TabularInline):
     model = OutfitGarment

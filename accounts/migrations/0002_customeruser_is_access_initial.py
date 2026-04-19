@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0001_initial'),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customeruser',
-            name='is_access_initial',
+            model_name="customeruser",
+            name="is_access_initial",
             field=models.BooleanField(default=True),
         ),
     ]

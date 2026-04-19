@@ -21,6 +21,7 @@ class SeasonChoices(models.TextChoices):
     AUTUMN = "autumn", "Autumn"
     WINTER = "winter", "Winter"
 
+
 class StylePreferencesChoices(models.TextChoices):
     CASUAL = "casual", "Casual"
     FORMAL = "formal", "Formal"

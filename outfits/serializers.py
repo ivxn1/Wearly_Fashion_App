@@ -11,9 +11,17 @@ class OutfitSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['garments_count'] = instance.garments.count()
+        representation["garments_count"] = instance.garments.count()
         return representation
 
     class Meta:
         model = Outfit
-        fields = ['title', 'occasion', 'season', 'notes', 'created_at', 'user', 'garments']
+        fields = [
+            "title",
+            "occasion",
+            "season",
+            "notes",
+            "created_at",
+            "user",
+            "garments",
+        ]

@@ -51,7 +51,8 @@
         {% endif %}
       </div>
 
-    {% if profile.user.pk == request.profile.user.pk %}
+
+    {% if profile.user.pk == request.user.profile.pk %}
       <a href="{% url 'outfits:styleboard_list' %}" class="btn-cta btn-secondary-cta profile-styleboard-btn">Style Boards</a>
     {% endif %}
     </div>
@@ -67,6 +68,8 @@
         {% endif %}
       </div>
     </div>
+
+
   </div>
 
   <!-- Wishlist Garments Section -->

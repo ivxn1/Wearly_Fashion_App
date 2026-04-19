@@ -4,7 +4,6 @@ from django.core.mail.backends.base import BaseEmailBackend
 
 
 class ResendEmailBackend(BaseEmailBackend):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         resend.api_key = settings.RESEND_API_KEY

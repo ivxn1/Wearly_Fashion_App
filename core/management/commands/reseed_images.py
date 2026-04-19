@@ -11,12 +11,23 @@ from outfits.models import Outfit
 from wardrobe.models import Garment
 
 CATEGORY_FOLDER_MAP = {
-    "tshirt": "tshirts", "shirt": "shirt", "sweater": "sweater",
-    "hoodie": "hoodie", "jeans": "jeans", "trousers": "trousers",
-    "shorts": "shorts", "skirt": "skirts", "jacket": "jacket",
-    "coat": "coat", "sneakers": "sneakers", "boots": "boots",
-    "sandals": "sandals", "bag": "bags", "belt": "belts",
-    "scarf": "scarf", "sunglasses": "sunglasses",
+    "tshirt": "tshirts",
+    "shirt": "shirt",
+    "sweater": "sweater",
+    "hoodie": "hoodie",
+    "jeans": "jeans",
+    "trousers": "trousers",
+    "shorts": "shorts",
+    "skirt": "skirts",
+    "jacket": "jacket",
+    "coat": "coat",
+    "sneakers": "sneakers",
+    "boots": "boots",
+    "sandals": "sandals",
+    "bag": "bags",
+    "belt": "belts",
+    "scarf": "scarf",
+    "sunglasses": "sunglasses",
 }
 
 GARMENT_IMAGE_MAP = {
@@ -101,8 +112,12 @@ class Command(BaseCommand):
     help = "Re-upload seed data images to the configured storage backend (Cloudinary, etc.)"
 
     def handle(self, *args, **options):
-        sample_clothes_dir = os.path.join(settings.BASE_DIR, "static", "sample_images", "clothes")
-        sample_outfits_dir = os.path.join(settings.BASE_DIR, "static", "sample_images", "outfits")
+        sample_clothes_dir = os.path.join(
+            settings.BASE_DIR, "static", "sample_images", "clothes"
+        )
+        sample_outfits_dir = os.path.join(
+            settings.BASE_DIR, "static", "sample_images", "outfits"
+        )
 
         self.stdout.write("Uploading garment images...")
         updated = 0

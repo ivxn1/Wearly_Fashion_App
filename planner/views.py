@@ -4,8 +4,9 @@ Views for the planner application.
 This module contains class-based views for managing outfit plan entries,
 including list, detail, create, update, and delete operations.
 """
+
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.utils import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -20,13 +21,15 @@ from django.views.generic import (
 )
 
 from accounts.models import Wishlist
-from core.mixin import SetPaginateByMixin, IsUserOwnerMixin
+from core.mixin import IsUserOwnerMixin, SetPaginateByMixin
 from planner.forms import PlanCreateForm, PlanSearchForm
 from planner.models import PlanEntry
 from planner.tasks import send_weekly_digest
 
 
-class PlannerListView(IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView):
+class PlannerListView(
+    IsUserOwnerMixin, LoginRequiredMixin, SetPaginateByMixin, ListView, FormView
+):
     """
     Display a paginated list of plan entries with search functionality.
 
@@ -106,9 +109,10 @@ class AddPlanEntryView(LoginRequiredMixin, CreateView):
         try:
             form.instance.user = self.request.user
             return super().form_valid(form)
-        except IntegrityError as exc:
+        except IntegrityError:
             messages.error(
-                self.request, "You have already planned an outfit for the selected date!"
+                self.request,
+                "You have already planned an outfit for the selected date!",
             )
             return redirect("planner:add_plan_entry")
 
@@ -160,13 +164,18 @@ class DeletePlanEntryView(IsUserOwnerMixin, LoginRequiredMixin, DeleteView):
         return context
 
 
-class TriggerDigestView(LoginRequiredMixin, View):
+class TriggerDigestView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    permission_required = "planner.can_trigger_digest"
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request, "Weekly digest is available for Premium members only."
+        )
+        return redirect("user-profile", pk=self.request.user.profile.pk)
 
     def post(self, request, *args, **kwargs):
-        if not request.user.is_premium:
-            messages.error(request, "Weekly digest is available for Premium members only.")
-            return redirect("user-profile", pk=request.user.profile.pk)
-
         send_weekly_digest.delay(request.user.pk)
-        messages.success(request, "Your weekly digest is on its way! Check your inbox shortly.")
+        messages.success(
+            request, "Your weekly digest is on its way! Check your inbox shortly."
+        )
         return redirect("user-profile", pk=request.user.profile.pk)

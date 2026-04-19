@@ -91,7 +91,9 @@ def seed_outfits(apps, schema_editor):
     OutfitGarment = apps.get_model("outfits", "OutfitGarment")
     Garment = apps.get_model("wardrobe", "Garment")
 
-    sample_outfits_dir = os.path.join(settings.BASE_DIR, "static", "sample_images", "outfits")
+    sample_outfits_dir = os.path.join(
+        settings.BASE_DIR, "static", "sample_images", "outfits"
+    )
 
     def get_outfit_image(title):
         slug = title.lower().replace(" ", "_").replace("'", "")
@@ -104,20 +106,62 @@ def seed_outfits(apps, schema_editor):
             if source_path:
                 image_bytes = read_and_convert_to_jpeg(source_path)
                 if image_bytes:
-                    saved_path = default_storage.save(dest_path, ContentFile(image_bytes))
+                    saved_path = default_storage.save(
+                        dest_path, ContentFile(image_bytes)
+                    )
                     return saved_path
         return ""
 
     # --- Outfits ---
     outfits_data = [
-        {"title": "Casual Weekend Brunch", "occasion": "Brunch", "season": "spring", "notes": "Perfect relaxed look for a weekend brunch with friends. Comfortable yet put-together."},
-        {"title": "Business Casual Friday", "occasion": "Office", "season": "autumn", "notes": "Smart casual office look suitable for client meetings and casual Fridays."},
-        {"title": "Summer Beach Day", "occasion": "Beach", "season": "summer", "notes": "Light and breezy outfit perfect for a day at the beach or poolside relaxation."},
-        {"title": "Evening Date Night", "occasion": "Date Night", "season": "autumn", "notes": "Elegant and sophisticated look for a romantic dinner date."},
-        {"title": "Winter City Walk", "occasion": "Outdoor", "season": "winter", "notes": "Warm layered outfit for exploring the city during cold winter days."},
-        {"title": "Gym Workout Session", "occasion": "Gym", "season": "all", "notes": "High-performance athletic wear for an intense workout session."},
-        {"title": "Sunday Coffee Run", "occasion": "Casual", "season": "spring", "notes": "Quick and easy outfit for grabbing coffee or running errands."},
-        {"title": "Formal Business Meeting", "occasion": "Business", "season": "winter", "notes": "Professional attire for important business meetings and presentations."},
+        {
+            "title": "Casual Weekend Brunch",
+            "occasion": "Brunch",
+            "season": "spring",
+            "notes": "Perfect relaxed look for a weekend brunch with friends. Comfortable yet put-together.",
+        },
+        {
+            "title": "Business Casual Friday",
+            "occasion": "Office",
+            "season": "autumn",
+            "notes": "Smart casual office look suitable for client meetings and casual Fridays.",
+        },
+        {
+            "title": "Summer Beach Day",
+            "occasion": "Beach",
+            "season": "summer",
+            "notes": "Light and breezy outfit perfect for a day at the beach or poolside relaxation.",
+        },
+        {
+            "title": "Evening Date Night",
+            "occasion": "Date Night",
+            "season": "autumn",
+            "notes": "Elegant and sophisticated look for a romantic dinner date.",
+        },
+        {
+            "title": "Winter City Walk",
+            "occasion": "Outdoor",
+            "season": "winter",
+            "notes": "Warm layered outfit for exploring the city during cold winter days.",
+        },
+        {
+            "title": "Gym Workout Session",
+            "occasion": "Gym",
+            "season": "all",
+            "notes": "High-performance athletic wear for an intense workout session.",
+        },
+        {
+            "title": "Sunday Coffee Run",
+            "occasion": "Casual",
+            "season": "spring",
+            "notes": "Quick and easy outfit for grabbing coffee or running errands.",
+        },
+        {
+            "title": "Formal Business Meeting",
+            "occasion": "Business",
+            "season": "winter",
+            "notes": "Professional attire for important business meetings and presentations.",
+        },
     ]
 
     outfits = {}
@@ -146,7 +190,6 @@ def reverse_seed(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("outfits", "0010_styleboard"),
         ("wardrobe", "0009_seed_brands_garments"),

@@ -48,7 +48,6 @@ class CustomerUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-
 class CustomerProfileModel(models.Model):
     user = models.OneToOneField(
         to=settings.AUTH_USER_MODEL,
@@ -58,7 +57,9 @@ class CustomerProfileModel(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     bio = models.CharField(max_length=300, blank=True, null=True)
-    style_preference = models.CharField(max_length=50, choices=StylePreferencesChoices, blank=True, null=True)
+    style_preference = models.CharField(
+        max_length=50, choices=StylePreferencesChoices, blank=True, null=True
+    )
     profile_picture = models.ImageField(upload_to="profiles/", blank=True, null=True)
     location = models.CharField(max_length=30, blank=True, null=True)
 
@@ -93,4 +94,3 @@ class FavouriteOutfits(models.Model):
 
     class Meta:
         verbose_name_plural = "Favourite Outfits"
-

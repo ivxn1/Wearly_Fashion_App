@@ -2,8 +2,6 @@ from django.contrib import admin
 
 from planner.models import PlanEntry
 
-# Register your models here.
-
 
 @admin.register(PlanEntry)
 class PlanEntryAdmin(admin.ModelAdmin):

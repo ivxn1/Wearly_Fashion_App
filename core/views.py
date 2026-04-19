@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.utils.timezone import localdate
 from django.views.generic import TemplateView
 
-from accounts.models import Wishlist, FavouriteOutfits
+from accounts.models import FavouriteOutfits, Wishlist
 from outfits.models import Outfit
 from planner.models import PlanEntry
 from wardrobe.models import Garment
@@ -40,9 +40,15 @@ class HomeView(TemplateView):
             )
 
             wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
-            context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
-            favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
-            context["favourites_ids"] = set(favourites.outfits.values_list("id", flat=True))
+            context["wishlist_ids"] = set(
+                wishlist.garments.values_list("id", flat=True)
+            )
+            favourites, _ = FavouriteOutfits.objects.get_or_create(
+                user=self.request.user
+            )
+            context["favourites_ids"] = set(
+                favourites.outfits.values_list("id", flat=True)
+            )
 
         return context
 

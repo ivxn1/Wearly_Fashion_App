@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from accounts.models import CustomerProfileModel
@@ -13,17 +13,20 @@ UserModel = get_user_model()
 
 
 class PlanEntryModelTest(TestCase):
-
     def setUp(self):
         self.user = UserModel.objects.get(pk=1)
         self.outfit = Outfit.objects.create(
-            title="Plan Outfit", occasion="Work", user=self.user,
+            title="Plan Outfit",
+            occasion="Work",
+            user=self.user,
         )
 
     def test_plan_entry_str_contains_date_and_outfit(self):
         target_date = date.today() + timedelta(days=500)
         entry = PlanEntry.objects.create(
-            date=target_date, outfit=self.outfit, user=self.user,
+            date=target_date,
+            outfit=self.outfit,
+            user=self.user,
         )
         self.assertIn(str(target_date), str(entry))
         self.assertIn("Plan Outfit", str(entry))
@@ -31,17 +34,22 @@ class PlanEntryModelTest(TestCase):
     def test_unique_constraint_one_plan_per_date_per_user(self):
         target_date = date.today() + timedelta(days=600)
         PlanEntry.objects.create(
-            date=target_date, outfit=self.outfit, user=self.user,
+            date=target_date,
+            outfit=self.outfit,
+            user=self.user,
         )
         with self.assertRaises(IntegrityError):
             PlanEntry.objects.create(
-                date=target_date, outfit=self.outfit, user=self.user,
+                date=target_date,
+                outfit=self.outfit,
+                user=self.user,
             )
 
     def test_outfit_protect_on_delete(self):
         PlanEntry.objects.create(
             date=date.today() + timedelta(days=700),
-            outfit=self.outfit, user=self.user,
+            outfit=self.outfit,
+            user=self.user,
         )
         with self.assertRaises(Exception):
             self.outfit.delete()
@@ -57,7 +65,6 @@ class PlanEntryModelTest(TestCase):
 
 
 class PlannerViewTest(TestCase):
-
     def setUp(self):
         self.user = UserModel.objects.get(pk=1)
         self.user.set_password("testpass123")

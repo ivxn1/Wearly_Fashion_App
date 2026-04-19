@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core import signing
@@ -11,12 +12,16 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 
 from accounts.forms import (
+    CustomResetPasswordForm,
     UserProfileForm,
     UserRegistrationForm,
-    CustomResetPasswordForm,
 )
 from accounts.models import CustomerProfileModel, FavouriteOutfits, Wishlist
-from accounts.tasks import PREMIUM_SALT, PREMIUM_TOKEN_MAX_AGE, send_premium_registration_email
+from accounts.tasks import (
+    PREMIUM_SALT,
+    PREMIUM_TOKEN_MAX_AGE,
+    send_premium_registration_email,
+)
 from core.mixin import IsUserOwnerMixin
 
 UserModel = get_user_model()
@@ -27,6 +32,13 @@ class RegisterView(CreateView):
     template_name = "accounts/user_registration.html"
     success_url = reverse_lazy("user-login")
     model = UserModel
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        member_group = Group.objects.filter(name="Member").first()
+        if member_group:
+            self.object.groups.add(member_group)
+        return response
 
 
 class CustomLoginView(LoginView):
@@ -82,7 +94,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
 
 class BecomePremiumView(LoginRequiredMixin, View):
-
     def post(self, request, *args, **kwargs):
         user = request.user
 
@@ -91,9 +102,7 @@ class BecomePremiumView(LoginRequiredMixin, View):
             return redirect("user-profile", pk=user.profile.pk)
 
         token = signing.dumps({"user_id": user.pk}, salt=PREMIUM_SALT)
-        activation_url = request.build_absolute_uri(
-            f"/activate-premium/{token}/"
-        )
+        activation_url = request.build_absolute_uri(f"/activate-premium/{token}/")
 
         send_premium_registration_email.delay(user.pk, activation_url)
 
@@ -105,10 +114,11 @@ class BecomePremiumView(LoginRequiredMixin, View):
 
 
 class ActivatePremiumView(View):
-
     def get(self, request, token, *args, **kwargs):
         try:
-            data = signing.loads(token, salt=PREMIUM_SALT, max_age=PREMIUM_TOKEN_MAX_AGE)
+            data = signing.loads(
+                token, salt=PREMIUM_SALT, max_age=PREMIUM_TOKEN_MAX_AGE
+            )
         except signing.BadSignature:
             messages.error(request, "Invalid or expired activation link.")
             return redirect("user-login")
@@ -124,20 +134,27 @@ class ActivatePremiumView(View):
         else:
             user.is_premium = True
             user.save(update_fields=["is_premium"])
-            messages.success(request, "Welcome to Wearly Premium! Your account has been upgraded.")
+            premium_group = Group.objects.filter(name="Premium Member").first()
+            if premium_group:
+                user.groups.add(premium_group)
+            messages.success(
+                request, "Welcome to Wearly Premium! Your account has been upgraded."
+            )
 
         return redirect("user-profile", pk=user.profile.pk)
 
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
-    success_message = "We've emailed you instructions for setting your password, " \
-                      "if an account exists with the email you entered. You should receive them shortly." \
-                      " If you don't receive an email, " \
-                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_message = (
+        "We've emailed you instructions for setting your password, "
+        "if an account exists with the email you entered. You should receive them shortly."
+        " If you don't receive an email, "
+        "please make sure you've entered the address you registered with, and check your spam folder."
+    )
 
     html_email_template_name = "accounts/password_reset_email.html"
     email_template_name = "accounts/password_reset_email.html"
     template_name = "accounts/password_reset.html"
     subject_template_name = "accounts/password_reset_subject.txt"
-    success_url = reverse_lazy('user-login')
+    success_url = reverse_lazy("user-login")
     form_class = CustomResetPasswordForm

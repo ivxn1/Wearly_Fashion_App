@@ -1,13 +1,14 @@
 from rest_framework.serializers import ModelSerializer
 
 from accounts.serializers import UserSerializer
-from wardrobe.models import Garment, Brand
+from wardrobe.models import Brand, Garment
 
 
 class BrandSerializer(ModelSerializer):
     class Meta:
         model = Brand
-        fields = ['name', 'website', 'country']
+        fields = ["name", "website", "country"]
+
 
 class GarmentSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -15,5 +16,16 @@ class GarmentSerializer(ModelSerializer):
 
     class Meta:
         model = Garment
-        fields = ['title', 'category', 'brand', 'price', 'slug', 'color', 'size', 'season', 'material', 'created_at', 'user']
-
+        fields = [
+            "title",
+            "category",
+            "brand",
+            "price",
+            "slug",
+            "color",
+            "size",
+            "season",
+            "material",
+            "created_at",
+            "user",
+        ]

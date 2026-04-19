@@ -7,4 +7,3 @@ from outfits.serializers import OutfitSerializer
 class OutfitListAPIView(ListAPIView):
     serializer_class = OutfitSerializer
     queryset = Outfit.objects.all()
-
