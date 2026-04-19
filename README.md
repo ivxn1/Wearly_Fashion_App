@@ -2,7 +2,7 @@
 
 A Django web application for managing a personal wardrobe, building outfits, and planning weekly looks. Built as a final project for SoftUni's Django Advanced course.
 
-**Live project:** [https://wearly-app.com](https://wearly-app.com)
+**Live demo:** [https://wearly-app.com](https://wearly-app.com)
 
 ## Tech Stack
 
@@ -38,8 +38,6 @@ docker compose up -d
 
 python manage.py migrate
 
-python manage.py reseed_images
-
 python manage.py runserver --insecure
 ```
 
@@ -59,6 +57,12 @@ A demo user is seeded automatically on first migration:
 Async features (premium activation emails, weekly digest) require Celery workers. The docker-compose file starts them automatically alongside Redis.
 
 To skip Celery entirely, add `CELERY_TASK_ALWAYS_EAGER=True` to your `.env` file. Tasks will run synchronously.
+
+### Email
+
+In production, transactional email is delivered via the Resend HTTP API (Railway blocks outbound SMTP). The custom backend at `core.email_backend.ResendEmailBackend` is enabled by setting `EMAIL_BACKEND=core.email_backend.ResendEmailBackend` and `RESEND_API_KEY` in the environment.
+
+In local/demo mode the default `EMAIL_BACKEND` is `django.core.mail.backends.console.EmailBackend`. When a Celery task attempts to send an email (premium activation, password reset, weekly digest), the rendered HTML template and its context data are printed to the **Celery worker logs** instead of being delivered. This makes it easy to inspect the full message body without configuring a real email provider.
 
 ### Environment Variables
 
