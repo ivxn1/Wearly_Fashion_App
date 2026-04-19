@@ -310,14 +310,58 @@ main {
     display: block !important;
 }
 
-@keyframes slideDown {
-    from {
+/* Smooth fade/slide for Bootstrap collapse on mobile.
+   Bootstrap toggles .collapsing during the transition and .show when open. */
+@media (max-width: 991px) {
+    .navbar-collapse .navbar-container {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px);
+        transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    to {
+
+    .navbar-collapse.show .navbar-container {
         opacity: 1;
         transform: translateY(0);
+    }
+
+    .navbar-collapse.collapsing {
+        transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .navbar-collapse .nav-item {
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .navbar-collapse.show .nav-item {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .navbar-collapse.show .nav-item:nth-child(1) { transition-delay: 0.08s; }
+    .navbar-collapse.show .nav-item:nth-child(2) { transition-delay: 0.12s; }
+    .navbar-collapse.show .nav-item:nth-child(3) { transition-delay: 0.16s; }
+    .navbar-collapse.show .nav-item:nth-child(4) { transition-delay: 0.20s; }
+    .navbar-collapse.show .nav-item:nth-child(5) { transition-delay: 0.24s; }
+    .navbar-collapse.show .nav-item:nth-child(6) { transition-delay: 0.28s; }
+
+    .navbar-toggler-icon {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+        transform: rotate(90deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-collapse .navbar-container,
+    .navbar-collapse .nav-item,
+    .navbar-collapse.collapsing,
+    .navbar-toggler-icon {
+        transition: none !important;
     }
 }
 
@@ -428,8 +472,8 @@ main {
     }
 
     .navbar-nav {
-        gap: 24px;
-        padding: 20px 0;
+        gap: 0;
+        padding: 0;
         width: 100%;
     }
 
@@ -437,15 +481,18 @@ main {
     .navbar-nav.navbar-right {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 0;
         width: 100%;
-        padding: 24px 0;
+        padding: 0;
         position: static;
         transform: none;
     }
 
     .navbar-nav.navbar-right {
-        align-items: center;
+        align-items: stretch;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .nav-item {
@@ -454,8 +501,34 @@ main {
     }
 
     .nav-link {
-        font-size: 0.85rem;
-        padding: 12px 0;
+        font-size: 0.9rem;
+        padding: 14px 16px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    .navbar-nav.navbar-right .nav-link {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 14px 16px;
+        border-radius: 8px;
+    }
+
+    .navbar-nav.navbar-right .nav-link:hover {
+        background: rgba(0, 0, 0, 0.04);
+        box-shadow: none;
     }
 
     .collapse.navbar-collapse {
@@ -468,8 +541,12 @@ main {
     }
 
     .navbar-container {
-        padding: 0 24px;
+        padding: 16px 24px;
         width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 8px;
     }
 }
 
@@ -498,17 +575,17 @@ main {
     }
 
     .navbar-nav {
-        gap: 20px;
+        gap: 0;
         width: 100%;
     }
 
     .navbar-nav.navbar-center {
-        gap: 12px;
-        padding: 20px 0;
+        gap: 0;
+        padding: 0;
     }
 
     .nav-link {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         letter-spacing: 0.3px;
     }
 
