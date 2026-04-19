@@ -15,5 +15,21 @@ services:
     ports:
       - "6379:6379"
 
+  celery-worker:
+    build: .
+    command: celery -A Wearly_Fashion_App worker --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+      - postgres
+
+  celery-beat:
+    build: .
+    command: celery -A Wearly_Fashion_App beat --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+      - postgres
+
 volumes:
   pgdata:
