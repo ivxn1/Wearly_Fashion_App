@@ -62,10 +62,12 @@
         <p class="notes-text">{{ outfit.notes|default:"No notes available..." }}</p>
       </div>
 
+    {% if request.user.pk == outfit.user.pk %}
       <div class="action-buttons">
         <a href="{% url 'outfits:edit_outfit' outfit.pk %}" class="btn-cta btn-primary-cta btn-action">Edit Outfit</a>
         <a href="{% url 'outfits:confirm_delete_outfit' outfit.pk %}" class="btn-cta btn-secondary-cta btn-action">Delete Outfit</a>
       </div>
+    {% endif %}
 
     </div>
 
