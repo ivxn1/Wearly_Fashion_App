@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: wearlydb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: pass
     ports:
       - "5433:5432"
     volumes:
@@ -19,17 +19,21 @@ services:
     build: .
     command: celery -A Wearly_Fashion_App worker --loglevel=info
     env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - POSTGRES_HOST=host.docker.internal
     depends_on:
       - redis
-      - postgres
 
   celery-beat:
     build: .
     command: celery -A Wearly_Fashion_App beat --loglevel=info
     env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - POSTGRES_HOST=host.docker.internal
     depends_on:
       - redis
-      - postgres
 
 volumes:
   pgdata:
