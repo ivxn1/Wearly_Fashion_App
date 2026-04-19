@@ -38,6 +38,8 @@ docker compose up -d
 
 python manage.py migrate
 
+python manage.py reseed_images
+
 python manage.py runserver --insecure
 ```
 
