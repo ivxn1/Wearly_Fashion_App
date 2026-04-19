@@ -2,7 +2,7 @@
 
 A Django web application for managing a personal wardrobe, building outfits, and planning weekly looks. Built as a final project for SoftUni's Django Advanced course.
 
-**Live demo:** [https://wearly-app.com](https://wearly-app.com)
+**Live project:** [https://wearly-app.com](https://wearly-app.com)
 
 ## Tech Stack
 
