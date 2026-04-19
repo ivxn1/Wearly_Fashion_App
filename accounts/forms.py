@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm, UserCreationForm
+from django.forms.fields import CharField
 from django.forms.models import ModelForm
 from django.forms.widgets import ClearableFileInput, Select, Textarea, TextInput
 from django.template import loader
@@ -70,6 +71,10 @@ class UserProfileForm(ModelForm):
                 "max_length": "Location cannot exceed 30 characters.",
             },
         }
+
+        def __init__(self):
+            self.fields['email'] = CharField(disabled=True, initial=self.instance.user.email if self.instance.pk else '')
+
 
 
 class CustomResetPasswordForm(PasswordResetForm):

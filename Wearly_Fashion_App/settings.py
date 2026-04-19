@@ -98,9 +98,13 @@ WSGI_APPLICATION = "Wearly_Fashion_App.wsgi.application"
 
 # Use dj_database_url to parse DATABASE_URL from environment (Railway, Heroku, etc.)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "wearlydb"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -142,13 +146,14 @@ LOGIN_URL = "user-login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "user-login"
 
-REDIS_URL = os.getenv("REDIS_URL")
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
 # Celery Configuration
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
+CELERY_TASK_ALWAYS_EAGER = os.getenv("CELERY_TASK_ALWAYS_EAGER", "False").lower() == "true"
 
 CELERY_BEAT_SCHEDULE = {
     "weekly-outfit-digest": {
@@ -157,7 +162,7 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "465"))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() == "true"
@@ -168,26 +173,32 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", os.getenv("EMAIL_HOST_USER"
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 
 
-# 1. Add the modern Django 5.0+ way
-# 1. Disable the strict checking (The most important line)
-# 1. Simplify the Storages (Remove Manifest and Compression)
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.StaticFilesStorage",
-    },
-}
+# Storage configuration
+# Use Cloudinary for media in production, local filesystem for development
+if os.getenv("CLOUDINARY_CLOUD_NAME"):
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.StaticFilesStorage",
+        },
+    }
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.StaticFilesStorage",
+        },
+    }
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-# 2. Add these to be safe
 WHITENOISE_MANIFEST_STRICT = False
 WHITENOISE_USE_FINDERS = True
-
-# 2. Add the OLD way (Django 4.2 and below) to stop the library from crashing
-# Even though Django doesn't use these anymore, the Cloudinary library still checks for them.
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
