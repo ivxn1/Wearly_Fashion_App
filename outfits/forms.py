@@ -186,9 +186,7 @@ class StyleBoardBaseForm(forms.ModelForm):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         if user:
-            self.fields["outfits"].queryset = Outfit.objects.filter(
-                user=user
-            ).prefetch_related("garments")
+            self.fields["outfits"].queryset = Outfit.objects.prefetch_related("garments")
         self.fields["description"].required = False
         self.fields["image"].required = False
 
