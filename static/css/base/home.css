@@ -455,6 +455,25 @@
   border-color: rgba(231, 76, 60, 0.2) !important;
 }
 
+/* ===== Favourite Button (Outfit Detail Page) ===== */
+.favourited-btn-detail {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(26, 26, 26, 0.15) !important;
+  cursor: pointer;
+  color: #aaa;
+  transition: all 0.25s ease;
+}
+
+.favourited-btn-detail:hover {
+  color: #f39c12;
+  border-color: rgba(243, 156, 18, 0.3) !important;
+}
+
+.favourited-btn-detail.favourited {
+  color: #f39c12;
+  border-color: rgba(243, 156, 18, 0.2) !important;
+}
+
 /* ===== Favourite Button (Outfit Card — overlays image) ===== */
 .favourite-form {
   position: absolute;

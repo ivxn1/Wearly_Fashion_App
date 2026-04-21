@@ -90,6 +90,8 @@ class OutfitDetailsView(LoginRequiredMixin, DetailView):
         context["outfit_garments"] = self.object.garments.all()
         wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
         context["wishlist_ids"] = set(wishlist.garments.values_list("id", flat=True))
+        favourites, _ = FavouriteOutfits.objects.get_or_create(user=self.request.user)
+        context['is_favourited'] = favourites.outfits.filter(pk=self.get_object().pk).exists()
         return context
 
 

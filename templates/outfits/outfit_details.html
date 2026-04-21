@@ -35,7 +35,16 @@
       <div class="details-header">
 
         <h1 class="details-title">{{ outfit.title|capfirst }}</h1>
-        <span class="occasion-badge-large">{{ outfit.occasion|capfirst }}</span>
+          <div class="details-etc">
+              <span class="occasion-badge-large">{{ outfit.occasion|capfirst }}</span>
+              <form method="post" action="{% url 'outfits:outfit_favourite' outfit.pk %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit" class="btn-cta btn-action favourited-btn-detail {% if is_favourited %}favourited{% endif %}">
+                    {% if is_favourited %}&#9733; In Favourites{% else %}&#9734; Add to Favourites{% endif %}
+                </button>
+              </form>
+          </div>
       </div>
 
       <div class="meta-grid">
